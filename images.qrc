@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/Images">
+        <file>WidgetBackground.jpg</file>
+        <file>Icons/search-icon.png</file>
+        <file>Icons/Message.png</file>
+        <file>Icons/OverviewButton.png</file>
+        <file>Icons/BooksManagementButton.png</file>
+        <file>Icons/BorrowBooksButton.png</file>
+        <file>Icons/ReturnBooksButton.png</file>
+        <file>Icons/ReaderManagementButton.png</file>
+        <file>Icons/PersonalInfoButton.png</file>
+        <file>NoCover.png</file>
+        <file>Icons/LeftArrow.png</file>
+        <file>Icons/RightArrow.png</file>
+    </qresource>
+</RCC>
