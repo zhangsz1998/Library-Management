@@ -7,7 +7,7 @@ In this program, xml files are used to store both book information and reader in
 
 The userinterface was written in Qt the basic xml operations are also based on Qt.
 
-So far, it is only an incomplete program with a  breifly designed UI and some xml operations that is specificly designed to 
+So far, it is only an incomplete program with a  briefly designed UI and some xml operations that is specificly designed to 
 manage the book information. Most of the interfaces are still remain undesigned. 
 
 Written by Hank Wang and Neal Zhang from BUPT.
