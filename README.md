@@ -11,4 +11,5 @@ So far, it is only an incomplete program with a  breifly designed UI and some xm
 manage the book information. Most of the interfaces are still remain undesigned. 
 
 Written by Hank Wang and Neal Zhang from BUPT.
+
 2017.3.21                                                                                                          
