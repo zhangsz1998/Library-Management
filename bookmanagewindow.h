@@ -20,6 +20,7 @@ class BookManageWindow : public QMdiSubWindow
     Q_OBJECT
 public:
     explicit BookManageWindow(QWidget *parent = 0);
+    ~BookManageWindow();
 
 protected:
     bool isAddingBook;        //用于判断当前时添加还是删除图书

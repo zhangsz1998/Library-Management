@@ -1,9 +1,15 @@
 #include <book_mgmt.h>
 #include <vector>
+#include <QString>
 
 QDomDocument doc;
 std::vector<Book> booklist,*pbooklist;
 QDomNodeList list;
+
+//数据文件目录与路径,均在main.cpp中作为全局变量定义
+extern QString dataDir;
+extern QString bookInfoPath;
+extern QString readerInfoPath;
 
 Book::Book(){
 }
@@ -147,7 +153,7 @@ void Book::IncIntByTag(QString tag){
 }
 
 std::vector<Book> * getXml(){
-    QFile file("C:/Users/hank/Documents/qt/xml/my.xml");
+    QFile file(bookInfoPath);
     if (!file.open(QIODevice::ReadOnly)) return NULL;
     if (!doc.setContent(&file)){
         file.close();
@@ -184,7 +190,7 @@ void update(){
 }
 
 void saveXml(){
-    QFile file("C:/Users/hank/Documents/qt/xml/my.xml");
+    QFile file(bookInfoPath);
     update();
     if (!file.open(QIODevice::WriteOnly|QIODevice::Truncate)) return;
     QTextStream out(&file);

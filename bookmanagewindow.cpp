@@ -82,6 +82,21 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
     addCoverBtn->setVisible(false);
 }
 
+BookManageWindow::~BookManageWindow()
+{
+    delete getTitile;     //用于获取标题
+    delete getAuthor;     //用于获取作者
+    delete getPress;      //用于获取出版社
+    delete getDescription; //用于获取简介
+    delete getAmount;     //用于获取数量
+    delete defaultCoverPath;     //默认封面路径
+    delete rightArrow;
+    delete leftArrow;
+    delete addBookBtn;  //添加图书按钮
+    delete addCoverBtn; //添加封面按钮
+    delete changePatternBtn; //改变模式的按钮，添加界面为左箭头，否则为右箭头
+}
+
 void BookManageWindow::paintEvent(QPaintEvent *paintEvent)
 {
     QPainter painter(this);
