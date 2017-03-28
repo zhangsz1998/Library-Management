@@ -2,7 +2,7 @@
 #include <vector>
 #include <QString>
 
-QDomDocument doc;
+QDomDocument doc;         //
 std::vector<Book> booklist,*pbooklist;
 QDomNodeList list;
 
@@ -10,6 +10,7 @@ QDomNodeList list;
 extern QString dataDir;
 extern QString bookInfoPath;
 extern QString readerInfoPath;
+extern QString coverDir;
 
 Book::Book(){
 }
@@ -154,7 +155,11 @@ void Book::IncIntByTag(QString tag){
 
 std::vector<Book> * getXml(){
     QFile file(bookInfoPath);
-    if (!file.open(QIODevice::ReadOnly)) return NULL;
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug()<<"Open failed.";
+        return NULL;
+    }
     if (!doc.setContent(&file)){
         file.close();
         return NULL;
