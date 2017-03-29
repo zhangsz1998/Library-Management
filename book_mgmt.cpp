@@ -185,13 +185,15 @@ void add_newbook(Book & book){
             it->setIntByTag(QString("id"),it->getIntByTag(QString("amount"))+book.getIntByTag(QString("amount")));
             return;
         }
+    book.order=booklist.back().order + 1;
     booklist.push_back(book);
 }
 
 void update(){
     for (std::vector<Book>::iterator it=booklist.begin();it!=booklist.end();++it)
-        if (it->is_modf)
+        if (it->is_modf && it->order < list.count())
             list.at(it->order) = it->toDom();
+        else doc.documentElement().appendChild(it->toDom());
 }
 
 void saveXml(){
