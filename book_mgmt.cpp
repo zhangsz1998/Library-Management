@@ -1,9 +1,16 @@
 #include <book_mgmt.h>
 #include <vector>
+#include <QString>
 
-QDomDocument doc;
+QDomDocument doc;         //
 std::vector<Book> booklist,*pbooklist;
 QDomNodeList list;
+
+//数据文件目录与路径,均在main.cpp中作为全局变量定义
+extern QString dataDir;
+extern QString bookInfoPath;
+extern QString readerInfoPath;
+extern QString coverDir;
 
 Book::Book(){
 }
@@ -147,8 +154,12 @@ void Book::IncIntByTag(QString tag){
 }
 
 std::vector<Book> * getXml(){
-    QFile file("C:/Users/hank/Documents/qt/xml/my.xml");
-    if (!file.open(QIODevice::ReadOnly)) return NULL;
+    QFile file(bookInfoPath);
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug()<<"Open failed.";
+        return NULL;
+    }
     if (!doc.setContent(&file)){
         file.close();
         return NULL;
@@ -174,17 +185,19 @@ void add_newbook(Book & book){
             it->setIntByTag(QString("id"),it->getIntByTag(QString("amount"))+book.getIntByTag(QString("amount")));
             return;
         }
+    book.order=booklist.back().order + 1;
     booklist.push_back(book);
 }
 
 void update(){
     for (std::vector<Book>::iterator it=booklist.begin();it!=booklist.end();++it)
-        if (it->is_modf)
+        if (it->is_modf && it->order < list.count())
             list.at(it->order) = it->toDom();
+        else doc.documentElement().appendChild(it->toDom());
 }
 
 void saveXml(){
-    QFile file("C:/Users/hank/Documents/qt/xml/my.xml");
+    QFile file(bookInfoPath);
     update();
     if (!file.open(QIODevice::WriteOnly|QIODevice::Truncate)) return;
     QTextStream out(&file);
