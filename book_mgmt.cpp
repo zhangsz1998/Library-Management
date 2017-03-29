@@ -74,19 +74,19 @@ QDomElement Book::toDom(){
     text = doc.createTextNode(id);
     idNode.appendChild(text);
     QDomElement amNode =doc.createElement(QString("amount"));
-    text = doc.createTextNode(QString(amount));
+    text = doc.createTextNode(QString::number(amount));
     amNode.appendChild(text);
     QDomElement toNode = doc.createElement(QString("total"));
-    text = doc.createTextNode(QString(total));
+    text = doc.createTextNode(QString::number(total));
     toNode.appendChild(text);
     QDomElement catNode = doc.createElement(QString("category"));
     text = doc.createTextNode(category);
     catNode.appendChild(text);
     QDomElement rcNode = doc.createElement(QString("refer_count"));
-    text = doc.createTextNode(QString(refer_count));
+    text = doc.createTextNode(QString::number(refer_count));
     rcNode.appendChild(text);
     QDomElement bcNode = doc.createElement(QString("bor_count"));
-    text = doc.createTextNode(QString(bor_count));
+    text = doc.createTextNode(QString::number(bor_count));
     bcNode.appendChild(text);
     QDomElement new_book = doc.createElement(QString("book"));
     new_book.appendChild(titleNode);
@@ -185,7 +185,9 @@ void add_newbook(Book & book){
             it->setIntByTag(QString("id"),it->getIntByTag(QString("amount"))+book.getIntByTag(QString("amount")));
             return;
         }
-    book.order=booklist.back().order + 1;
+    if (booklist.size())
+        book.order=booklist.back().order + 1;
+    else book.order=0;
     booklist.push_back(book);
 }
 
