@@ -101,6 +101,23 @@ Widget::Widget(QWidget *parent) :
 
 Widget::~Widget()
 {
+    delete minimizeBtn;           //最小化按钮
+    delete closeBtn;              //最大化按钮
+    delete messageCentreBtn;            //消息中心按钮
+    delete searchBar;                 //搜索栏
+
+    delete bookManagementBtn;           //图书管理
+    delete readerManagementBtn;         //读者管理
+    delete reservationBtn;              //图书预定
+    delete borrowBtn;                   //图书借阅
+    delete giveBackBtn;                 //图书归还
+    delete overviewBtn;                 //图书概览
+    delete loginBtn;                    //登录按钮
+    delete personalInfoBtn;             //个人信息
+
+    delete bookExhibitionWindow;
+    delete bookManagementWindow;
+
     delete ui;
 }
 

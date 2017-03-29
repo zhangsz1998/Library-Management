@@ -11,10 +11,10 @@ class SearchBar : public QWidget
     Q_OBJECT
 public:
     SearchBar(QWidget* parent);
+    ~SearchBar();
     QLabel* label;
     QLineEdit* lineEdit;
     //QToolButton* searchButton;
-public:
     QString text()
     {
         return lineEdit->text();

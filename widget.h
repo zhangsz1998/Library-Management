@@ -11,7 +11,6 @@
 #include <QPushButton>
 #include "searchbar.h"
 #include "toolbutton.h"
-#include <QVBoxLayout>
 #include "bookexhibition.h"
 #include "bookmanagewindow.h"
 

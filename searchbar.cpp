@@ -17,3 +17,9 @@ SearchBar::SearchBar(QWidget *parent)
     textPalette.setColor(QPalette::Text,Qt::gray);
     lineEdit->setPalette(textPalette);
 }
+
+SearchBar::~SearchBar()
+{
+    delete label;
+    delete lineEdit;
+}
