@@ -202,6 +202,7 @@ void BookManageWindow::paintEvent(QPaintEvent *paintEvent)
         addCoverBtn->setVisible(false);
         addBookBtn->setVisible(false);
         getDescription->setVisible(false);
+        getCategory->setVisible(false);
     }
 }
 
