@@ -106,6 +106,12 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
     addBookBtn->setStyleSheet("background-color:#ccffff");
     connect(addBookBtn,SIGNAL(clicked()),this,SLOT(addNewBook()));
 
+    addCompleteWindow=new MessageBox(this);
+    addCompleteWindow->setText("添加成功");
+    addCompleteWindow->setVisible(false);
+    addCompleteWindow->setModal(true);
+    addCompleteWindow->setGeometry(220,150,addCompleteWindow->width(),addCompleteWindow->height());
+
     //添加图片部分
     cover.load(*defaultCoverPath);
 
@@ -234,6 +240,7 @@ void BookManageWindow::addNewBook()
     newBook=new Book(titile,author,press,desp,titile,category,amount,amount,0,0);        //由于编号函数暂未确定，先置编号为titile
     add_newbook(*newBook);
     saveXml();
+    addCompleteWindow->setVisible(true);
 }
 
 

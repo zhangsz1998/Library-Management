@@ -20,14 +20,16 @@ SOURCES += main.cpp\
     bookexhibition.cpp \
     bookmanagewindow.cpp \
     b.cpp \
-    book_mgmt.cpp
+    book_mgmt.cpp \
+    messagebox.cpp
 
 HEADERS  += widget.h \
     searchbar.h \
     toolbutton.h \
     bookexhibition.h \
     bookmanagewindow.h \
-    book_mgmt.h
+    book_mgmt.h \
+    messagebox.h
 
 FORMS    += widget.ui
 

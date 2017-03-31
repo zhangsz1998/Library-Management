@@ -15,6 +15,7 @@
 #include <QUrl>
 #include "book_mgmt.h"
 #include <QComboBox>
+#include "messagebox.h"
 
 class BookManageWindow : public QMdiSubWindow
 {
@@ -39,6 +40,7 @@ protected:
     QPixmap* leftArrow;
     QPushButton* addBookBtn;  //添加图书按钮
     QPushButton* addCoverBtn; //添加封面按钮
+    MessageBox* addCompleteWindow;  //添加成功弹窗
     QToolButton* changePatternBtn; //改变模式的按钮，添加界面为左箭头，否则为右箭头
     Book* newBook;
     void paintEvent(QPaintEvent *paintEvent);
@@ -49,7 +51,6 @@ public slots:
     void changePattern();        //改变模式的函数
     void chooseCover();         //弹出选择图片界面的窗口
     void addNewBook();          //按下添加图书按钮后添加新书
-
 };
 
 #endif // BOOKMANAGEWINDOW_H
