@@ -3,6 +3,8 @@
 #include "widget.h"
 #include <QDebug>
 
+extern QDate systemDate;
+
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget)
@@ -32,6 +34,7 @@ Widget::Widget(QWidget *parent) :
 
     //添加搜索条
     searchBar=new SearchBar(this);
+    connect(searchBar->lineEdit,SIGNAL(returnPressed()),this,SLOT(showSearchResult()));
 
     //添加消息中心按钮
     messageCentreBtn= new ToolButton(this);
@@ -94,9 +97,20 @@ Widget::Widget(QWidget *parent) :
     bookExhibitionWindow->setVisible(false);
     bookManagementWindow=new BookManageWindow(this);
     bookManagementWindow->setVisible(false);
-    //关联信号与槽
     connect(bookManagementBtn,SIGNAL(clicked()),this,SLOT(showBookManagementWindow()));
-    connect(searchBar->lineEdit,SIGNAL(returnPressed()),this,SLOT(showSearchResult()));
+
+    //日期相关
+    changeDateBtn1=new ToolButton(this);
+    changeDateBtn1->setGeometry(200,85,20,20);
+    changeDateBtn1->setStyleSheet("background-color:transparent; border:none");
+    changeDateBtn1->setIcon(QPixmap(":/Images/Icons/RightArrow2.png"));
+    connect(changeDateBtn1,SIGNAL(clicked()),this,SLOT(addDate()));
+
+    changeDateBtn2=new ToolButton(this);
+    changeDateBtn2->setGeometry(220,85,20,20);
+    changeDateBtn2->setIcon(QPixmap(":/Images/Icons/DoubleRightArrow2.png"));
+    changeDateBtn2->setStyleSheet("background-color:transparent; border:none");
+    connect(changeDateBtn2,SIGNAL(clicked()),this,SLOT(addMonth()));
 }
 
 Widget::~Widget()
@@ -108,7 +122,6 @@ Widget::~Widget()
 
     delete bookManagementBtn;           //图书管理
     delete readerManagementBtn;         //读者管理
-    delete reservationBtn;              //图书预定
     delete borrowBtn;                   //图书借阅
     delete giveBackBtn;                 //图书归还
     delete overviewBtn;                 //图书概览
@@ -134,6 +147,8 @@ void Widget::paintEvent(QPaintEvent *event)
     //重新计算按钮的位置
     minimizeBtn->setGeometry(this->width()-2*40,0,40,40);
     closeBtn->setGeometry(this->width()-40,0,40,40);
+
+    drawDate();
 }
 
 void Widget::mousePressEvent(QMouseEvent *event)
@@ -181,3 +196,119 @@ void Widget::mouseReleaseEvent(QMouseEvent *event)
     QApplication::restoreOverrideCursor();
 }
 
+void Widget::drawDate()
+{
+    QPainter painter(this);\
+    QPen pen(Qt::white);
+    painter.setPen(pen);
+//    QFont digitFont("Kozuka Gothic Pr6N EL",40);
+//    QFont thFont("Kozuka Gothic Pr6N EL",20);
+//    QFont weekFont("Kozuka Gothic Pr6N EL",30);
+//    QFont monthFont("Kozuka Gothic Pr6N EL",12);
+    QFont digitFont("Gothic",40);
+    QFont thFont("Gothic",20);
+    QFont weekFont("Gothic",30);
+    QFont monthFont("Gothic",12);
+    painter.setFont(digitFont);
+    painter.drawText(50,75,QString::number(systemDate.day()));
+    painter.setFont(thFont);
+    if(systemDate.day()>9)
+        painter.drawText(110,55,"th");
+    else
+        painter.drawText(80,55,"th");
+    painter.setFont(weekFont);
+    painter.drawText(150,70,toWeekString(systemDate.dayOfWeek()));
+    painter.setFont(monthFont);
+    painter.drawText(50,100,toMonthString(systemDate.month())+"  "+QString::number(systemDate.year()));
+}
+
+void Widget::addDate()
+{
+    qDebug()<<systemDate;
+    systemDate=systemDate.addDays(1);
+    qDebug()<<systemDate;
+    update();
+}
+
+void Widget::addMonth()
+{
+   qDebug()<<systemDate;
+   systemDate=systemDate.addMonths(1);
+   qDebug()<<systemDate;
+   update();
+}
+
+QString Widget::toWeekString(int week)
+{
+    switch (week) {
+    case 1:
+        return QString("Monday");
+        break;
+    case 2:
+        return QString("Tuesday");
+        break;
+    case 3:
+        return QString("Wednesday");
+        break;
+    case 4:
+        return QString("Thursday");
+        break;
+    case 5:
+        return QString("Friday");
+        break;
+    case 6:
+        return QString("Saturday");
+        break;
+    case 7:
+        return QString("Sunday");
+        break;
+    default:
+        return QString("");
+        break;
+    }
+}
+
+QString Widget::toMonthString(int month)
+{
+    switch (month) {
+    case 1:
+        return QString("January");
+        break;
+    case 2:
+        return QString("February");
+        break;
+    case 3:
+        return QString("March");
+        break;
+    case 4:
+        return QString("April");
+        break;
+    case 5:
+        return QString("May");
+        break;
+    case 6:
+        return QString("June");
+        break;
+    case 7:
+        return QString("July");
+        break;
+    case 8:
+        return QString("August");
+        break;
+    case 9:
+        return QString("September");
+        break;
+    case 10:
+        return QString("October");
+        break;
+    case 11:
+        return QString("November");
+        break;
+    case 12:
+        return QString("December");
+        break;
+    default:
+        return QString("");
+        break;
+    }
+}

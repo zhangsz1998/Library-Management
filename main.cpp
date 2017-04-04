@@ -11,16 +11,18 @@
 #include <QString>
 #include <QtXml>
 #include <QFile>
+#include <QDate>
 
 QString dataDir;       //数据所在目录
 QString bookInfoPath;  //图书信息文件路径
 QString readerInfoPath; //读者信息文件路径
 QString coverDir;      //图书封面所在目录,用于存储图书封面
+QDate systemDate;      //程序当前日期
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
+    systemDate=QDate::currentDate();
 
     //创建Data文件夹
     QDir dir;

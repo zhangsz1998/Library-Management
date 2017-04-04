@@ -13,6 +13,8 @@
 #include "toolbutton.h"
 #include "bookexhibition.h"
 #include "bookmanagewindow.h"
+#include <QDate>
+#include <QPainter>
 
 namespace Ui {
 class Widget;
@@ -38,6 +40,7 @@ protected:
     //以下两个按钮为管理员界面特有
     ToolButton* bookManagementBtn;           //图书管理
     ToolButton* readerManagementBtn;         //读者管理
+
     //以下为全体读者均有的功能
     ToolButton* reservationBtn;              //图书预定
     ToolButton* borrowBtn;                   //图书借阅
@@ -50,16 +53,25 @@ protected:
     //中央界面
     BookExhibition* bookExhibitionWindow;
     BookManageWindow* bookManagementWindow;
-
     void paintEvent(QPaintEvent* event);
+
+    //日期管理
+    ToolButton* changeDateBtn1;                //日期前进一天
+    ToolButton* changeDateBtn2;                //日期前进一个月
+    QString toWeekString(int week);            //1~7天转换成对应的英文字符串
+    QString toMonthString(int month);          //1~12月转换成相应字符串
+    void drawDate();                           //实现日期的显示
 
     //以下三个事件处理函数用于：实现窗口的拖动
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
+
 protected slots:
     void showBookManagementWindow();
     void showSearchResult();
+    void addDate();
+    void addMonth();
 };
 
 #endif // WIDGET_H

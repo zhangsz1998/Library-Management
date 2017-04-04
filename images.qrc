@@ -12,5 +12,7 @@
         <file>NoCover.png</file>
         <file>Icons/LeftArrow.png</file>
         <file>Icons/RightArrow.png</file>
+        <file>Icons/DoubleRightArrow2.png</file>
+        <file>Icons/RightArrow2.png</file>
     </qresource>
 </RCC>
