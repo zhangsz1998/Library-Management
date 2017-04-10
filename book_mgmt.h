@@ -36,4 +36,5 @@ void add_newbook(Book &);
 QString convert2id();
 
 
+
 #endif // BOOK_MGMT_H

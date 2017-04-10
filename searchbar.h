@@ -5,6 +5,7 @@
 #include <QLineEdit>
 #include <QToolButton>
 #include <QLabel>
+#include "book_mgmt.h"
 
 class SearchBar : public QWidget
 {

@@ -143,14 +143,15 @@ BookManageWindow::~BookManageWindow()
     delete addBookBtn;  //添加图书按钮
     delete addCoverBtn; //添加封面按钮
     delete changePatternBtn; //改变模式的按钮，添加界面为左箭头，否则为右箭头
+    delete getCategory;
 }
 
 void BookManageWindow::paintEvent(QPaintEvent *paintEvent)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    QFont titleFont("幼圆",30);
-    QFont elemFont("幼圆",20);
+    QFont titleFont("微软雅黑",30);
+    QFont elemFont("微软雅黑",20);
     painter.setFont(titleFont);
 
     //标题画笔
@@ -241,6 +242,9 @@ void BookManageWindow::addNewBook()
     add_newbook(*newBook);
     saveXml();
     addCompleteWindow->setVisible(true);
+    getTitile->clear();
+    getAuthor->clear();
+    getPress->clear();
+    getDescription->clear();
+    getAmount->clear();
 }
-
-

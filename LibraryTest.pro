@@ -19,9 +19,9 @@ SOURCES += main.cpp\
     toolbutton.cpp \
     bookexhibition.cpp \
     bookmanagewindow.cpp \
-    b.cpp \
     book_mgmt.cpp \
-    messagebox.cpp
+    messagebox.cpp\
+    reader_mgmt.cpp
 
 HEADERS  += widget.h \
     searchbar.h \
@@ -29,7 +29,8 @@ HEADERS  += widget.h \
     bookexhibition.h \
     bookmanagewindow.h \
     book_mgmt.h \
-    messagebox.h
+    messagebox.h\
+    reader_mgmt.h
 
 FORMS    += widget.ui
 

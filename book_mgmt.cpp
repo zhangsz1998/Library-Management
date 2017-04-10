@@ -1,6 +1,7 @@
 #include <book_mgmt.h>
 #include <vector>
 #include <QString>
+#include <QRegularExpression>
 
 QDomDocument doc;         //
 std::vector<Book> booklist,*pbooklist;
