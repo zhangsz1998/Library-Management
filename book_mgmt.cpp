@@ -1,6 +1,7 @@
 #include <book_mgmt.h>
 #include <vector>
 #include <QString>
+#include <QRegularExpression>
 
 QDomDocument doc;         //
 std::vector<Book> booklist,*pbooklist;
@@ -194,7 +195,9 @@ void add_newbook(Book & book){
             it->setIntByTag(QString("id"),it->getIntByTag(QString("amount"))+book.getIntByTag(QString("amount")));
             return;
         }
-    book.order=booklist.back().order + 1;
+     if (booklist.size()) + book.order=booklist.back().order + 1;
+        book.order=booklist.back().order + 1;		
+    else book.order=0;
     booklist.push_back(book);
 }
 
@@ -212,4 +215,26 @@ void saveXml(){
     QTextStream out(&file);
     doc.save(out,2);
     file.close();
+}
+		
+bool match(Book & b,QRegExp &rx,int mode){		
+    if (mode == 1) return rx.exactMatch(b.getStringByTag("title"));		
+    else if (mode == 2) return rx.exactMatch(b.getStringByTag("author"));		
+    else if (mode == 3) return rx.exactMatch(b.getStringByTag("press"));		
+    else if (mode == 4) return rx.exactMatch(b.getStringByTag("description"));		
+    else if (mode == 5) return rx.exactMatch(b.getStringByTag("id"));		
+    else if (mode == 6) return rx.exactMatch(b.getStringByTag("category"));		
+    else return ((rx.exactMatch(b.getStringByTag("title"))) || (rx.exactMatch(b.getStringByTag("author"))) || (rx.exactMatch(b.getStringByTag("press"))) || (rx.exactMatch(b.getStringByTag("description"))) || (rx.exactMatch(b.getStringByTag("id"))) || (rx.exactMatch(b.getStringByTag("category"))));		
+}		
+		
+std::vector<Book *> search(QString kw,int mode){		
+    QString pattern("^.*");		
+    for (int i=0;i<kw.size();i++)		
+        pattern += "("+kw[i]+").*";		
+    pattern += "$";		
+    QRegExp rx(pattern);		
+    std::vector<Book *> res;		
+    for (int i=0;i<booklist.size();i++)		
+        if (match(booklist[i],rx,mode)) res.push_back(&booklist[i]);		
+    return res;		
 }
