@@ -1,7 +1,6 @@
 #include <book_mgmt.h>
 #include <vector>
 #include <QString>
-#include <QRegularExpression>
 
 QDomDocument doc;         //
 std::vector<Book> booklist,*pbooklist;
@@ -27,6 +26,7 @@ Book & Book::operator= (const Book & dul){
     this->category = dul.category;
     this->refer_count = dul.refer_count;
     this->bor_count = dul.bor_count;
+    this->loc = dul.loc;
     return *this;
 }
 
@@ -42,9 +42,10 @@ Book::Book(const QDomNode a){
     this->category =list.at(7).toElement().text();
     this->refer_count = list.at(8).toElement().text().toInt();
     this->bor_count = list.at(9).toElement().text().toInt();
+    this->loc = list.at(10).toElement().text();
 }
 
-Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &c, int am, int to, int rc, int bc){
+Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &c, int am, int to, int rc, int bc,QString &lc){
     this->title = t;
     this->author = a;
     this->press = p;
@@ -55,6 +56,7 @@ Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &
     this->category = c;
     this->refer_count =rc;
     this->bor_count = bc;
+    this->loc = lc;
 }
 
 QDomElement Book::toDom(){
@@ -89,6 +91,9 @@ QDomElement Book::toDom(){
     QDomElement bcNode = doc.createElement(QString("bor_count"));
     text = doc.createTextNode(QString::number(bor_count));
     bcNode.appendChild(text);
+    QDomElement lcNode = doc.createElement(QString("loc"));
+    text = doc.createTextNode(loc);
+    lcNode.appendChild(text);
     QDomElement new_book = doc.createElement(QString("book"));
     new_book.appendChild(titleNode);
     new_book.appendChild(authorNode);
@@ -100,6 +105,7 @@ QDomElement Book::toDom(){
     new_book.appendChild(catNode);
     new_book.appendChild(rcNode);
     new_book.appendChild(bcNode);
+    new_book.appendChild(lcNode);
     return new_book;
 }
 
@@ -110,6 +116,7 @@ QString Book::getStringByTag(QString tag){
     if (tag == "description") return desp;
     if (tag == "id") return id;
     if (tag == "category") return category;
+    if (tag == "loc") return loc;
     return QString("");
 }
 
@@ -128,6 +135,7 @@ void Book::setStringByTag(QString tag, QString &text){
     if (tag == "description") this->desp = text;
     if (tag == "id") this->id = text;
     if (tag == "category") this->category = text;
+    if (tag == "loc") this->loc = text;
 }
 
 void Book::setIntByTag(QString tag, int num){
@@ -186,9 +194,7 @@ void add_newbook(Book & book){
             it->setIntByTag(QString("id"),it->getIntByTag(QString("amount"))+book.getIntByTag(QString("amount")));
             return;
         }
-    if (booklist.size())
-        book.order=booklist.back().order + 1;
-    else book.order=0;
+    book.order=booklist.back().order + 1;
     booklist.push_back(book);
 }
 
@@ -207,26 +213,3 @@ void saveXml(){
     doc.save(out,2);
     file.close();
 }
-
-bool match(Book & b,QRegExp &rx,int mode){
-    if (mode == 1) return rx.exactMatch(b.getStringByTag("title"));
-    else if (mode == 2) return rx.exactMatch(b.getStringByTag("author"));
-    else if (mode == 3) return rx.exactMatch(b.getStringByTag("press"));
-    else if (mode == 4) return rx.exactMatch(b.getStringByTag("description"));
-    else if (mode == 5) return rx.exactMatch(b.getStringByTag("id"));
-    else if (mode == 6) return rx.exactMatch(b.getStringByTag("category"));
-    else return ((rx.exactMatch(b.getStringByTag("title"))) || (rx.exactMatch(b.getStringByTag("author"))) || (rx.exactMatch(b.getStringByTag("press"))) || (rx.exactMatch(b.getStringByTag("description"))) || (rx.exactMatch(b.getStringByTag("id"))) || (rx.exactMatch(b.getStringByTag("category"))));
-}
-
-std::vector<Book *> search(QString kw,int mode){
-    QString pattern("^.*");
-    for (int i=0;i<kw.size();i++)
-        pattern += "("+kw[i]+").*";
-    pattern += "$";
-    QRegExp rx(pattern);
-    std::vector<Book *> res;
-    for (int i=0;i<booklist.size();i++)
-        if (match(booklist[i],rx,mode)) res.push_back(&booklist[i]);
-    return res;
-}
-
