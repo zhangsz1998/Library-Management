@@ -2,6 +2,7 @@
 #include "searchbar.h"
 #include "widget.h"
 #include <QDebug>
+#include "book_mgmt.h"
 
 extern QDate systemDate;
 
@@ -184,10 +185,16 @@ void Widget::showBookManagementWindow()
     this->bookManagementWindow->show();
 }
 
-void Widget::showSearchResult()
+void Widget::showSearchResult()    //在此添加查询结果
 {
     this->bookManagementWindow->setVisible(false);
+    std::vector<Book*> &books=(this->bookExhibitionWindow->books);
+    int mode=this->searchBar->mode();
+    books=search(this->searchBar->lineEdit->text(),mode);
     this->bookExhibitionWindow->show();
+    this->bookExhibitionWindow->currentPage=0;
+    bookExhibitionWindow->refreshDesp();
+    this->bookExhibitionWindow->repaint();
 }
 
 void Widget::mouseReleaseEvent(QMouseEvent *event)

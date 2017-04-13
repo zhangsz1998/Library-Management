@@ -14,5 +14,8 @@
         <file>Icons/RightArrow.png</file>
         <file>Icons/DoubleRightArrow2.png</file>
         <file>Icons/RightArrow2.png</file>
+        <file>Icons/DownArrow.png</file>
+        <file>Icons/NextPage.png</file>
+        <file>Icons/PrePage.png</file>
     </qresource>
 </RCC>

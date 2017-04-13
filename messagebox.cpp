@@ -19,7 +19,6 @@ MessageBox::MessageBox(QWidget *parent) :
     confirmBtn->setFont(QFont("幼圆"));
     confirmBtn->setText("确定");
     connect(confirmBtn,SIGNAL(clicked()),this,SLOT(close()));
-
 }
 
 MessageBox::~MessageBox()

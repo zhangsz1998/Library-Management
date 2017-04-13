@@ -37,6 +37,4 @@ QString convert2id();
 bool match(Book & b,QRegExp & rx,int mode);
 std::vector<Book *> search(QString kw,int mode);
 
-
-
 #endif // BOOK_MGMT_H

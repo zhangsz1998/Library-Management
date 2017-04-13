@@ -48,7 +48,7 @@ protected:
 signals:
 
 public slots:
-    void changePattern();        //改变模式的函数
+    void changePattern();        //改变模式的函数:添加或删减图书
     void chooseCover();         //弹出选择图片界面的窗口
     void addNewBook();          //按下添加图书按钮后添加新书
 };
