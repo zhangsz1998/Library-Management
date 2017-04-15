@@ -36,6 +36,7 @@ protected:
     QSpinBox* getAmount;     //用于获取数量
     QPixmap cover;          //获取封面
     QString* defaultCoverPath;     //默认封面路径
+    QString newCoverPath;
     QPixmap* rightArrow;
     QPixmap* leftArrow;
     QPushButton* addBookBtn;  //添加图书按钮

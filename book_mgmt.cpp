@@ -195,8 +195,8 @@ void add_newbook(Book & book){
             it->setIntByTag(QString("id"),it->getIntByTag(QString("amount"))+book.getIntByTag(QString("amount")));
             return;
         }
-     if (booklist.size()) + book.order=booklist.back().order + 1;
-        book.order=booklist.back().order + 1;		
+     if (booklist.size())
+        book.order=booklist.back().order + 1;
     else book.order=0;
     booklist.push_back(book);
 }

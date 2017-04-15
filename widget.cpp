@@ -5,13 +5,14 @@
 #include "book_mgmt.h"
 
 extern QDate systemDate;
+extern qreal dpi;
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    this->setGeometry(320,90,1024,725);
+    this->setGeometry(320*dpi,90*dpi,1024*dpi,725*dpi);
     setWindowFlags(Qt::FramelessWindowHint);      //设置无边框
     setStyleSheet("background-color:#99ccff;");
 
@@ -20,7 +21,7 @@ Widget::Widget(QWidget *parent) :
     QPixmap minPix=style()->standardPixmap(QStyle::SP_TitleBarMinButton);
     minimizeBtn->setIcon(minPix);
     minimizeBtn->setStyleSheet("background-color:transparent;");
-    minimizeBtn->setGeometry(this->width()-2*40,0,40,40);
+    minimizeBtn->setGeometry(this->width()-2*40*dpi,0*dpi,40*dpi,40*dpi);
     connect(minimizeBtn,SIGNAL(clicked()),this,SLOT(showMinimized()));
     minimizeBtn->show();
 
@@ -28,7 +29,7 @@ Widget::Widget(QWidget *parent) :
     closeBtn=new ToolButton(this);
     QPixmap closePix=style()->standardPixmap(QStyle::SP_TitleBarCloseButton);
     closeBtn->setIcon(closePix);
-    closeBtn->setGeometry(this->width()-40,0,40,40);
+    closeBtn->setGeometry(this->width()-40*dpi,0*dpi,40*dpi,40*dpi);
     closeBtn->setStyleSheet("background-color:transparent;");
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(close()));
     closeBtn->show();
@@ -39,59 +40,59 @@ Widget::Widget(QWidget *parent) :
 
     //添加消息中心按钮
     messageCentreBtn= new ToolButton(this);
-    messageCentreBtn->setIcon(QPixmap(":/Images/Icons/Message.png").scaled(40,40,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    messageCentreBtn->setIcon(QPixmap(":/Images/Icons/Message.png").scaled(40*dpi,40*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     messageCentreBtn->setStyleSheet("background-color:transparent;");
-    messageCentreBtn->setGeometry(this->width()-3*40,0,40,40);
+    messageCentreBtn->setGeometry(this->width()-3*40*dpi,0*dpi,40*dpi,40*dpi);
     messageCentreBtn->show();
 
     //添加登录按钮
     loginBtn=new ToolButton(this);
     loginBtn->setText("登录");
     loginBtn->setFont(QFont("幼圆"));
-    loginBtn->setGeometry(this->width()-4*40,0,40,40);
+    loginBtn->setGeometry(this->width()-4*40*dpi,0*dpi,40*dpi,40*dpi);
     loginBtn->setStyleSheet("background-color:transparent;");
 
     //添加图书概览按钮
     overviewBtn=new ToolButton(this);
     overviewBtn->setIcon(QPixmap(":/Images/Icons/OverviewButton.png"));
-    overviewBtn->setIconSize(QSize(120,80));
+    overviewBtn->setIconSize(QSize(120*dpi,80*dpi));
     overviewBtn->setStyleSheet("background-color:transparent; border:none");
-    overviewBtn->setGeometry(10,this->height()/6+50,120,90);
+    overviewBtn->setGeometry(10*dpi,this->height()/6+50*dpi,120*dpi,90*dpi);
 
     //添加图书管理按钮
     bookManagementBtn=new ToolButton(this);
     bookManagementBtn->setIcon(QPixmap(":/Images/Icons/BooksManagementButton.png"));
-    bookManagementBtn->setIconSize(QSize(120,80));
+    bookManagementBtn->setIconSize(QSize(120*dpi,80*dpi));
     bookManagementBtn->setStyleSheet("background-color:transparent; border:none");
-    bookManagementBtn->setGeometry(10,this->height()/6+50+90*5,120,90);
+    bookManagementBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*5*dpi,120*dpi,90*dpi);
 
     //添加读者管理按钮
     readerManagementBtn=new ToolButton(this);
     readerManagementBtn->setIcon(QPixmap(":/Images/Icons/ReaderManagementButton.png"));
-    readerManagementBtn->setIconSize(QSize(120,80));
+    readerManagementBtn->setIconSize(QSize(120*dpi,80*dpi));
     readerManagementBtn->setStyleSheet("background-color:transparent; border:none");
-    readerManagementBtn->setGeometry(10,this->height()/6+50+90*4,120,90);
+    readerManagementBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*4*dpi,120*dpi,90*dpi);
 
     //添加借书按钮
     borrowBtn=new ToolButton(this);
     borrowBtn->setIcon(QPixmap(":/Images/Icons/BorrowBooksButton.png"));
-    borrowBtn->setIconSize(QSize(120,80));
+    borrowBtn->setIconSize(QSize(120*dpi,80*dpi));
     borrowBtn->setStyleSheet("background-color:transparent; border:none");
-    borrowBtn->setGeometry(10,this->height()/6+50+90,120,90);
+    borrowBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*dpi,120*dpi,90*dpi);
 
     //添加还书按钮
     giveBackBtn=new ToolButton(this);
     giveBackBtn->setIcon(QPixmap(":/Images/Icons/ReturnBooksButton.png"));
-    giveBackBtn->setIconSize(QSize(120,80));
+    giveBackBtn->setIconSize(QSize(120*dpi,80*dpi));
     giveBackBtn->setStyleSheet("background-color:transparent; border:none");
-    giveBackBtn->setGeometry(10,this->height()/6+50+90*2,120,90);
+    giveBackBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*2*dpi,120*dpi,90*dpi);
 
     //添加个人信息按钮
     personalInfoBtn=new ToolButton(this);
     personalInfoBtn->setIcon(QPixmap(":/Images/Icons/PersonalInfoButton.png"));
-    personalInfoBtn->setIconSize(QSize(120,80));
+    personalInfoBtn->setIconSize(QSize(120*dpi,80*dpi));
     personalInfoBtn->setStyleSheet("background-color:transparent; border:none");
-    personalInfoBtn->setGeometry(10,this->height()/6+50+90*3,120,90);
+    personalInfoBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*3*dpi,120*dpi,90*dpi);
 
     //添加中央窗口
     bookExhibitionWindow=new BookExhibition(this);
@@ -146,8 +147,8 @@ void Widget::paintEvent(QPaintEvent *event)
    // this->setPalette(palette);//图片不搭
 
     //重新计算按钮的位置
-    minimizeBtn->setGeometry(this->width()-2*40,0,40,40);
-    closeBtn->setGeometry(this->width()-40,0,40,40);
+    minimizeBtn->setGeometry(this->width()-2*40*dpi,0*dpi,40*dpi,40*dpi);
+    closeBtn->setGeometry(this->width()-40*dpi,0*dpi,40*dpi,40*dpi);
 
     drawDate();
 }
@@ -217,16 +218,16 @@ void Widget::drawDate()
     QFont weekFont("Gothic",30);
     QFont monthFont("Gothic",12);
     painter.setFont(digitFont);
-    painter.drawText(50,75,QString::number(systemDate.day()));
+    painter.drawText(50*dpi,75*dpi,QString::number(systemDate.day()));
     painter.setFont(thFont);
     if(systemDate.day()>9)
-        painter.drawText(110,55,"th");
+        painter.drawText(110*dpi,55*dpi,"th");
     else
-        painter.drawText(80,55,"th");
+        painter.drawText(80*dpi,55*dpi,"th");
     painter.setFont(weekFont);
-    painter.drawText(150,70,toWeekString(systemDate.dayOfWeek()));
+    painter.drawText(150*dpi,70*dpi,toWeekString(systemDate.dayOfWeek()));
     painter.setFont(monthFont);
-    painter.drawText(50,100,toMonthString(systemDate.month())+"  "+QString::number(systemDate.year()));
+    painter.drawText(50*dpi,100*dpi,toMonthString(systemDate.month())+"  "+QString::number(systemDate.year()));
 }
 
 void Widget::addDate()

@@ -3,13 +3,17 @@
 #include <QDebug>
 #include <QList>
 
+extern QString coverDir;
+extern qreal dpi;
+
 BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
 {
     setWindowFlags(Qt::FramelessWindowHint);
-    this->setGeometry(150,170,859,533);
+    this->setGeometry(150*dpi,170*dpi,859*dpi,533*dpi);
     this->setStyleSheet("background-color:#ffffff;border:none");
     isAddingBook=true;
     defaultCoverPath=new QString(":/Images/NoCover.png");
+    newCoverPath=*defaultCoverPath;
     newBook=Q_NULLPTR;      //初始化当前添加书籍
 
     //切换模式按键
@@ -17,9 +21,9 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
     rightArrow=new QPixmap(":/Images/Icons/RightArrow.png");
     leftArrow=new QPixmap(":/Images/Icons/LeftArrow.png");
     changePatternBtn->setIcon(*rightArrow);
-    changePatternBtn->setIconSize(QSize(50,50));
+    changePatternBtn->setIconSize(QSize(50*dpi,50*dpi));
     changePatternBtn->setStyleSheet("background-color:transparent");
-    changePatternBtn->setGeometry(this->width()/2+40,5,50,50);
+    changePatternBtn->setGeometry(this->width()/2+40*dpi,5*dpi,50*dpi,50*dpi);
     connect(changePatternBtn,SIGNAL(clicked()),this,SLOT(changePattern()));
 
     //添加对话框
@@ -28,32 +32,32 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
     textPalette.setColor(QPalette::Text,Qt::gray);
 
     getTitile=new QLineEdit(this);
-    getTitile->setGeometry(100,70,400,40);
+    getTitile->setGeometry(100*dpi,70*dpi,400*dpi,40*dpi);
     getTitile->setStyleSheet("background-color:#ccffff");
     getTitile->setFont(QFont("微软雅黑",20));
     getTitile->setPalette(textPalette);
 
     getAuthor=new QLineEdit(this);
-    getAuthor->setGeometry(100,120,400,40);
+    getAuthor->setGeometry(100*dpi,120*dpi,400*dpi,40*dpi);
     getAuthor->setStyleSheet("background-color:#ccffff");
     getAuthor->setFont(QFont("微软雅黑",20));
     getAuthor->setPalette(textPalette);
 
     getPress=new QLineEdit(this);
-    getPress->setGeometry(130,170,370,40);
+    getPress->setGeometry(130*dpi,170*dpi,370*dpi,40*dpi);
     getPress->setStyleSheet("background-color:#ccffff");
     getPress->setFont(QFont("微软雅黑",20));
     getPress->setPalette(textPalette);
 
     getAmount=new QSpinBox(this);
-    getAmount->setGeometry(100,220,400,40);
+    getAmount->setGeometry(100*dpi,220*dpi,400*dpi,40*dpi);
     getAmount->setMaximum(10000);
     getAmount->setStyleSheet("background-color:#ccffff;");
     getAmount->setFont(QFont("微软雅黑",20));
     getAmount->setPalette(textPalette);
 
     getCategory=new QComboBox(this);
-    getCategory->setGeometry(100,270,400,40);
+    getCategory->setGeometry(100*dpi,270*dpi,400*dpi,40*dpi);
     getCategory->setStyleSheet("background-color:#ccffff");
     getCategory->setFont(QFont("微软雅黑",20));
     getCategory->setPalette(textPalette);
@@ -94,7 +98,7 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
 
 
     getDescription=new QTextEdit(this);
-    getDescription->setGeometry(30,370,470,150);
+    getDescription->setGeometry(30*dpi,370*dpi,470*dpi,150*dpi);
     getDescription->setStyleSheet("background-color:#ccffff");
     getDescription->setFont(QFont("微软雅黑",15));
     getDescription->setPalette(textPalette);
@@ -102,7 +106,7 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
     addBookBtn=new QPushButton(this);
     addBookBtn->setFont(QFont("微软雅黑",15));
     addBookBtn->setText("添加图书");
-    addBookBtn->setGeometry(603,473,150,40);
+    addBookBtn->setGeometry(603*dpi,473*dpi,150*dpi,40*dpi);
     addBookBtn->setStyleSheet("background-color:#ccffff");
     connect(addBookBtn,SIGNAL(clicked()),this,SLOT(addNewBook()));
 
@@ -110,7 +114,7 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
     addCompleteWindow->setText("添加成功");
     addCompleteWindow->setVisible(false);
     addCompleteWindow->setModal(true);
-    addCompleteWindow->setGeometry(220,150,addCompleteWindow->width(),addCompleteWindow->height());
+    addCompleteWindow->setGeometry(220*dpi,150*dpi,addCompleteWindow->width(),addCompleteWindow->height());
 
     //添加图片部分
     cover.load(*defaultCoverPath);
@@ -118,7 +122,7 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
     addCoverBtn=new QPushButton(this);
     addCoverBtn->setText("添加封面");
     addCoverBtn->setFont(QFont("微软雅黑",15));
-    addCoverBtn->setGeometry(603,423,150,40);
+    addCoverBtn->setGeometry(603*dpi,423*dpi,150*dpi,40*dpi);
     addCoverBtn->setStyleSheet("background-color:#ccffff");
     connect(addCoverBtn,SIGNAL(clicked()),this,SLOT(chooseCover()));
 
@@ -169,20 +173,20 @@ void BookManageWindow::paintEvent(QPaintEvent *paintEvent)
     {
         changePatternBtn->setIcon(*rightArrow);
         painter.setPen(titlePen);
-        painter.drawText(this->width()/3,45,"添加图书");
+        painter.drawText(this->width()/3,45*dpi,"添加图书");
         painter.setPen(dashLine);
-        painter.drawLine(0,60,this->width(),60);
+        painter.drawLine(0*dpi,60*dpi,this->width(),60*dpi);
         painter.setFont(elemFont);
         painter.setPen(textPen);
         //绘制表单提示字符
-        painter.drawText(30,100,"书名:");
-        painter.drawText(30,150,"作者:");
-        painter.drawText(30,200,"出版社:");
-        painter.drawText(30,250,"数量:");
-        painter.drawText(30,300,"类别");
-        painter.drawText(30,350,"简介:");
+        painter.drawText(30*dpi,100*dpi,"书名:");
+        painter.drawText(30*dpi,150*dpi,"作者:");
+        painter.drawText(30*dpi,200*dpi,"出版社:");
+        painter.drawText(30*dpi,250*dpi,"数量:");
+        painter.drawText(30*dpi,300*dpi,"类别");
+        painter.drawText(30*dpi,350*dpi,"简介:");
         //绘制封面
-        painter.drawPixmap(550,70,250,333,cover);
+        painter.drawPixmap(550*dpi,70*dpi,250*dpi,333*dpi,cover);
 
         //设置部件可见
         getTitile->setVisible(true);
@@ -197,9 +201,9 @@ void BookManageWindow::paintEvent(QPaintEvent *paintEvent)
     {
         changePatternBtn->setIcon(*leftArrow);
         painter.setPen(titlePen);
-        painter.drawText(this->width()/3,45,"删减图书");
+        painter.drawText(this->width()/3,45*dpi,"删减图书");
         painter.setPen(dashLine);
-        painter.drawLine(0,60,this->width(),60);
+        painter.drawLine(0*dpi,60*dpi,this->width(),60*dpi);
 
         //设置部件不可见
         getTitile->setVisible(false);
@@ -222,15 +226,18 @@ void BookManageWindow::changePattern()
 void BookManageWindow::chooseCover()
 {
     QUrl coverUrl=QFileDialog::getOpenFileUrl(this,tr("Choose a Cover"),tr("F:"),tr("Image(*.png *.jpg)"));
-    QString coverPath=coverUrl.path().mid(1);
-    if(!cover.load(coverPath))
+    newCoverPath=coverUrl.path().mid(1);
+    if(!cover.load(newCoverPath))
+    {
         cover.load(*defaultCoverPath);
+        newCoverPath=*defaultCoverPath;
+    }
     this->update();
 }
 
 void BookManageWindow::addNewBook()
 {
-    QString titile=getTitile->text();
+    QString title=getTitile->text();
     QString author=getAuthor->text();
     QString press=getPress->text();
     QString desp=getDescription->toPlainText();
@@ -238,13 +245,20 @@ void BookManageWindow::addNewBook()
     int amount=getAmount->value();
     if(newBook!=Q_NULLPTR)
         delete newBook;
-    newBook=new Book(titile,author,press,desp,titile,category,amount,amount,0,0);        //由于编号函数暂未确定，先置编号为titile
+    if(newCoverPath!=defaultCoverPath)
+    {
+        cover.save(coverDir+"/"+title+".png","png");
+        newCoverPath=coverDir+"/"+title+".png";
+    }
+    newBook=new Book(title,author,press,desp,title,category,amount,amount,0,0,newCoverPath);        //由于编号函数暂未确定，先置编号为titile
     add_newbook(*newBook);
     saveXml();
+    cover.load(*defaultCoverPath);
     addCompleteWindow->setVisible(true);
     getTitile->clear();
     getAuthor->clear();
     getPress->clear();
     getDescription->clear();
     getAmount->clear();
+    this->repaint();
 }

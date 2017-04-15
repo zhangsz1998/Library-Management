@@ -5,26 +5,28 @@
 #include <vector>
 #include <QVector>
 
+extern qreal dpi;
+
 BookExhibition::BookExhibition(QWidget *parent) : QMdiSubWindow(parent)
 {
     for(int i=0;i<10;i++)
     {
-        cover.push_back(QPixmap(":/Images/NoCover.png").scaled(120,160,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+        cover.push_back(QPixmap(":/Images/NoCover.png").scaled(120*dpi,160*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     }
     setWindowFlags(Qt::FramelessWindowHint);
-    this->setGeometry(150,170,859,533);
+    this->setGeometry(150*dpi,170*dpi,859*dpi,533*dpi);
     this->setStyleSheet("background-color:#ffffff;border:none");
     cursorLayer=1;
     currentPage=0;
     maxPages=0;
 
     nextPage=new ToolButton(this);
-    nextPage->setGeometry(460,500,30,30);
+    nextPage->setGeometry(460*dpi,500*dpi,30*dpi,30*dpi);
     nextPage->setIcon(QPixmap(":/Images/Icons/NextPage.png"));
     connect(nextPage,SIGNAL(clicked()),this,SLOT(toNextPage()));
 
     prePage=new ToolButton(this);
-    prePage->setGeometry(360,500,30,30);
+    prePage->setGeometry(360*dpi,500*dpi,30*dpi,30*dpi);
     prePage->setIcon(QPixmap(":/Images/Icons/PrePage.png"));
     connect(prePage,SIGNAL(clicked()),this,SLOT(toPrePage()));
 }
@@ -97,7 +99,7 @@ void BookExhibition::paintEvent(QPaintEvent *event)
     painter.setFont(titleFont);
     dashLine.setStyle(Qt::DashLine);
     painter.setPen(dashLine);
-    int h=0;
+    int h=0*dpi;
     if(books.size()>0)
         maxPages=(books.size()-1)/9;
     else
@@ -116,57 +118,57 @@ void BookExhibition::paintEvent(QPaintEvent *event)
         {
             index=i-1+currentPage*9;
             if(i<cursorLayer)
-                h+=41;
+                h+=41*dpi;
             else if(i==cursorLayer)
-                h+=41*4;
+                h+=41*4*dpi;
             else
-                h+=41;
+                h+=41*dpi;
             painter.drawLine(0,h,this->width(),h);
             if(i==cursorLayer)
             {
-                painter.drawPixmap(20,h-164+2,(this->cover)[0]);
+                painter.drawPixmap(20*dpi,h-164*dpi+2*dpi,QPixmap((this->books)[index]->getStringByTag("loc")).scaled(120,160,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
                 painter.setPen(titleText);
-                painter.drawText(20+120,h-164+30,(this->books)[index]->getStringByTag("title"));
+                painter.drawText(20*dpi+120*dpi,h-164*dpi+30*dpi,(this->books)[index]->getStringByTag("title"));
                 painter.setPen(subscript);
                 painter.setFont(authorFont);
-                painter.drawText(20+120,h-164+55,(this->books)[index]->getStringByTag("author"));
-                painter.drawText(20+120,h-164+80,(this->books)[index]->getStringByTag("press"));
+                painter.drawText((20+120)*dpi,h-164*dpi+55*dpi,(this->books)[index]->getStringByTag("author"));
+                painter.drawText(20*dpi+120*dpi,h-164*dpi+80*dpi,(this->books)[index]->getStringByTag("press"));
 
                 //打印简介
                 for(int j=0;j<despList[index].size();j++)
                 {
                     if(j==0)
-                        painter.drawText(20+430,h-164+55+20*j,despList[index].at(j));
+                        painter.drawText(20*dpi+430*dpi,h-164*dpi+55*dpi+20*j*dpi,despList[index].at(j));
                     else
-                        painter.drawText(20+400,h-164+55+20*j,despList[index].at(j));
+                        painter.drawText(20*dpi+400*dpi,h-164*dpi+55*dpi+20*j*dpi,despList[index].at(j));
                 }
             }
             else
             {
                 painter.setPen(titleText);
                 painter.setFont(titleFont);
-                painter.drawText(20,h-41+30,(this->books)[index]->getStringByTag("title"));
+                painter.drawText(20*dpi,h-41*dpi+30*dpi,(this->books)[index]->getStringByTag("title"));
             }
             painter.setPen(dashLine);
         }
     }
     painter.setPen(subscript);
     painter.setFont(subFont);
-    painter.drawText(20,520,QString("共%1条搜索结果").arg(QString::number(books.size())));
+    painter.drawText(20*dpi,520*dpi,QString("共%1条搜索结果").arg(QString::number(books.size())));
     painter.drawText(408,520,QString("%1 / %2").arg(QString::number(currentPage+1)).arg(maxPages+1));
 }
 
 void BookExhibition::mouseMoveEvent(QMouseEvent *event)
 {
     int y=(event->pos()).y();
-    if(y>=0&&y<(cursorLayer-1)*41)
+    if(y>=0&&y<(cursorLayer-1)*41*dpi)
     {
-        cursorLayer=y/41+1;
+        cursorLayer=y/(41*dpi)+1;
         update();
     }
-    else if(y>=(cursorLayer+3)*41&&y<this->height())
+    else if(y>=(cursorLayer+3)*41*dpi&&y<this->height())
     {
-        cursorLayer=y/41-2;
+        cursorLayer=y/(41*dpi)-2;
         update();
     }
     qDebug()<<currentPage<<" "<<maxPages<<" "<<books.size();
