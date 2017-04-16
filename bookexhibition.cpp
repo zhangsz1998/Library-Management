@@ -126,7 +126,7 @@ void BookExhibition::paintEvent(QPaintEvent *event)
             painter.drawLine(0,h,this->width(),h);
             if(i==cursorLayer)
             {
-                painter.drawPixmap(20*dpi,h-164*dpi+2*dpi,QPixmap((this->books)[index]->getStringByTag("loc")).scaled(120,160,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
+                painter.drawPixmap(20*dpi,h-164*dpi+2*dpi,QPixmap((this->books)[index]->getStringByTag("loc")).scaled(120*dpi,160*dpi,Qt::IgnoreAspectRatio,Qt::SmoothTransformation));
                 painter.setPen(titleText);
                 painter.drawText(20*dpi+120*dpi,h-164*dpi+30*dpi,(this->books)[index]->getStringByTag("title"));
                 painter.setPen(subscript);
