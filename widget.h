@@ -15,6 +15,7 @@
 #include "bookmanagewindow.h"
 #include <QDate>
 #include <QPainter>
+#include "bookinfowindow.h"
 
 namespace Ui {
 class Widget;
@@ -31,6 +32,7 @@ public:
 private:
     Ui::Widget *ui;
     QPoint offset;
+    int preWindowFlag;       //若前一窗口为搜索框进入则为1,为图书概览界面则为2.....
 protected:
     ToolButton* minimizeBtn;           //最小化按钮
     ToolButton* closeBtn;              //最大化按钮
@@ -43,7 +45,6 @@ protected:
 
     //以下为全体读者均有的功能
     ToolButton* reservationBtn;              //图书预定
-    ToolButton* borrowBtn;                   //图书借阅
     ToolButton* giveBackBtn;                 //图书归还
     ToolButton* overviewBtn;                 //图书概览
     ToolButton* loginBtn;                    //登录按钮
@@ -53,6 +54,7 @@ protected:
     //中央界面
     BookExhibition* bookExhibitionWindow;
     BookManageWindow* bookManagementWindow;
+    BookInfoWindow* bookInfoWindow;
     void paintEvent(QPaintEvent* event);
 
     //日期管理
@@ -66,10 +68,12 @@ protected:
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
-
-protected slots:
+public slots:
+    void showBookInfoBySearch();
     void showBookManagementWindow();
     void showSearchResult();
+    void showPreWindow();
+protected slots:
     void addDate();
     void addMonth();
 };

@@ -25,15 +25,16 @@ public:
     int maxPages;
     int currentPage;
     void refreshDesp();        //用于预处理图书的简介列表
+    Book* bookOnDisplay();       //用于获取当前放大展示的图书指针
 signals:
-
+    void bookInfoClicked();
 public slots:
     void toNextPage();
     void toPrePage();
 protected:
     void paintEvent(QPaintEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
-   // void mousePressEvent(QMouseEvent *mouseEvent);
+    void mousePressEvent(QMouseEvent *event);
 private:
     int cursorLayer;
 };

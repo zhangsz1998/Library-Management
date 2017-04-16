@@ -9,10 +9,6 @@ extern qreal dpi;
 
 BookExhibition::BookExhibition(QWidget *parent) : QMdiSubWindow(parent)
 {
-    for(int i=0;i<10;i++)
-    {
-        cover.push_back(QPixmap(":/Images/NoCover.png").scaled(120*dpi,160*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    }
     setWindowFlags(Qt::FramelessWindowHint);
     this->setGeometry(150*dpi,170*dpi,859*dpi,533*dpi);
     this->setStyleSheet("background-color:#ffffff;border:none");
@@ -82,6 +78,14 @@ void BookExhibition::refreshDesp()
         }
         despList.push_back(a);
     }
+}
+
+Book* BookExhibition::bookOnDisplay()
+{
+    if(books.size()>0)
+        return books[9*currentPage+cursorLayer-1];
+    else
+        return Q_NULLPTR;
 }
 
 void BookExhibition::paintEvent(QPaintEvent *event)
@@ -155,7 +159,7 @@ void BookExhibition::paintEvent(QPaintEvent *event)
     painter.setPen(subscript);
     painter.setFont(subFont);
     painter.drawText(20*dpi,520*dpi,QString("共%1条搜索结果").arg(QString::number(books.size())));
-    painter.drawText(408,520,QString("%1 / %2").arg(QString::number(currentPage+1)).arg(maxPages+1));
+    painter.drawText(408*dpi,520*dpi,QString("%1 / %2").arg(QString::number(currentPage+1)).arg(maxPages+1));
 }
 
 void BookExhibition::mouseMoveEvent(QMouseEvent *event)
@@ -171,9 +175,18 @@ void BookExhibition::mouseMoveEvent(QMouseEvent *event)
         cursorLayer=y/(41*dpi)-2;
         update();
     }
-    qDebug()<<currentPage<<" "<<maxPages<<" "<<books.size();
     if(currentPage<maxPages&&cursorLayer>=9)         //除尾页外每页显示9组数据,鼠标层数为10则置为9
         cursorLayer=9;
     else if(currentPage==maxPages&&cursorLayer>=(books.size()-1)%9+1)      //尾页显示books.size()%10+1组数据,鼠标层数超过则显示最后一组
         cursorLayer=(books.size()-1)%9+1;
+}
+
+void BookExhibition::mousePressEvent(QMouseEvent *event)
+{
+    if(event->button()&Qt::LeftButton)
+    {
+        int y=event->pos().y();
+        if(y>=0&&y<=492)
+            emit bookInfoClicked();
+    }
 }

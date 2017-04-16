@@ -6,6 +6,7 @@
 
 extern QDate systemDate;
 extern qreal dpi;
+extern std::vector<Book> booklist,*pbooklist;
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -59,57 +60,56 @@ Widget::Widget(QWidget *parent) :
     overviewBtn->setStyleSheet("background-color:transparent; border:none");
     overviewBtn->setGeometry(10*dpi,this->height()/6+50*dpi,120*dpi,90*dpi);
 
-    //添加图书管理按钮
-    bookManagementBtn=new ToolButton(this);
-    bookManagementBtn->setIcon(QPixmap(":/Images/Icons/BooksManagementButton.png"));
-    bookManagementBtn->setIconSize(QSize(120*dpi,80*dpi));
-    bookManagementBtn->setStyleSheet("background-color:transparent; border:none");
-    bookManagementBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*5*dpi,120*dpi,90*dpi);
-
-    //添加读者管理按钮
-    readerManagementBtn=new ToolButton(this);
-    readerManagementBtn->setIcon(QPixmap(":/Images/Icons/ReaderManagementButton.png"));
-    readerManagementBtn->setIconSize(QSize(120*dpi,80*dpi));
-    readerManagementBtn->setStyleSheet("background-color:transparent; border:none");
-    readerManagementBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*4*dpi,120*dpi,90*dpi);
-
-    //添加借书按钮
-    borrowBtn=new ToolButton(this);
-    borrowBtn->setIcon(QPixmap(":/Images/Icons/BorrowBooksButton.png"));
-    borrowBtn->setIconSize(QSize(120*dpi,80*dpi));
-    borrowBtn->setStyleSheet("background-color:transparent; border:none");
-    borrowBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*dpi,120*dpi,90*dpi);
-
     //添加还书按钮
     giveBackBtn=new ToolButton(this);
     giveBackBtn->setIcon(QPixmap(":/Images/Icons/ReturnBooksButton.png"));
     giveBackBtn->setIconSize(QSize(120*dpi,80*dpi));
     giveBackBtn->setStyleSheet("background-color:transparent; border:none");
-    giveBackBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*2*dpi,120*dpi,90*dpi);
+    giveBackBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*dpi,120*dpi,90*dpi);
 
     //添加个人信息按钮
     personalInfoBtn=new ToolButton(this);
     personalInfoBtn->setIcon(QPixmap(":/Images/Icons/PersonalInfoButton.png"));
     personalInfoBtn->setIconSize(QSize(120*dpi,80*dpi));
     personalInfoBtn->setStyleSheet("background-color:transparent; border:none");
-    personalInfoBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*3*dpi,120*dpi,90*dpi);
+    personalInfoBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*2*dpi,120*dpi,90*dpi);
+
+    //添加读者管理按钮
+    readerManagementBtn=new ToolButton(this);
+    readerManagementBtn->setIcon(QPixmap(":/Images/Icons/ReaderManagementButton.png"));
+    readerManagementBtn->setIconSize(QSize(120*dpi,80*dpi));
+    readerManagementBtn->setStyleSheet("background-color:transparent; border:none");
+    readerManagementBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*3*dpi,120*dpi,90*dpi);
+
+    //添加图书管理按钮
+    bookManagementBtn=new ToolButton(this);
+    bookManagementBtn->setIcon(QPixmap(":/Images/Icons/BooksManagementButton.png"));
+    bookManagementBtn->setIconSize(QSize(120*dpi,80*dpi));
+    bookManagementBtn->setStyleSheet("background-color:transparent; border:none");
+    bookManagementBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*4*dpi,120*dpi,90*dpi);
 
     //添加中央窗口
     bookExhibitionWindow=new BookExhibition(this);
     bookExhibitionWindow->setVisible(false);
+    connect(bookExhibitionWindow,SIGNAL(bookInfoClicked()),this,SLOT(showBookInfoBySearch()));
+
     bookManagementWindow=new BookManageWindow(this);
     bookManagementWindow->setVisible(false);
     connect(bookManagementBtn,SIGNAL(clicked()),this,SLOT(showBookManagementWindow()));
 
+    bookInfoWindow=new BookInfoWindow(this);
+    bookInfoWindow->setVisible(false);
+    connect(bookInfoWindow->goBackBtn,SIGNAL(clicked()),this,SLOT(showPreWindow()));
+
     //日期相关
     changeDateBtn1=new ToolButton(this);
-    changeDateBtn1->setGeometry(200,85,20,20);
+    changeDateBtn1->setGeometry(200*dpi,85*dpi,20*dpi,20*dpi);
     changeDateBtn1->setStyleSheet("background-color:transparent; border:none");
     changeDateBtn1->setIcon(QPixmap(":/Images/Icons/RightArrow2.png"));
     connect(changeDateBtn1,SIGNAL(clicked()),this,SLOT(addDate()));
 
     changeDateBtn2=new ToolButton(this);
-    changeDateBtn2->setGeometry(220,85,20,20);
+    changeDateBtn2->setGeometry(220*dpi,85*dpi,20*dpi,20*dpi);
     changeDateBtn2->setIcon(QPixmap(":/Images/Icons/DoubleRightArrow2.png"));
     changeDateBtn2->setStyleSheet("background-color:transparent; border:none");
     connect(changeDateBtn2,SIGNAL(clicked()),this,SLOT(addMonth()));
@@ -124,7 +124,6 @@ Widget::~Widget()
 
     delete bookManagementBtn;           //图书管理
     delete readerManagementBtn;         //读者管理
-    delete borrowBtn;                   //图书借阅
     delete giveBackBtn;                 //图书归还
     delete overviewBtn;                 //图书概览
     delete loginBtn;                    //登录按钮
@@ -180,22 +179,50 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+void Widget::showBookInfoBySearch()
+{
+    this->bookInfoWindow->loadBook(this->bookExhibitionWindow->bookOnDisplay());
+    this->bookInfoWindow->setVisible(true);
+    this->bookExhibitionWindow->setVisible(false);
+    this->bookManagementWindow->setVisible(false);
+}
+
 void Widget::showBookManagementWindow()
 {
+    this->bookInfoWindow->setVisible(false);
     this->bookExhibitionWindow->setVisible(false);
-    this->bookManagementWindow->show();
+    this->bookManagementWindow->setVisible(true);
 }
 
 void Widget::showSearchResult()    //在此添加查询结果
 {
+    this->preWindowFlag=1;
     this->bookManagementWindow->setVisible(false);
     std::vector<Book*> &books=(this->bookExhibitionWindow->books);
     int mode=this->searchBar->mode();
     books=search(this->searchBar->lineEdit->text(),mode);
-    this->bookExhibitionWindow->show();
     this->bookExhibitionWindow->currentPage=0;
+
+    this->bookInfoWindow->setVisible(false);
+    this->bookExhibitionWindow->setVisible(true);
+    this->bookManagementWindow->setVisible(false);
+
     bookExhibitionWindow->refreshDesp();
     this->bookExhibitionWindow->repaint();
+}
+
+void Widget::showPreWindow()
+{
+    if(preWindowFlag==1)
+    {
+        bookExhibitionWindow->setVisible(true);
+        bookManagementWindow->setVisible(false);
+        bookInfoWindow->setVisible(false);
+    }
+    else
+    {
+
+    }
 }
 
 void Widget::mouseReleaseEvent(QMouseEvent *event)

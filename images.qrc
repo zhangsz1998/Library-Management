@@ -5,7 +5,6 @@
         <file>Icons/Message.png</file>
         <file>Icons/OverviewButton.png</file>
         <file>Icons/BooksManagementButton.png</file>
-        <file>Icons/BorrowBooksButton.png</file>
         <file>Icons/ReturnBooksButton.png</file>
         <file>Icons/ReaderManagementButton.png</file>
         <file>Icons/PersonalInfoButton.png</file>
@@ -17,5 +16,8 @@
         <file>Icons/DownArrow.png</file>
         <file>Icons/NextPage.png</file>
         <file>Icons/PrePage.png</file>
+        <file>Icons/borrowbookBtn2.png</file>
+        <file>Icons/ReservationBtn.png</file>
+        <file>Icons/Goback.png</file>
     </qresource>
 </RCC>
