@@ -11,11 +11,13 @@ AuthorityCheckWindow::AuthorityCheckWindow(QWidget *parent):
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(close()));
 
     getPassWord=new QLineEdit(this);
+    getPassWord->setGeometry(90*dpi,90*dpi,300*dpi,40*dpi);
     getPassWord->setStyleSheet("background-color:#ccffff");
     getPassWord->setFont(QFont("微软雅黑",20));
     getPassWord->setEchoMode(QLineEdit::Password);
 
     confirmBtn=new ToolButton(this,QColor(153,204,255,255),QColor(0,153,255,255));
+    confirmBtn->setGeometry(400*dpi,90*dpi,80*dpi,40*dpi);
     confirmBtn->setFont(QFont("微软雅黑",15));
     confirmBtn->setText("确认");
     connect(this->confirmBtn,SIGNAL(clicked()),this,SLOT(isAdmin()));
