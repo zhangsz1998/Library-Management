@@ -31,7 +31,7 @@ public:
 
 std::vector<Book> * getXml();//Get Xml from file to vector <Book>
 void saveXml();//save Xml from file to vector <Book>
-void update();
+void fileUpdate();
 void add_newbook(Book &);
 QString convert2id();
 bool match(Book & b,QRegExp & rx,int mode);		

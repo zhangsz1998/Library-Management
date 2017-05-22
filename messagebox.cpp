@@ -15,7 +15,7 @@ MessageBox::MessageBox(QWidget *parent) :
     closeBtn->setIcon(closePix);
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(close()));
 
-    confirmBtn=new ToolButton(this,QColor(204,255,204,255),QColor(0,153,255,255));
+    confirmBtn=new ToolButton(this,QColor(153,204,255,255),QColor(0,153,255,255));
     confirmBtn->setPlainColor(QColor(153,204,255,255));
     confirmBtn->setGeometry(75*dpi,130*dpi,100*dpi,20*dpi);
     confirmBtn->setFont(QFont("微软雅黑"));

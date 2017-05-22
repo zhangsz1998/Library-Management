@@ -98,6 +98,7 @@ Widget::Widget(QWidget *parent) :
     connect(bookManagementBtn,SIGNAL(clicked()),this,SLOT(showBookManagementWindow()));
 
     bookInfoWindow=new BookInfoWindow(this);
+    bookInfoWindow->loadBook(&(booklist.at(1)));
     bookInfoWindow->setVisible(false);
     connect(bookInfoWindow->goBackBtn,SIGNAL(clicked()),this,SLOT(showPreWindow()));
 
@@ -236,10 +237,6 @@ void Widget::drawDate()
     QPainter painter(this);\
     QPen pen(Qt::white);
     painter.setPen(pen);
-//    QFont digitFont("Kozuka Gothic Pr6N EL",40);
-//    QFont thFont("Kozuka Gothic Pr6N EL",20);
-//    QFont weekFont("Kozuka Gothic Pr6N EL",30);
-//    QFont monthFont("Kozuka Gothic Pr6N EL",12);
     QFont digitFont("Gothic",40);
     QFont thFont("Gothic",20);
     QFont weekFont("Gothic",30);

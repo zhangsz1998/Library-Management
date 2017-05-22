@@ -175,6 +175,7 @@ void BookExhibition::mouseMoveEvent(QMouseEvent *event)
         cursorLayer=y/(41*dpi)-2;
         update();
     }
+    qDebug()<<currentPage<<" "<<maxPages<<" "<<books.size();
     if(currentPage<maxPages&&cursorLayer>=9)         //除尾页外每页显示9组数据,鼠标层数为10则置为9
         cursorLayer=9;
     else if(currentPage==maxPages&&cursorLayer>=(books.size()-1)%9+1)      //尾页显示books.size()%10+1组数据,鼠标层数超过则显示最后一组

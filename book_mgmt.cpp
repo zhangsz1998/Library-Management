@@ -201,7 +201,7 @@ void add_newbook(Book & book){
     booklist.push_back(book);
 }
 
-void update(){
+void fileUpdate(){
     for (std::vector<Book>::iterator it=booklist.begin();it!=booklist.end();++it)
         if (it->is_modf && it->order < list.count())
             list.at(it->order) = it->toDom();
@@ -210,7 +210,7 @@ void update(){
 
 void saveXml(){
     QFile file(bookInfoPath);
-    update();
+    fileUpdate();
     if (!file.open(QIODevice::WriteOnly|QIODevice::Truncate)) return;
     QTextStream out(&file);
     doc.save(out,2);

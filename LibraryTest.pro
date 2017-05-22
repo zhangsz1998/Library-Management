@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     book_mgmt.cpp \
     messagebox.cpp\
     reader_mgmt.cpp \
-    bookinfowindow.cpp
+    bookinfowindow.cpp \
+    authoritycheckwindow.cpp \
+    getreasonwindow.cpp
 
 HEADERS  += widget.h \
     searchbar.h \
@@ -32,7 +34,9 @@ HEADERS  += widget.h \
     book_mgmt.h \
     messagebox.h\
     reader_mgmt.h \
-    bookinfowindow.h
+    bookinfowindow.h \
+    authoritycheckwindow.h \
+    getreasonwindow.h
 
 FORMS    += widget.ui
 
