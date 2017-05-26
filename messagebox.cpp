@@ -7,10 +7,12 @@ MessageBox::MessageBox(QWidget *parent) :
 {
     this->setWindowFlags(Qt::FramelessWindowHint);
     this->setGeometry(0*dpi,0*dpi,250*dpi,175*dpi);
+    this->setStyleSheet("border:1px;border-style:solid;border-color:black;border-radius: 4px");
     this->icon=Q_NULLPTR;
 
     closeBtn= new ToolButton(this,QColor(0,0,0,0),QColor(0,153,255,255));
-    closeBtn->setGeometry(220*dpi,0*dpi,30*dpi,30*dpi);
+    closeBtn->setEnterColor("#ff6666");
+    closeBtn->setGeometry(220*dpi,1*dpi,29*dpi,29*dpi);
     QPixmap closePix=style()->standardPixmap(QStyle::SP_TitleBarCloseButton);
     closeBtn->setIcon(closePix);
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(close()));
@@ -34,6 +36,11 @@ MessageBox::~MessageBox()
 void MessageBox::setText(QString text)
 {
     (this->text)=text;
+}
+
+QString MessageBox::getText()
+{
+    return text;
 }
 
 void MessageBox::setIcon(QPixmap pixmap)

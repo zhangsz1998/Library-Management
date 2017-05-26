@@ -39,32 +39,39 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
 
     getTitile=new QLineEdit(this);
     getTitile->setGeometry(100*dpi,70*dpi,400*dpi,40*dpi);
-    getTitile->setStyleSheet("background-color:#ccffff");
+    getTitile->setStyleSheet("background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius:10px;padding: 4px");
     getTitile->setFont(QFont("微软雅黑",20));
     getTitile->setPalette(textPalette);
 
     getAuthor=new QLineEdit(this);
     getAuthor->setGeometry(100*dpi,120*dpi,400*dpi,40*dpi);
-    getAuthor->setStyleSheet("background-color:#ccffff");
+    getAuthor->setStyleSheet("background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius:10px;padding: 4px");
     getAuthor->setFont(QFont("微软雅黑",20));
     getAuthor->setPalette(textPalette);
 
     getPress=new QLineEdit(this);
     getPress->setGeometry(130*dpi,170*dpi,370*dpi,40*dpi);
-    getPress->setStyleSheet("background-color:#ccffff");
+    getPress->setStyleSheet("background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius:10px;padding: 4px");
     getPress->setFont(QFont("微软雅黑",20));
     getPress->setPalette(textPalette);
 
     getAmount=new QSpinBox(this);
     getAmount->setGeometry(100*dpi,220*dpi,400*dpi,40*dpi);
     getAmount->setMaximum(10000);
-    getAmount->setStyleSheet("background-color:#ccffff;");
+    getAmount->setStyleSheet(
+                "QSpinBox{background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius: 4px}"
+                "QSpinBox::down-button{width:30px;height:30px;image:url(:/Images/Icons/DownArrow.png);}"
+                "QSpinBox::up-button{width:30px;height:30px;image:url(:/Images/Icons/UpArrow.png);}}"
+                );
     getAmount->setFont(QFont("微软雅黑",20));
     getAmount->setPalette(textPalette);
 
     getCategory=new QComboBox(this);
     getCategory->setGeometry(100*dpi,270*dpi,400*dpi,40*dpi);
-    getCategory->setStyleSheet("background-color:#ccffff");
+    getCategory->setStyleSheet(
+                "QComboBox{background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius: 4px}"
+                "QComboBox::drop-down{width:40px;height:40px;image:url(:/Images/Icons/DownArrow.png);}"
+                );
     getCategory->setFont(QFont("微软雅黑",20));
     getCategory->setPalette(textPalette);
     QList<QString> categoryList;
@@ -105,7 +112,7 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
 
     getDescription=new QTextEdit(this);
     getDescription->setGeometry(30*dpi,370*dpi,470*dpi,150*dpi);
-    getDescription->setStyleSheet("background-color:#ccffff");
+    getDescription->setStyleSheet("background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius:10px;padding: 4px");
     getDescription->setFont(QFont("微软雅黑",15));
     getDescription->setPalette(textPalette);
 
@@ -132,7 +139,7 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
 
     getId=new QLineEdit(this);
     getId->setGeometry(200*dpi,210*dpi,400*dpi,40*dpi);
-    getId->setStyleSheet("background-color:#ccffff");
+    getId->setStyleSheet("background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius:10px;padding: 4px");
     getId->setFont(QFont("微软雅黑",20));
     getId->setPalette(textPalette);
     getId->setPlaceholderText("请输入待修改图书编号");
@@ -468,7 +475,7 @@ void BookManageWindow::searchToEdit()
          getAuthor->setText(bookEditing->getStringByTag("author"));
          getPress->setText(bookEditing->getStringByTag("press"));
          getAmount->setValue(bookEditing->getIntByTag("amount"));
-         getCategory->setCurrentIndex(getCategoryIndex(bookEditing->getStringByTag("category"))); 
+         getCategory->setCurrentIndex(getCategoryIndex(bookEditing->getStringByTag("category")));
          getDescription->setText(bookEditing->getStringByTag("description"));   //这句话迷之运行特别慢.....
          cover.load(bookEditing->getStringByTag("loc"));
          newCoverPath=bookEditing->getStringByTag("loc");
@@ -510,7 +517,7 @@ void BookManageWindow::changeBookInfo()
     }
     if(changeInfoPattern==Delete)
     {
-        booklist.erase(booklist.begin()+(&(*bookEditing)-&booklist[0]));
+        saveXml();
         popUp->setText("删除成功");
         popUp->setVisible(true);
         getTitile->clear();
@@ -525,7 +532,15 @@ void BookManageWindow::changeBookInfo()
 
 void BookManageWindow::checkAuthority()
 {
-    checkWindow->setVisible(true);
+    if(changeInfoPattern==Delete&&bookEditing->getIntByTag("amount")!=bookEditing->getIntByTag("total"))
+    {
+        popUp->setText("图书已被外借！\n");
+        popUp->setVisible(true);
+    }
+    else
+    {
+        checkWindow->setVisible(true);
+    }
 }
 
 void BookManageWindow::notAuthorized()

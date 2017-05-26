@@ -79,7 +79,6 @@ protected:
     void paintEvent(QPaintEvent *paintEvent);
 
     QStringList modifyReasons;
-
 signals:
 
 public slots:
@@ -93,7 +92,6 @@ public slots:
     void isAuthorized();        //验证成功
     void nowEditing();    //修改模式为修改
     void nowDeleting();       //修改模式为删除
-
 };
 
 #endif // BOOKMANAGEWINDOW_H

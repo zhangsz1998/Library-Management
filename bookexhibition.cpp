@@ -46,7 +46,7 @@ void BookExhibition::refreshDesp()
     despList.clear();
     if(books.size()==0)
         return;
-    for(int i=0;i<books.size();i++)
+    for(unsigned int i=0;i<books.size();i++)
     {
         QVector<QString> a;
         QString desc=(this->books)[i]->getStringByTag("description");

@@ -5,6 +5,7 @@
 
 QDomDocument doc;         //
 std::vector<Book> booklist,*pbooklist;
+QDomNode firstNode;
 QDomNodeList list;
 
 //数据文件目录与路径,均在main.cpp中作为全局变量定义
@@ -14,6 +15,8 @@ extern QString readerInfoPath;
 extern QString coverDir;
 
 Book::Book(){
+    is_modf = false;
+    is_delete = false;
 }
 Book & Book::operator= (const Book & dul){
     if (this == &dul) return *this;
@@ -44,6 +47,8 @@ Book::Book(const QDomNode a){
     this->refer_count = list.at(8).toElement().text().toInt();
     this->bor_count = list.at(9).toElement().text().toInt();
     this->loc = list.at(10).toElement().text();
+    is_modf = false;
+    is_delete = false;
 }
 
 Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &c, int am, int to, int rc, int bc,QString &lc){
@@ -58,6 +63,8 @@ Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &
     this->refer_count =rc;
     this->bor_count = bc;
     this->loc = lc;
+    is_modf = false;
+    is_delete = false;
 }
 
 QDomElement Book::toDom(){
@@ -80,6 +87,7 @@ QDomElement Book::toDom(){
     QDomElement amNode =doc.createElement(QString("amount"));
     text = doc.createTextNode(QString::number(amount));
     amNode.appendChild(text);
+    //qDebug() << amNode.toElement().text();
     QDomElement toNode = doc.createElement(QString("total"));
     text = doc.createTextNode(QString::number(total));
     toNode.appendChild(text);
@@ -175,7 +183,7 @@ std::vector<Book> * getXml(){
         return NULL;
     }
     file.close();
-    QDomNode firstNode = doc.documentElement();
+    firstNode = doc.documentElement();
     list = firstNode.childNodes();
     for (int i=0;i<list.count();i++){
         booklist.push_back(Book(list.at(i)));
@@ -203,8 +211,22 @@ void add_newbook(Book & book){
 
 void fileUpdate(){
     for (std::vector<Book>::iterator it=booklist.begin();it!=booklist.end();++it)
-        if (it->is_modf && it->order < list.count())
-            list.at(it->order) = it->toDom();
+        if (it->is_delete) {
+            firstNode.removeChild(firstNode.childNodes().at(it->order));
+            for (std::vector<Book>::iterator ir=it;ir!=booklist.end();ir++)
+                ir->order--;
+            booklist.erase(it);
+        }
+        else if (it->is_modf && it->order < list.count()){
+            QDomNode tmp = it->toDom();
+            firstNode.replaceChild(tmp,firstNode.childNodes().at(it->order));
+            list = firstNode.childNodes();
+            //qDebug()<<st.childNodes().at(5).toElement().text();
+            //qDebug()<<firstNode.childNodes().at(it->order).childNodes().at(5).toElement().text();
+            //firstNode.childNodes().at(it->order).childNodes().at(5).setNodeValue("32");;
+            //qDebug()<<firstNode.childNodes().at(it->order).childNodes().at(5).toElement().text();
+
+        }
         else doc.documentElement().appendChild(it->toDom());
 }
 
@@ -216,25 +238,25 @@ void saveXml(){
     doc.save(out,2);
     file.close();
 }
-		
-bool match(Book & b,QRegExp &rx,int mode){		
-    if (mode == 1) return rx.exactMatch(b.getStringByTag("title"));		
-    else if (mode == 2) return rx.exactMatch(b.getStringByTag("author"));		
-    else if (mode == 3) return rx.exactMatch(b.getStringByTag("press"));		
-    else if (mode == 4) return rx.exactMatch(b.getStringByTag("description"));		
-    else if (mode == 5) return rx.exactMatch(b.getStringByTag("id"));		
-    else if (mode == 6) return rx.exactMatch(b.getStringByTag("category"));		
-    else return ((rx.exactMatch(b.getStringByTag("title"))) || (rx.exactMatch(b.getStringByTag("author"))) || (rx.exactMatch(b.getStringByTag("press"))) || (rx.exactMatch(b.getStringByTag("description"))) || (rx.exactMatch(b.getStringByTag("id"))) || (rx.exactMatch(b.getStringByTag("category"))));		
-}		
-		
-std::vector<Book *> search(QString kw,int mode){		
-    QString pattern("^.*");		
-    for (int i=0;i<kw.size();i++)		
-        pattern += "("+kw[i]+").*";		
-    pattern += "$";		
-    QRegExp rx(pattern);		
-    std::vector<Book *> res;		
-    for (int i=0;i<booklist.size();i++)		
-        if (match(booklist[i],rx,mode)) res.push_back(&booklist[i]);		
-    return res;		
+
+bool match(Book & b,QRegExp &rx,int mode){
+    if (mode == 1) return rx.exactMatch(b.getStringByTag("title"));
+    else if (mode == 2) return rx.exactMatch(b.getStringByTag("author"));
+    else if (mode == 3) return rx.exactMatch(b.getStringByTag("press"));
+    else if (mode == 4) return rx.exactMatch(b.getStringByTag("description"));
+    else if (mode == 5) return rx.exactMatch(b.getStringByTag("id"));
+    else if (mode == 6) return rx.exactMatch(b.getStringByTag("category"));
+    else return ((rx.exactMatch(b.getStringByTag("title"))) || (rx.exactMatch(b.getStringByTag("author"))) || (rx.exactMatch(b.getStringByTag("press"))) || (rx.exactMatch(b.getStringByTag("description"))) || (rx.exactMatch(b.getStringByTag("id"))) || (rx.exactMatch(b.getStringByTag("category"))));
+}
+
+std::vector<Book *> search(QString kw,int mode){
+    QString pattern("^.*");
+    for (int i=0;i<kw.size();i++)
+        pattern += "("+kw[i]+").*";
+    pattern += "$";
+    QRegExp rx(pattern);
+    std::vector<Book *> res;
+    for (int i=0;i<booklist.size();i++)
+        if (match(booklist[i],rx,mode)) res.push_back(&booklist[i]);
+    return res;
 }

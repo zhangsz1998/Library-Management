@@ -8,6 +8,8 @@
 #include "book_mgmt.h"
 #include <QVector>
 #include "toolbutton.h"
+#include "borrowform.h"
+#include "messagebox.h"
 
 class BookInfoWindow : public QMdiSubWindow
 {
@@ -21,10 +23,13 @@ public:
     ToolButton *reservationBtn;  //预约按钮
     ToolButton *goBackBtn;      //返回按钮
     loadBook(Book* book);        //更新所需展示的图书信息
+    BorrowForm* borrowForm;
+    MessageBox* popUp;
     ~BookInfoWindow();
+
 signals:
 public slots:
-
+    void showBorrowForm();
 protected:
     void paintEvent(QPaintEvent *paintEvent);
 };

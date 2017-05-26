@@ -13,6 +13,7 @@ private:
     QString title,author,press,desp,id,category,loc;
     int amount,total,refer_count,bor_count;
 public:
+    int is_delete;
     int order;
     Book();
     bool is_modf;

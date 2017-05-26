@@ -14,11 +14,16 @@
         <file>Icons/RightArrow.png</file>
         <file>Icons/DoubleRightArrow2.png</file>
         <file>Icons/RightArrow2.png</file>
-        <file>Icons/DownArrow.png</file>
         <file>Icons/NextPage.png</file>
         <file>Icons/PrePage.png</file>
         <file>Icons/borrowbookBtn2.png</file>
         <file>Icons/ReservationBtn.png</file>
         <file>Icons/Goback.png</file>
+        <file>Icons/DownArrow.png</file>
+        <file>Icons/UpArrow.png</file>
+        <file>Icons/Login.png</file>
+        <file>background.png</file>
+        <file>Icons/Student.png</file>
+        <file>Icons/Teacher.png</file>
     </qresource>
 </RCC>

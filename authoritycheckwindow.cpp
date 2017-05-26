@@ -3,16 +3,18 @@ AuthorityCheckWindow::AuthorityCheckWindow(QWidget *parent):
     QDialog(parent)
 {
     this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setStyleSheet("border:1px;border-style:solid;border-radius:4px;border-color:black");
 
     closeBtn= new ToolButton(this,QColor(0,0,0,0),QColor(0,153,255,255));
-    closeBtn->setGeometry(470*dpi,0*dpi,30*dpi,30*dpi);
+    closeBtn->setEnterColor("#ff6666");
+    closeBtn->setGeometry(470*dpi,1*dpi,29*dpi,29*dpi);
     QPixmap closePix=style()->standardPixmap(QStyle::SP_TitleBarCloseButton);
     closeBtn->setIcon(closePix);
     connect(closeBtn,SIGNAL(clicked()),this,SLOT(close()));
 
     getPassWord=new QLineEdit(this);
     getPassWord->setGeometry(90*dpi,90*dpi,300*dpi,40*dpi);
-    getPassWord->setStyleSheet("background-color:#ccffff");
+    getPassWord->setStyleSheet("background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius:10px;padding: 4px");
     getPassWord->setFont(QFont("微软雅黑",20));
     getPassWord->setEchoMode(QLineEdit::Password);
 

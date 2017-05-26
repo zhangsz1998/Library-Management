@@ -16,6 +16,9 @@
 #include <QDate>
 #include <QPainter>
 #include "bookinfowindow.h"
+#include "loginwindow.h"
+#include "messagebox.h"
+#include "personalinfowindow.h"
 
 namespace Ui {
 class Widget;
@@ -34,6 +37,7 @@ private:
     QPoint offset;
     int preWindowFlag;       //若前一窗口为搜索框进入则为1,为图书概览界面则为2.....
 protected:
+    bool isloged;
     ToolButton* minimizeBtn;           //最小化按钮
     ToolButton* closeBtn;              //最大化按钮
     ToolButton* messageCentreBtn;            //消息中心按钮
@@ -48,14 +52,18 @@ protected:
     ToolButton* giveBackBtn;                 //图书归还
     ToolButton* overviewBtn;                 //图书概览
     ToolButton* loginBtn;                    //登录按钮
+    ToolButton* logoutBtn;                   //注销登录按钮
     ToolButton* personalInfoBtn;             //个人信息
-
+    MessageBox* popUp;
 
     //中央界面
     BookExhibition* bookExhibitionWindow;
     BookManageWindow* bookManagementWindow;
     BookInfoWindow* bookInfoWindow;
+    PersonalInfoWindow* personalInfoWindow;
+    LoginWindow* loginWindow;
     void paintEvent(QPaintEvent* event);
+
 
     //日期管理
     ToolButton* changeDateBtn1;                //日期前进一天
@@ -71,8 +79,13 @@ protected:
 public slots:
     void showBookInfoBySearch();
     void showBookManagementWindow();
+    void showPersonalInfoWindow();
     void showSearchResult();
+    void showLoginWindow();
+    void showLogoutWindow();
     void showPreWindow();
+    void userLogedIn();
+    void tryToLogOut();
 protected slots:
     void addDate();
     void addMonth();

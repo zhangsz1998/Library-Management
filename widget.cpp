@@ -3,10 +3,12 @@
 #include "widget.h"
 #include <QDebug>
 #include "book_mgmt.h"
+#include <QPainter>
 
 extern QDate systemDate;
 extern qreal dpi;
 extern std::vector<Book> booklist,*pbooklist;
+extern Reader* activereader;
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -28,6 +30,7 @@ Widget::Widget(QWidget *parent) :
 
     //添加关闭按钮
     closeBtn=new ToolButton(this);
+    closeBtn->setEnterColor(QColor("#ff6666"));
     QPixmap closePix=style()->standardPixmap(QStyle::SP_TitleBarCloseButton);
     closeBtn->setIcon(closePix);
     closeBtn->setGeometry(this->width()-40*dpi,0*dpi,40*dpi,40*dpi);
@@ -52,6 +55,26 @@ Widget::Widget(QWidget *parent) :
     loginBtn->setFont(QFont("幼圆"));
     loginBtn->setGeometry(this->width()-4*40*dpi,0*dpi,40*dpi,40*dpi);
     loginBtn->setStyleSheet("background-color:transparent;");
+    connect(loginBtn,SIGNAL(clicked()),this,SLOT(showLoginWindow()));
+
+
+    //添加注销按钮
+    logoutBtn=new ToolButton(this);
+    logoutBtn->setText("注销");
+    logoutBtn->setFont(QFont("幼圆"));
+    logoutBtn->setGeometry(this->width()-4*40*dpi,0*dpi,40*dpi,40*dpi);
+    logoutBtn->setStyleSheet("background-color:transparent;");
+    logoutBtn->setVisible(false);
+    connect(logoutBtn,SIGNAL(clicked()),this,SLOT(showLogoutWindow()));
+
+    //注销弹窗
+    popUp=new MessageBox(this);
+    popUp->setVisible(false);
+    popUp->setGeometry(this->width()/3,this->height()/3,popUp->width(),popUp->height());
+    connect(popUp->confirmBtn,SIGNAL(clicked()),this,SLOT(tryToLogOut()));
+
+    isloged=false;
+
 
     //添加图书概览按钮
     overviewBtn=new ToolButton(this);
@@ -73,6 +96,7 @@ Widget::Widget(QWidget *parent) :
     personalInfoBtn->setIconSize(QSize(120*dpi,80*dpi));
     personalInfoBtn->setStyleSheet("background-color:transparent; border:none");
     personalInfoBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*2*dpi,120*dpi,90*dpi);
+    connect(personalInfoBtn,SIGNAL(clicked()),this,SLOT(showPersonalInfoWindow()));
 
     //添加读者管理按钮
     readerManagementBtn=new ToolButton(this);
@@ -102,6 +126,13 @@ Widget::Widget(QWidget *parent) :
     bookInfoWindow->setVisible(false);
     connect(bookInfoWindow->goBackBtn,SIGNAL(clicked()),this,SLOT(showPreWindow()));
 
+    personalInfoWindow=new PersonalInfoWindow(this);
+    personalInfoWindow->setVisible(false);
+
+    //添加登录界面
+    loginWindow=new LoginWindow(this);
+    loginWindow->setVisible(false);
+    connect(loginWindow,SIGNAL(logedIn()),this,SLOT(userLogedIn()));
     //日期相关
     changeDateBtn1=new ToolButton(this);
     changeDateBtn1->setGeometry(200*dpi,85*dpi,20*dpi,20*dpi);
@@ -139,6 +170,9 @@ Widget::~Widget()
 void Widget::paintEvent(QPaintEvent *event)
 {
     //设置背景图片
+    QPainter painter(this);
+    painter.setFont(QFont("微软雅黑",10));
+
     this->setAutoFillBackground(true);
     QPixmap pixmap(":/Images/WidgetBackground.jpg");
     QPixmap fitpixmap=pixmap.scaled(this->width(),this->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -149,6 +183,18 @@ void Widget::paintEvent(QPaintEvent *event)
     //重新计算按钮的位置
     minimizeBtn->setGeometry(this->width()-2*40*dpi,0*dpi,40*dpi,40*dpi);
     closeBtn->setGeometry(this->width()-40*dpi,0*dpi,40*dpi,40*dpi);
+
+    if(isloged)
+    {
+        loginBtn->setVisible(false);
+        logoutBtn->setVisible(true);
+        painter.drawText(this->width()-250*dpi,25*dpi,"欢迎，"+activereader->getStringByTag("name"));
+    }
+    else
+    {
+        loginBtn->setVisible(true);
+        logoutBtn->setVisible(false);
+    }
 
     drawDate();
 }
@@ -186,13 +232,35 @@ void Widget::showBookInfoBySearch()
     this->bookInfoWindow->setVisible(true);
     this->bookExhibitionWindow->setVisible(false);
     this->bookManagementWindow->setVisible(false);
+    personalInfoWindow->setVisible(false);
 }
 
 void Widget::showBookManagementWindow()
 {
     this->bookInfoWindow->setVisible(false);
     this->bookExhibitionWindow->setVisible(false);
+    personalInfoWindow->setVisible(false);
+    if(activereader==Q_NULLPTR)
+    {
+        popUp->setText("请先登录");
+        popUp->setVisible(true);
+        return;
+    }
     this->bookManagementWindow->setVisible(true);
+}
+
+void Widget::showPersonalInfoWindow()
+{
+    this->bookInfoWindow->setVisible(false);
+    this->bookExhibitionWindow->setVisible(false);
+    this->bookManagementWindow->setVisible(false);
+    if(activereader==Q_NULLPTR)
+    {
+        popUp->setText("请先登录");
+        popUp->setVisible(true);
+        return;
+    }
+    personalInfoWindow->setVisible(true);
 }
 
 void Widget::showSearchResult()    //在此添加查询结果
@@ -205,11 +273,23 @@ void Widget::showSearchResult()    //在此添加查询结果
     this->bookExhibitionWindow->currentPage=0;
 
     this->bookInfoWindow->setVisible(false);
-    this->bookExhibitionWindow->setVisible(true);
     this->bookManagementWindow->setVisible(false);
+    personalInfoWindow->setVisible(false);
+    this->bookExhibitionWindow->setVisible(true);
 
     bookExhibitionWindow->refreshDesp();
     this->bookExhibitionWindow->repaint();
+}
+
+void Widget::showLoginWindow()
+{
+    loginWindow->setVisible(true);
+}
+
+void Widget::showLogoutWindow()
+{
+    popUp->setText("您真的要注销么？");
+    popUp->setVisible(true);
 }
 
 void Widget::showPreWindow()
@@ -223,6 +303,22 @@ void Widget::showPreWindow()
     else
     {
 
+    }
+}
+
+void Widget::userLogedIn()
+{
+    isloged=true;
+    update();
+}
+
+void Widget::tryToLogOut()
+{
+    if(popUp->getText()=="您真的要注销么？");
+    {
+        isloged=false;
+        activereader=Q_NULLPTR;
+        update();
     }
 }
 

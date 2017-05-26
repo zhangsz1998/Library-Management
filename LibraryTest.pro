@@ -24,7 +24,11 @@ SOURCES += main.cpp\
     reader_mgmt.cpp \
     bookinfowindow.cpp \
     authoritycheckwindow.cpp \
-    getreasonwindow.cpp
+    getreasonwindow.cpp \
+    loginwindow.cpp \
+    signupwindow.cpp \
+    borrowform.cpp \
+    personalinfowindow.cpp
 
 HEADERS  += widget.h \
     searchbar.h \
@@ -36,7 +40,11 @@ HEADERS  += widget.h \
     reader_mgmt.h \
     bookinfowindow.h \
     authoritycheckwindow.h \
-    getreasonwindow.h
+    getreasonwindow.h \
+    loginwindow.h \
+    signupwindow.h \
+    borrowform.h \
+    personalinfowindow.h
 
 FORMS    += widget.ui
 
