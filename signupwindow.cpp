@@ -1,5 +1,6 @@
 #include "signupwindow.h"
 extern qreal dpi;
+extern Reader * activereader;
 
 SignUpWindow::SignUpWindow(QWidget *parent) : QDialog(parent)
 {
@@ -91,6 +92,9 @@ void SignUpWindow::addNewUser()
     {
         saveXml2();
         popUp->setText("注册成功");
+        int tmp;
+        activereader = sign_in(id,passWord,tmp);
+        emit signedUp();
         popUp->setVisible(true);
     }
     else

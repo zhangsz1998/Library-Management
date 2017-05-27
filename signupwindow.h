@@ -27,7 +27,7 @@ protected:
     MessageBox* popUp;
     void paintEvent(QPaintEvent *event);
 signals:
-
+    void signedUp();
 public slots:
     void addNewUser();
 };

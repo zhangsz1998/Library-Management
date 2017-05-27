@@ -1,6 +1,5 @@
 #include "bookinfowindow.h"
 #include <QPainter>
-#include "borrowform.h"
 
 extern qreal dpi;
 extern Reader* activereader;
@@ -15,6 +14,7 @@ BookInfoWindow::BookInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     borrowBtn->setGeometry(60*dpi,323*dpi,150*dpi,40*dpi);
     borrowBtn->setIcon(QPixmap(":/Images/Icons/borrowbookBtn2.png"));
     borrowBtn->setIconSize(QSize(150*dpi,40*dpi));
+    connect(borrowBtn,SIGNAL(clicked()),this,SLOT(borrowEvent()));
 
     reservationBtn=new ToolButton(this);
     reservationBtn->setGeometry(60*dpi,373*dpi,150*dpi,40*dpi);
@@ -26,12 +26,12 @@ BookInfoWindow::BookInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     goBackBtn->setIcon(QPixmap(":/Images/Icons/Goback.png"));
     goBackBtn->setIconSize(QSize(40*dpi,40*dpi));
 
-    borrowForm=new BorrowForm(this);
+    borrowForm = new BorrowForm(this);
     borrowForm->setVisible(false);
 
     popUp=new MessageBox(this);
+    popUp->setGeometry(220*dpi,150*dpi,popUp->width(),popUp->height());
     popUp->setVisible(false);
-
 }
 
 BookInfoWindow::loadBook(Book *book)
@@ -63,21 +63,6 @@ BookInfoWindow::~BookInfoWindow()
     delete borrowBtn;
     delete goBackBtn;
     delete reservationBtn;
-}
-
-void BookInfoWindow::showBorrowForm()
-{
-    if(activereader!=Q_NULLPTR)
-    {
-        borrowForm->setVisible(true);
-        popUp->setVisible("登陆成功");
-        this->close();
-    }
-    else
-    {
-        popUp->setText("请先登录");
-        popUp->setVisible(true);
-    }
 }
 
 void BookInfoWindow::paintEvent(QPaintEvent *paintEvent)
@@ -134,3 +119,16 @@ void BookInfoWindow::paintEvent(QPaintEvent *paintEvent)
 
 }
 
+void BookInfoWindow::borrowEvent(){
+    if(activereader!=Q_NULLPTR)
+    {
+        borrowForm->setBook(book);
+        borrowForm->setReader(activereader);
+        borrowForm->setVisible(true);
+    }
+    else
+    {
+        popUp->setText("请先登录");
+        popUp->setVisible(true);
+    }
+}

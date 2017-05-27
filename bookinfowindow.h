@@ -2,13 +2,13 @@
 #define BOOKINFOWINDOW_H
 
 /*该类用于图书详细信息的展示*/
-
 #include <QWidget>
 #include <QMdiSubWindow>
 #include "book_mgmt.h"
+#include "reader_mgmt.h"
 #include <QVector>
-#include "toolbutton.h"
 #include "borrowform.h"
+#include "toolbutton.h"
 #include "messagebox.h"
 
 class BookInfoWindow : public QMdiSubWindow
@@ -20,16 +20,17 @@ public:
     QPixmap cover;       //图书的封面
     QVector<QString> despList;    //图书简介分行
     ToolButton *borrowBtn;       //借阅按钮
+    BorrowForm *borrowForm; //jieyuebiaodan
     ToolButton *reservationBtn;  //预约按钮
     ToolButton *goBackBtn;      //返回按钮
     loadBook(Book* book);        //更新所需展示的图书信息
-    BorrowForm* borrowForm;
-    MessageBox* popUp;
+    MessageBox *popUp;
     ~BookInfoWindow();
-
 signals:
 public slots:
-    void showBorrowForm();
+protected slots:
+    void borrowEvent(void);
+
 protected:
     void paintEvent(QPaintEvent *paintEvent);
 };

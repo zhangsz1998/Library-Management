@@ -67,11 +67,6 @@ Widget::Widget(QWidget *parent) :
     logoutBtn->setVisible(false);
     connect(logoutBtn,SIGNAL(clicked()),this,SLOT(showLogoutWindow()));
 
-    //注销弹窗
-    popUp=new MessageBox(this);
-    popUp->setVisible(false);
-    popUp->setGeometry(this->width()/3,this->height()/3,popUp->width(),popUp->height());
-    connect(popUp->confirmBtn,SIGNAL(clicked()),this,SLOT(tryToLogOut()));
 
     isloged=false;
 
@@ -145,6 +140,13 @@ Widget::Widget(QWidget *parent) :
     changeDateBtn2->setIcon(QPixmap(":/Images/Icons/DoubleRightArrow2.png"));
     changeDateBtn2->setStyleSheet("background-color:transparent; border:none");
     connect(changeDateBtn2,SIGNAL(clicked()),this,SLOT(addMonth()));
+
+    //注销弹窗,该弹窗用于注销或提示登录
+    popUp=new MessageBox(this);
+    popUp->setVisible(false);
+    popUp->setGeometry(this->width()/3,this->height()/3,popUp->width(),popUp->height());
+    connect(popUp->confirmBtn,SIGNAL(clicked()),this,SLOT(tryToLogOut()));
+
 }
 
 Widget::~Widget()
@@ -226,6 +228,12 @@ void Widget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+void Widget::mouseReleaseEvent(QMouseEvent *event)
+{
+    //恢复鼠标形状
+    QApplication::restoreOverrideCursor();
+}
+
 void Widget::showBookInfoBySearch()
 {
     this->bookInfoWindow->loadBook(this->bookExhibitionWindow->bookOnDisplay());
@@ -237,9 +245,6 @@ void Widget::showBookInfoBySearch()
 
 void Widget::showBookManagementWindow()
 {
-    this->bookInfoWindow->setVisible(false);
-    this->bookExhibitionWindow->setVisible(false);
-    personalInfoWindow->setVisible(false);
     if(activereader==Q_NULLPTR)
     {
         popUp->setText("请先登录");
@@ -251,9 +256,6 @@ void Widget::showBookManagementWindow()
 
 void Widget::showPersonalInfoWindow()
 {
-    this->bookInfoWindow->setVisible(false);
-    this->bookExhibitionWindow->setVisible(false);
-    this->bookManagementWindow->setVisible(false);
     if(activereader==Q_NULLPTR)
     {
         popUp->setText("请先登录");
@@ -322,11 +324,6 @@ void Widget::tryToLogOut()
     }
 }
 
-void Widget::mouseReleaseEvent(QMouseEvent *event)
-{
-    //恢复鼠标形状
-    QApplication::restoreOverrideCursor();
-}
 
 void Widget::drawDate()
 {

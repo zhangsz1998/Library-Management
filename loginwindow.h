@@ -41,6 +41,7 @@ public slots:
     void checkPassWord();
     void showSignUpWindow();
     void tryToClose();
+    void userSignedUp();
 };
 
 #endif // LOGINWINDOW_H

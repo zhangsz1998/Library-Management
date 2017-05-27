@@ -53,6 +53,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QDialog(parent)
 
     signUpWindow=new SignUpWindow(this);
     signUpWindow->setVisible(false);
+    connect(signUpWindow,SIGNAL(signedUp()),this,SLOT(userSignedUp()));
 
 }
 
@@ -130,6 +131,11 @@ void LoginWindow::tryToClose()
     {
         this->close();
     }
+}
+
+void LoginWindow::userSignedUp()
+{
+    emit logedIn();
 }
 
 

@@ -44,7 +44,7 @@ public:
 };
 
 Reader* sign_in(QString &id,QString &pa, int &flag);
-void borrow(Book & b,Reader & r,QDate & cur, QDate & exp);
+void borrow(Book * b,Reader * r,QDate & cur, QDate & exp);
 std::vector<Reader> * getXml2();
 int add_newreader(Reader & reader);
 void update2();

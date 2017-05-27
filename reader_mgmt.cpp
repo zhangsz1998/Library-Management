@@ -103,8 +103,8 @@ QDomElement Reader::toDom(){
     QDomText idText,stText,expText;
     for (int i=0;i<bor_num;i++){
         idText = doc2.createTextNode(bor_list[i].id);
-        stText = doc2.createTextNode(bor_list[i].st.toString("yyyyMMDD"));
-        expText = doc2.createTextNode(bor_list[i].exp.toString("yyyyMMDD"));
+        stText = doc2.createTextNode(bor_list[i].st.toString("yyyyMMdd"));
+        expText = doc2.createTextNode(bor_list[i].exp.toString("yyyyMMdd"));
         borId = doc2.createElement(QString("id"));
         borId.appendChild(idText);
         borSt = doc2.createElement(QString("bor_time"));
@@ -121,7 +121,7 @@ QDomElement Reader::toDom(){
     QDomElement resvId,resvExp;
     for (int i=0;i<resv_num;i++){
         idText = doc2.createTextNode(resvs[i].id);
-        expText = doc2.createTextNode(resvs[i].d.toString("yyyyMMDD"));
+        expText = doc2.createTextNode(resvs[i].d.toString("yyyyMMdd"));
         resvId = doc2.createElement(QString("id"));
         resvId.appendChild(idText);
         resvExp = doc2.createElement(QString("resv_time"));
@@ -252,16 +252,18 @@ void saveXml2(){
     file.close();
 }
 
-void borrow(Book &b, Reader &r, QDate &cur, QDate &exp){
-    b.DecIntByTag("amount");
-    b.IncIntByTag("bor_count");
-    r.IncIntByTag("bor_num");
-    int num = r.getIntByTag("bor_num");
-    r.bor_list[num].id = b.getStringByTag("id");
-    r.bor_list[num].st = cur;
-    r.bor_list[num].exp = exp;
-
+void borrow(Book *b, Reader *r, QDate &cur, QDate &exp){
+    b->DecIntByTag("amount");
+    b->IncIntByTag("bor_count");
+    r->IncIntByTag("bor_num");
+    int num = r->getIntByTag("bor_num");
+    r->bor_list[num-1].id = b->getStringByTag("id");
+    r->bor_list[num-1].st = cur;
+    r->bor_list[num-1].exp = exp;
 }
+
+
+void resvation(Book * b,Reader *r,QDate &cur);
 
 Reader* sign_in(QString &id,QString &pa, int &flag){
     for (int i=0;i<readerlist.size();i++)
@@ -275,11 +277,8 @@ Reader* sign_in(QString &id,QString &pa, int &flag){
                 return Q_NULLPTR;
             }
         }
-        else{
-            flag = 3;   //找不到用户
-            return Q_NULLPTR;
-        }
-
+    flag = 3;   //找不到用户
+    return Q_NULLPTR;
 }
 
 void returning(Book &b, Reader &r, QDate &cur){
