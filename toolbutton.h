@@ -8,6 +8,7 @@
 
 class ToolButton : public QToolButton
 {
+    Q_OBJECT
 public:
     ToolButton(QWidget* parent,QColor p_color,QColor e_color);
     ToolButton(QWidget *parent);

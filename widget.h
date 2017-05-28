@@ -9,16 +9,19 @@
 #include <QMouseEvent>
 #include <QPushButton>
 #include <QPushButton>
-#include "searchbar.h"
-#include "toolbutton.h"
-#include "bookexhibition.h"
-#include "bookmanagewindow.h"
 #include <QDate>
 #include <QPainter>
+#include <QHeaderView>
+
 #include "bookinfowindow.h"
 #include "loginwindow.h"
 #include "messagebox.h"
 #include "personalinfowindow.h"
+#include "searchbar.h"
+#include "toolbutton.h"
+#include "bookexhibition.h"
+#include "bookmanagewindow.h"
+#include "returnwindow.h"
 
 namespace Ui {
 class Widget;
@@ -62,6 +65,7 @@ protected:
     BookInfoWindow* bookInfoWindow;
     PersonalInfoWindow* personalInfoWindow;
     LoginWindow* loginWindow;
+    ReturnWindow* returnWindow;
     void paintEvent(QPaintEvent* event);
 
 
@@ -84,6 +88,7 @@ public slots:
     void showLoginWindow();
     void showLogoutWindow();
     void showPreWindow();
+    void showReturnWindow();
     void userLogedIn();
     void tryToLogOut();
 protected slots:

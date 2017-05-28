@@ -49,5 +49,8 @@ std::vector<Reader> * getXml2();
 int add_newreader(Reader & reader);
 void update2();
 void saveXml2();
+void returning(int order,Reader *r, QDate &cur);
+void reservation(Book * b, Reader * r,QDate &cur);
+void daycheck();
 
 #endif // READER_MGMT_H

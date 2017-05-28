@@ -57,7 +57,6 @@ Widget::Widget(QWidget *parent) :
     loginBtn->setStyleSheet("background-color:transparent;");
     connect(loginBtn,SIGNAL(clicked()),this,SLOT(showLoginWindow()));
 
-
     //添加注销按钮
     logoutBtn=new ToolButton(this);
     logoutBtn->setText("注销");
@@ -123,6 +122,10 @@ Widget::Widget(QWidget *parent) :
 
     personalInfoWindow=new PersonalInfoWindow(this);
     personalInfoWindow->setVisible(false);
+
+    returnWindow=new ReturnWindow(this);
+    returnWindow->setVisible(false);
+    connect(giveBackBtn,SIGNAL(clicked()),this,SLOT(showReturnWindow()));
 
     //添加登录界面
     loginWindow=new LoginWindow(this);
@@ -237,9 +240,11 @@ void Widget::mouseReleaseEvent(QMouseEvent *event)
 void Widget::showBookInfoBySearch()
 {
     this->bookInfoWindow->loadBook(this->bookExhibitionWindow->bookOnDisplay());
-    this->bookInfoWindow->setVisible(true);
-    this->bookExhibitionWindow->setVisible(false);
-    this->bookManagementWindow->setVisible(false);
+    bookExhibitionWindow->setVisible(false);
+    bookManagementWindow->setVisible(false);
+    bookInfoWindow->setVisible(true);
+    personalInfoWindow->setVisible(false);
+    returnWindow->setVisible(false);
     personalInfoWindow->setVisible(false);
 }
 
@@ -251,7 +256,11 @@ void Widget::showBookManagementWindow()
         popUp->setVisible(true);
         return;
     }
-    this->bookManagementWindow->setVisible(true);
+    bookExhibitionWindow->setVisible(false);
+    bookManagementWindow->setVisible(true);
+    bookInfoWindow->setVisible(false);
+    personalInfoWindow->setVisible(false);
+    returnWindow->setVisible(false);
 }
 
 void Widget::showPersonalInfoWindow()
@@ -262,22 +271,27 @@ void Widget::showPersonalInfoWindow()
         popUp->setVisible(true);
         return;
     }
+    bookExhibitionWindow->setVisible(false);
+    bookManagementWindow->setVisible(false);
+    bookInfoWindow->setVisible(false);
     personalInfoWindow->setVisible(true);
+    returnWindow->setVisible(false);
 }
 
 void Widget::showSearchResult()    //在此添加查询结果
 {
     this->preWindowFlag=1;
-    this->bookManagementWindow->setVisible(false);
     std::vector<Book*> &books=(this->bookExhibitionWindow->books);
     int mode=this->searchBar->mode();
     books=search(this->searchBar->lineEdit->text(),mode);
     this->bookExhibitionWindow->currentPage=0;
-
-    this->bookInfoWindow->setVisible(false);
-    this->bookManagementWindow->setVisible(false);
+    bookExhibitionWindow->setVisible(true);
+    bookManagementWindow->setVisible(false);
+    bookInfoWindow->setVisible(false);
     personalInfoWindow->setVisible(false);
-    this->bookExhibitionWindow->setVisible(true);
+    returnWindow->setVisible(false);
+
+    personalInfoWindow->setVisible(false);
 
     bookExhibitionWindow->refreshDesp();
     this->bookExhibitionWindow->repaint();
@@ -308,6 +322,24 @@ void Widget::showPreWindow()
     }
 }
 
+void Widget::showReturnWindow()
+{
+    if(activereader==Q_NULLPTR)
+    {
+        popUp->setText("请先登录");
+        popUp->setVisible(true);
+        return;
+    }
+    else
+    {
+        bookExhibitionWindow->setVisible(false);
+        bookManagementWindow->setVisible(false);
+        bookInfoWindow->setVisible(false);
+        personalInfoWindow->setVisible(false);
+        returnWindow->setVisible(true);
+    }
+}
+
 void Widget::userLogedIn()
 {
     isloged=true;
@@ -320,6 +352,8 @@ void Widget::tryToLogOut()
     {
         isloged=false;
         activereader=Q_NULLPTR;
+        bookManagementWindow->setVisible(false);
+        personalInfoWindow->setVisible(false);
         update();
     }
 }

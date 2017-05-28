@@ -14,6 +14,7 @@
 #include <QDate>
 #include <QScreen>
 #include "reader_mgmt.h"
+#include <QStyleFactory>
 
 QString dataDir;       //数据所在目录
 QString bookInfoPath;  //图书信息文件路径

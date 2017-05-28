@@ -14,7 +14,9 @@ private:
     int amount,total,refer_count,bor_count;
 public:
     int is_delete;
+    int is_resv;
     int order;
+    QDate resv_date;
     Book();
     bool is_modf;
     Book & operator=(const Book &);

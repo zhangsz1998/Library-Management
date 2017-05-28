@@ -3,6 +3,7 @@
 
 extern qreal dpi;
 extern Reader* activereader;
+extern QDate systemDate;
 
 BookInfoWindow::BookInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
 {
@@ -20,6 +21,7 @@ BookInfoWindow::BookInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     reservationBtn->setGeometry(60*dpi,373*dpi,150*dpi,40*dpi);
     reservationBtn->setIcon(QPixmap(":/Images/Icons/ReservationBtn.png"));
     reservationBtn->setIconSize(QSize(150*dpi,40*dpi));
+    connect(reservationBtn,SIGNAL(clicked()),this,SLOT(resvEvent()));
 
     goBackBtn=new ToolButton(this);
     goBackBtn->setGeometry(15*dpi,480*dpi,40*dpi,40*dpi);
@@ -28,6 +30,9 @@ BookInfoWindow::BookInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
 
     borrowForm = new BorrowForm(this);
     borrowForm->setVisible(false);
+
+    resvForm = new ResvForm(this);
+    resvForm->setVisible(false);
 
     popUp=new MessageBox(this);
     popUp->setGeometry(220*dpi,150*dpi,popUp->width(),popUp->height());
@@ -100,8 +105,8 @@ void BookInfoWindow::paintEvent(QPaintEvent *paintEvent)
     painter.drawText(320*dpi,80*dpi,book->getStringByTag("author"));
     painter.drawText(345*dpi,110*dpi,book->getStringByTag("press"));
     painter.drawText(320*dpi,140*dpi,book->getStringByTag("id"));
-    painter.drawText(345*dpi,170*dpi,QString::number(book->getIntByTag("amount")));
-
+    if (book->getIntByTag("amount")) painter.drawText(345*dpi,170*dpi,QString::number(book->getIntByTag("amount")));
+    else painter.drawText(345*dpi,170*dpi,QString("暂无库存"));
     painter.setPen(labelPen);
     painter.setFont(despFont);
     painter.drawText(270*dpi,210*dpi,"内容简介");
@@ -122,12 +127,41 @@ void BookInfoWindow::paintEvent(QPaintEvent *paintEvent)
 void BookInfoWindow::borrowEvent(){
     if(activereader!=Q_NULLPTR)
     {
-        borrowForm->setBook(book);
-        borrowForm->setReader(activereader);
-        borrowForm->setVisible(true);
+        int num = activereader->getIntByTag("bor_num");
+        int count = 0;
+        for (int i=0;i<num;i++)
+            if (activereader->bor_list[i].id == book->getStringByTag("id")) count++;
+        if (count > 2){
+            popUp->setText("借书数量过多");
+            popUp->setVisible(true);
+        } else if (book->getIntByTag("amount") == 1 && book->is_resv && systemDate <= book->resv_date){
+            popUp->setText("该图书处于预定状态，请与" + book->resv_date.toString("yyyy年MM月dd日") + "后再次查询");
+            popUp->setVisible(true);
+        }
+        else if (book->getIntByTag("amount") == 0){
+            popUp->setText("暂无库存");
+            popUp->setVisible(true);
+        }
+        else {
+            borrowForm->setBook(book);
+            borrowForm->setReader(activereader);
+            borrowForm->setVisible(true);
+        }
     }
     else
     {
+        popUp->setText("请先登录");
+        popUp->setVisible(true);
+    }
+}
+
+void BookInfoWindow::resvEvent(){
+    if (activereader!=Q_NULLPTR){
+        resvForm->setBook(book);
+        resvForm->setReader(activereader);
+        resvForm->setVisible(true);
+    }
+    else {
         popUp->setText("请先登录");
         popUp->setVisible(true);
     }

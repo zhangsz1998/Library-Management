@@ -5,9 +5,16 @@
 #include <QMdiSubWindow>
 #include <vector>
 #include <QPainter>
+#include <QTextEdit>
+#include <QScrollArea>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QHeaderView>
 
 #include "reader_mgmt.h"
 #include "toolbutton.h"
+#include "messagewidget.h"
+#include "book_mgmt.h"
 
 extern Reader* activereader;
 extern qreal dpi;
@@ -15,8 +22,8 @@ extern qreal dpi;
 enum ExhibitPattern
 {
     PersonalInfo,
-    BookInfo,
-    Messages
+    BorrowInfo,
+    ReserveInfo
 };
 
 class PersonalInfoWindow : public QMdiSubWindow
@@ -26,28 +33,30 @@ public:
     PersonalInfoWindow(QWidget *parent = 0);
 protected:
     ToolButton* showPersonalInfoBtn;
-    ToolButton* showBookInfoBtn;
-    ToolButton* showMessagesBtn;
-    ExhibitPattern pattern;
+    ToolButton* showBorrowInfoBtn;
+    ToolButton* showReserveInfoBtn;
 
-    QString name;
-    QString id;
-    QString agency;
-    QString credit;
-    int illegal_count;
+    ExhibitPattern pattern;
 
     std::vector<QString> coverPath_bor;
     std::vector<QString> bookTitle_bor;
     std::vector<QString> coverPath_rev;
     std::vector<QString> bookTitle_rev;
+    MessageWidget* messageArea;
+
+    QScrollArea* area;
+    QTableWidget* borrowInfo;
+    QTableWidget* reserveInfo;
+    QTableWidgetItem* borrowItem[20][3];
+    QTableWidgetItem* reserveItem[20][2];
 
     void paintEvent(QPaintEvent *paintEvent);
 signals:
 
 public slots:
     void showPersonalInfo();
-    void showBookInfo();
-    void showMessagesInfo();
+    void showBorrowInfo();
+    void showReserveInfo();
 };
 
 #endif // PERSONALINFOWINDOW_H

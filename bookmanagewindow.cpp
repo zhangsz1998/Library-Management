@@ -442,7 +442,7 @@ void BookManageWindow::addNewBook()
     if(newCoverPath!=defaultCoverPath)
     {
         cover.save(coverDir+"/"+title+".png","png");
-        newCoverPath=coverDir+"/"+title+".png";
+        newCoverPath="/"+title+".png";
     }
     newBook=new Book(title,author,press,desp,title,category,amount,amount,0,0,newCoverPath);        //由于编号函数暂未确定，先置编号为titile
     add_newbook(*newBook);

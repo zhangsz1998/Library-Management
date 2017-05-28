@@ -31,6 +31,8 @@ Book & Book::operator= (const Book & dul){
     this->refer_count = dul.refer_count;
     this->bor_count = dul.bor_count;
     this->loc = dul.loc;
+    this->resv_date = dul.resv_date;
+    this->is_resv = dul.is_resv;
     return *this;
 }
 
@@ -46,7 +48,15 @@ Book::Book(const QDomNode a){
     this->category =list.at(7).toElement().text();
     this->refer_count = list.at(8).toElement().text().toInt();
     this->bor_count = list.at(9).toElement().text().toInt();
-    this->loc = list.at(10).toElement().text();
+    QString tmp = list.at(10).toElement().text();
+    if (tmp[0]==':') this->loc = tmp;
+    else this->loc = coverDir + tmp;
+    tmp = list.at(11).toElement().text();
+    this->resv_date = QDate::fromString(tmp,"yyyy-MM-dd");
+    if (tmp=="1970-01-01")
+        this->is_resv = false;
+    else
+        this->is_resv = true;
     is_modf = false;
     is_delete = false;
 }
@@ -64,6 +74,7 @@ Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &
     this->bor_count = bc;
     this->loc = lc;
     is_modf = false;
+    is_resv = false;
     is_delete = false;
 }
 
@@ -101,8 +112,13 @@ QDomElement Book::toDom(){
     text = doc.createTextNode(QString::number(bor_count));
     bcNode.appendChild(text);
     QDomElement lcNode = doc.createElement(QString("loc"));
-    text = doc.createTextNode(loc);
+    if (loc[0]==':') text = doc.createTextNode(loc);
+    else text = doc.createTextNode(loc.right(loc.length()-coverDir.length()));
     lcNode.appendChild(text);
+    QDomElement rdNode = doc.createElement(QString("resv_date"));
+    if (is_resv) text = doc.createTextNode(resv_date.toString("yyyy-MM-dd"));
+        else text = doc.createTextNode(QString("1970-01-01"));
+    rdNode.appendChild(text);
     QDomElement new_book = doc.createElement(QString("book"));
     new_book.appendChild(titleNode);
     new_book.appendChild(authorNode);
@@ -115,6 +131,7 @@ QDomElement Book::toDom(){
     new_book.appendChild(rcNode);
     new_book.appendChild(bcNode);
     new_book.appendChild(lcNode);
+    new_book.appendChild(rdNode);
     return new_book;
 }
 
@@ -227,7 +244,8 @@ void fileUpdate(){
             //qDebug()<<firstNode.childNodes().at(it->order).childNodes().at(5).toElement().text();
 
         }
-        else doc.documentElement().appendChild(it->toDom());
+       else if (it->order >= list.count())
+            doc.documentElement().appendChild(it->toDom());
 }
 
 void saveXml(){

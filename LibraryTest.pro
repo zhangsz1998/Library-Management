@@ -28,11 +28,13 @@ SOURCES += main.cpp\
     loginwindow.cpp \
     signupwindow.cpp \
     borrowform.cpp \
-    personalinfowindow.cpp
+    personalinfowindow.cpp \
+    messagewidget.cpp \
+    resvform.cpp \
+    returnwindow.cpp
 
 HEADERS  += widget.h \
     searchbar.h \
-    toolbutton.h \
     bookexhibition.h \
     bookmanagewindow.h \
     book_mgmt.h \
@@ -44,7 +46,11 @@ HEADERS  += widget.h \
     loginwindow.h \
     signupwindow.h \
     borrowform.h \
-    personalinfowindow.h
+    personalinfowindow.h \
+    messagewidget.h \
+    resvform.h \
+    returnwindow.h \
+    toolbutton.h
 
 FORMS    += widget.ui
 
