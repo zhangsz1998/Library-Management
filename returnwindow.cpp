@@ -6,6 +6,7 @@ ReturnWindow::ReturnWindow(QWidget *parent) : QMdiSubWindow(parent)
     this->setGeometry(150*dpi,170*dpi,859*dpi,533*dpi);
     this->setStyleSheet("background-color:#ffffff;border:none");
 
+
     QStringList columnLabels;
     QFont labelFont("微软雅黑",12);
     columnLabels<<"已借书籍"<<"借书时间"<<"期望归还时间"<<" ";
@@ -31,9 +32,9 @@ ReturnWindow::ReturnWindow(QWidget *parent) : QMdiSubWindow(parent)
     {
         returnBtn[i]=new ToolButton(this);
         returnBtn[i]->setGeometry(650*dpi,10+40*i*dpi,30*dpi,30*dpi);
-        returnBtn[i]->setText("归还");
+        returnBtn[i]->setText("归还/续借/挂失");
         returnBtn[i]->setVisible(false);
-        connect(returnBtn[i],SIGNAL(clicked()),this,SLOT(bookReturned()));
+        connect(returnBtn[i],SIGNAL(clicked()),this,SLOT(bookHandling()));
         returnBtn[i]->setObjectName(QString::number(i));
     }
     for(int i=0;i<20;i++)
@@ -51,7 +52,13 @@ ReturnWindow::ReturnWindow(QWidget *parent) : QMdiSubWindow(parent)
         borrowTable->setItem(i,2,item[i][2]);
         borrowTable->setCellWidget(i,3,returnBtn[i]);
     }
-   borrowTable->setVisible(true);
+    borrowTable->setVisible(true);
+    //选择操作模式：归还续借、挂失
+    handleWindow=new BookHandleWindow(this);
+    handleWindow->setVisible(false);
+    connect(handleWindow,SIGNAL(returnPatternConfirmed()),this,SLOT(bookReturning()));
+    connect(handleWindow,SIGNAL(renewPatternConfirmed()),this,SLOT(bookRenewing()));
+    connect(handleWindow,SIGNAL(lossPatternConfirmed()),this,SLOT(bookLost()));
 }
 
 void ReturnWindow::paintEvent(QPaintEvent *paintEvent)
@@ -80,14 +87,45 @@ void ReturnWindow::paintEvent(QPaintEvent *paintEvent)
         returnBtn[i]->setVisible(true);
     for(int i=l;i<20;i++)
         returnBtn[i]->setVisible(false);
+    popUp=new MessageBox(this);
+    popUp->setGeometry(this->width()/3,this->height()/4,popUp->width(),popUp->height());
+    popUp->setVisible(false);
 }
 
-void ReturnWindow::bookReturned()
+void ReturnWindow::bookHandling()
 {
     ToolButton* clickedButton=qobject_cast<ToolButton*>(sender());
     int i=(clickedButton->objectName()).toInt();
-    returning(i,activereader,systemDate);
+    order=i;
+    handleWindow->setVisible(true);
+}
+
+void ReturnWindow::bookReturning()
+{
+    handleWindow->setVisible(true);
+    returning(order,activereader,systemDate);
+    popUp->setText("归还成功");
+    popUp->setVisible(true);
     saveXml();
     saveXml2();
-    repaint();
+    update();
+}
+
+void ReturnWindow::bookRenewing()
+{
+    int state=renew(order,activereader,systemDate);
+    if(state==2)
+        popUp->setText("抱歉，图书已被预订");
+    else if(state==1)
+        popUp->setText("图书超期，无法续借");
+    else if(state==3)
+        popUp->setText("无需续借");
+    else
+        popUp->setText("续借成功");
+    popUp->setVisible(true);
+}
+
+void ReturnWindow::bookLost()
+{
+
 }

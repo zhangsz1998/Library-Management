@@ -23,6 +23,7 @@ QString coverDir;      //图书封面所在目录,用于存储图书封面
 QDate systemDate;      //程序当前日期
 qreal dpi;
 Reader* activereader=Q_NULLPTR;
+bool userMessageChanged=false;
 
 int main(int argc, char *argv[])
 {

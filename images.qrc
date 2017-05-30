@@ -25,5 +25,7 @@
         <file>background.png</file>
         <file>Icons/Student.png</file>
         <file>Icons/Teacher.png</file>
+        <file>SignUpBackground.png</file>
+        <file>Icons/haveMessage.png</file>
     </qresource>
 </RCC>

@@ -31,7 +31,12 @@ SOURCES += main.cpp\
     personalinfowindow.cpp \
     messagewidget.cpp \
     resvform.cpp \
-    returnwindow.cpp
+    returnwindow.cpp \
+    bookhandlewindow.cpp \
+    rechargewindow.cpp \
+    readersearchwindow.cpp \
+    bookoverviewwindow.cpp \
+    label.cpp
 
 HEADERS  += widget.h \
     searchbar.h \
@@ -50,7 +55,12 @@ HEADERS  += widget.h \
     messagewidget.h \
     resvform.h \
     returnwindow.h \
-    toolbutton.h
+    toolbutton.h \
+    bookhandlewindow.h \
+    rechargewindow.h \
+    readersearchwindow.h \
+    bookoverviewwindow.h \
+    label.h
 
 FORMS    += widget.ui
 

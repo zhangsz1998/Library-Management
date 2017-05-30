@@ -31,7 +31,6 @@ Book & Book::operator= (const Book & dul){
     this->refer_count = dul.refer_count;
     this->bor_count = dul.bor_count;
     this->loc = dul.loc;
-    this->resv_date = dul.resv_date;
     this->is_resv = dul.is_resv;
     return *this;
 }
@@ -52,8 +51,7 @@ Book::Book(const QDomNode a){
     if (tmp[0]==':') this->loc = tmp;
     else this->loc = coverDir + tmp;
     tmp = list.at(11).toElement().text();
-    this->resv_date = QDate::fromString(tmp,"yyyy-MM-dd");
-    if (tmp=="1970-01-01")
+    if (tmp=="0")
         this->is_resv = false;
     else
         this->is_resv = true;
@@ -61,7 +59,7 @@ Book::Book(const QDomNode a){
     is_delete = false;
 }
 
-Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &c, int am, int to, int rc, int bc,QString &lc){
+Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &c, int am, int to, int rc, int bc,QString &lc,int is_r){
     this->title = t;
     this->author = a;
     this->press = p;
@@ -73,8 +71,8 @@ Book::Book(QString &t, QString &a, QString &p, QString &d, QString &i, QString &
     this->refer_count =rc;
     this->bor_count = bc;
     this->loc = lc;
+    this->is_resv = is_r;
     is_modf = false;
-    is_resv = false;
     is_delete = false;
 }
 
@@ -115,9 +113,9 @@ QDomElement Book::toDom(){
     if (loc[0]==':') text = doc.createTextNode(loc);
     else text = doc.createTextNode(loc.right(loc.length()-coverDir.length()));
     lcNode.appendChild(text);
-    QDomElement rdNode = doc.createElement(QString("resv_date"));
-    if (is_resv) text = doc.createTextNode(resv_date.toString("yyyy-MM-dd"));
-        else text = doc.createTextNode(QString("1970-01-01"));
+    QDomElement rdNode = doc.createElement(QString("is_resv"));
+    if (is_resv) text = doc.createTextNode(QString("1"));
+        else text = doc.createTextNode(QString("0"));
     rdNode.appendChild(text);
     QDomElement new_book = doc.createElement(QString("book"));
     new_book.appendChild(titleNode);
@@ -153,7 +151,7 @@ int Book::getIntByTag(QString tag){
     if (tag == "bor_count") return bor_count;
 }
 
-void Book::setStringByTag(QString tag, QString &text){
+void Book::setStringByTag(QString tag, QString text){
     is_modf = true;
     if (tag == "title") this->title = text;
     if (tag == "author") this->author = text;

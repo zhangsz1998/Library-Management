@@ -7,6 +7,8 @@
 #include <QHeaderView>
 #include "toolbutton.h"
 #include "reader_mgmt.h"
+#include "bookhandlewindow.h"
+#include "messagebox.h"
 
 extern Reader* activereader;
 extern qreal dpi;
@@ -20,12 +22,18 @@ public:
     QTableWidget* borrowTable;
     QTableWidgetItem* item[20][3];
     ToolButton* returnBtn[20];
+    BookHandleWindow* handleWindow;
+    MessageBox* popUp;
+    int order;   //当前操作的图书
 protected:
     void paintEvent(QPaintEvent *paintEvent);
 signals:
 
 public slots:
-    void bookReturned();
+    void bookHandling();
+    void bookReturning();
+    void bookRenewing();
+    void bookLost();
 };
 
 #endif // RETURNWINDOW_H

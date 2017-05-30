@@ -12,7 +12,7 @@ public:
     MessageWidget(QWidget *parent = 0);
     void loadMessage(QString m_msg[],int num);
 protected:
-    QString* msg[20];
+    QString* msg[30];
     int msg_num;
     void paintEvent(QPaintEvent *event);
 signals:

@@ -1,7 +1,6 @@
 #include "resvform.h"
 
 extern qreal dpi;
-extern QDate systemDate;
 
 ResvForm::ResvForm(QWidget *parent):
     QDialog(parent){
@@ -30,12 +29,6 @@ ResvForm::ResvForm(QWidget *parent):
     comfirmBtn->setFont(QFont("微软雅黑"));
     comfirmBtn->setText("确定");
     connect(comfirmBtn,SIGNAL(clicked()),this,SLOT(comfirm()));
-
-    expBox = new QSpinBox(this);
-    expBox->setGeometry(30*dpi,370*dpi,30*dpi,30*dpi);
-    expBox->setMaximum(10);
-    expBox->setMinimum(3);
-    connect(expBox,SIGNAL(valueChanged()),this,SLOT(repaint()));
 
     popUp=new MessageBox(this);
     popUp->move(QPoint(100*dpi,100*dpi));
@@ -119,18 +112,11 @@ void ResvForm::paintEvent(QPaintEvent *event){
     //rect.adjust(350*dpi,310*dpi,100*dpi,25*dpi);
     painter.drawText(350*dpi,275*dpi,(this->borrower->getStringByTag("credit")));
 
-    painter.drawLine(30*dpi,330*dpi,510*dpi,330*dpi);
-    painter.drawText(30*dpi,370*dpi,QString("借书时间:"));
-    painter.drawText(120*dpi,370*dpi,systemDate.toString("yyyy-MM-dd"));
-    painter.drawText(30*dpi,405*dpi,QString("预期归还时间:"));
-    expdate = systemDate.addDays(expBox->value());
-    painter.drawText(165*dpi,405*dpi,expdate.toString("yyyy-MM-dd"));
-
 }
 
 void ResvForm::comfirm(){
     qDebug()<<"Entering function";
-    reservation(item,borrower,expdate);
+    reservation(item,borrower);
     saveXml();
     saveXml2();
     popUp->setVisible(true);

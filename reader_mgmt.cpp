@@ -8,7 +8,7 @@ QDomNode firstNode2;
 extern QString readerInfoPath;
 extern QDate systemDate;
 extern std::vector<Book> booklist;
-
+extern bool userMessageChanged;
 Reader::Reader(){
 }
 
@@ -32,13 +32,13 @@ Reader::Reader(const QDomNode a){
     tmp=list.at(8).childNodes();
     this->resv_num=tmp.size();
     for(int i=0;i<resv_num;i++){
-        this->resvs[i].id = tmp.at(i).childNodes().at(0).toElement().text();
-        this->resvs[i].d = QDate::fromString(tmp.at(i).childNodes().at(1).toElement().text(),"yyyy-MM-dd");
+        this->resvs[i] = tmp.at(i).childNodes().at(0).toElement().text();
     }
     tmp=list.at(9).childNodes();
     this->msg_num=tmp.size();
     for (int i=0;i<msg_num;i++)
         this->msg[i]=tmp.at(i).toElement().text();
+    this->balance = list.at(10).toElement().text().toDouble();
 }
 
 Reader & Reader::operator =(const Reader & dul){
@@ -59,10 +59,11 @@ Reader & Reader::operator =(const Reader & dul){
     this->msg_num = dul.msg_num;
     for (int i=0;i<this->msg_num;i++)
         this->msg[i] = dul.msg[i];
+    this->balance = dul.balance;
     return *this;
 }
 
-Reader::Reader(QString &n, QString &i, QString &p, QString &ag, QString &au, QString &cr, int il,int bn,int rn, int mn){
+Reader::Reader(QString &n, QString &i, QString &p, QString &ag, QString &au, QString &cr, int il,int bn,int rn, int mn, double bal){
     this->name = n;
     this->id = i;
     this->password = p;
@@ -73,6 +74,7 @@ Reader::Reader(QString &n, QString &i, QString &p, QString &ag, QString &au, QSt
     this->bor_num = bn;
     this->msg_num = mn;
     this->resv_num = rn;
+    this->balance = bal;
 }
 
 QDomElement Reader::toDom(){
@@ -121,14 +123,10 @@ QDomElement Reader::toDom(){
     QDomElement resvId,resvExp;
     for (int i=0;i<resv_num;i++){
         QDomElement resvItem = doc2.createElement(QString("book"));
-        idText = doc2.createTextNode(resvs[i].id);
-        expText = doc2.createTextNode(resvs[i].d.toString("yyyy-MM-dd"));
+        idText = doc2.createTextNode(resvs[i]);
         resvId = doc2.createElement(QString("id"));
         resvId.appendChild(idText);
-        resvExp = doc2.createElement(QString("resv_time"));
-        resvExp.appendChild(expText);
         resvItem.appendChild(resvId);
-        resvItem.appendChild(resvExp);
         resvNode.appendChild(resvItem);
     }
     QDomElement msgNode = doc2.createElement(QString("messages"));
@@ -138,6 +136,9 @@ QDomElement Reader::toDom(){
         msgItem.appendChild(text);
         msgNode.appendChild(msgItem);
     }
+    QDomElement balNode = doc2.createElement(QString("balance"));
+    text = doc2.createTextNode(QString::number(balance,'f',2));
+    balNode.appendChild(text);
     QDomElement new_reader = doc2.createElement(QString("reader"));
     new_reader.appendChild(nameNode);
     new_reader.appendChild(idNode);
@@ -149,6 +150,7 @@ QDomElement Reader::toDom(){
     new_reader.appendChild(creditNode);
     new_reader.appendChild(resvNode);
     new_reader.appendChild(msgNode);
+    new_reader.appendChild(balNode);
     return new_reader;
 }
 
@@ -178,7 +180,7 @@ void Reader::setIntByTag(QString tag, int num){
     if (tag == "msg_num") this->msg_num = num;
 }
 
-void Reader::setStringByTag(QString tag, QString &text){
+void Reader::setStringByTag(QString tag, QString text){
     is_modf = true;
     if (tag == "name") this->name = text;
     if (tag == "id") this->id = text;
@@ -265,12 +267,10 @@ void borrow(Book *b, Reader *r, QDate &cur, QDate &exp){
 }
 
 
-void reservation(Book * b,Reader *r,QDate &exp){
+void reservation(Book * b,Reader *r){
     b->is_resv = true;
-    b->resv_date = exp;
     int num = r->getIntByTag("resv_num");
-    r->resvs[num].id = b->getStringByTag("id");
-    r->resvs[num].d = exp;
+    r->resvs[num] = b->getStringByTag("id");
     r->IncIntByTag("resv_num");
 }
 
@@ -290,6 +290,27 @@ Reader* sign_in(QString &id,QString &pa, int &flag){
     return Q_NULLPTR;
 }
 
+int renew(int order,Reader *r, QDate &cur){
+    QDate due = r->bor_list[order].exp;
+    QString id = r->bor_list[order].id;
+    Book *b;
+    for (int i=0;i<booklist.size();i++)
+        if (booklist[i].getStringByTag("id") == id) {
+            b = &booklist[i];
+            break;
+        }
+    if (b->is_resv) return 2; //yi bei yu ding
+    if (cur > due) {
+        r->IncIntByTag("illegal_count");
+        return 1; //bu neng xu jie
+    }
+    if (due < cur.addDays(15)) {
+        r->bor_list[order].exp = cur.addDays(15);
+        return 0; //xujiechenggong
+    }
+    return 3; // riqi mei bian
+}
+
 void returning(int order,Reader *r, QDate &cur){
     QDate due = r->bor_list[order].exp;
     QString id = r->bor_list[order].id;
@@ -304,20 +325,31 @@ void returning(int order,Reader *r, QDate &cur){
     for (int j=order+1;j<num;j++)
         r->bor_list[j-1] = r->bor_list[j];
     r->DecIntByTag("bor_num");
-    if (cur > due) r->IncIntByTag("illegal_count");
-    /*int num = r->getIntByTag("msg_num");
-    r->msg[num] = QString("尊敬的"+r->getStringByTag("name")+"，您借阅的图书"+b->getStringByTag("id")+"已到期，请尽快归还！");
-    r->IncIntByTag("msg_num");*/
+    if (b->is_resv && b->getIntByTag("amount") == 1)
+        for (int i=0;i<readerlist.size();i++){
+            int rnum = readerlist[i].getIntByTag("resv_num");
+            for (int j=0;j<rnum;j++)
+                if (readerlist[i].resvs[j] == b->getStringByTag("id")) {
+                    for (int k=j+1;k<rnum;k++)
+                        readerlist[i].bor_list[k-1] = readerlist[i].bor_list[k];
+                    rnum--;
+                    if (readerlist[i].getIntByTag("msg_num")!=30)
+                        readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = systemDate.toString("yyyy-MM-dd")+" 您预约的图书"+b->getStringByTag("id")+"已有库存，请尽快前往借阅！";
+                    else {
+                       for (int k=0;k<29;k++)
+                           readerlist[i].msg[k]=readerlist[i].msg[k+1];
+                       readerlist[i].msg[29] = systemDate.toString("yyyy-MM-dd")+" 您预约的图书"+b->getStringByTag("id")+"已有库存，请尽快前往借阅！";
+                    }
+                    if (readerlist[i].getIntByTag("msg_num") != 30) readerlist[i].IncIntByTag("msg_num");
+                    else readerlist[i].is_modf = true;
+                    userMessageChanged=true;
+                }
+            readerlist[i].setIntByTag("resv_num",rnum);
+        }
 }
 
-void daycheck(){
-    for (int i=0;i<readerlist.size();i++){
-        int num = readerlist[i].getIntByTag("bor_num");
-        for (int j=0;j<num;j++)
-            if (readerlist[i].bor_list[j].exp > systemDate){
-                readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = QString("Book overdue"); //待替换，瞎写的。
-                readerlist[i].IncIntByTag("msg_num");
-            }
-    }
+Reader * getUser(QString id){
+    for (int i=0;i<readerlist.size();i++)
+        if (readerlist[i].getStringByTag("id") == id) return &readerlist[i];
+    return Q_NULLPTR;
 }
-

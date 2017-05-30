@@ -72,6 +72,8 @@ void SignUpWindow::paintEvent(QPaintEvent *event)
     painter.drawText(250*dpi,110*dpi,"身份");
     painter.drawText(250*dpi,170*dpi,"ID");
     painter.drawText(250*dpi,230*dpi,"密码");
+    QPixmap background(":/Images/SignUpBackground.png");
+    painter.drawPixmap(0*dpi,0*dpi,background.scaled(this->width(),this->height(),Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 }
 
 void SignUpWindow::addNewUser()
@@ -85,9 +87,9 @@ void SignUpWindow::addNewUser()
     QString id=getId->text();
     QString passWord=getPassWord->text();
     QString authority("1");
-    QString credit("5");
+    QString credit("1");
 
-    Reader newReader(Reader(userName,id,passWord,agency,authority,credit,0,0,0,0));
+    Reader newReader(Reader(userName,id,passWord,agency,authority,credit,0,0,0,0,0));
     if(add_newreader(newReader)==1)
     {
         saveXml2();

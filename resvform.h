@@ -27,8 +27,6 @@ public:
     Book * item;
     Reader * borrower;
     QPixmap *icon;
-    QSpinBox *expBox;
-    QDate expdate;
     QPoint offset;
     ~ResvForm();
 protected:

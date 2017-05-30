@@ -22,10 +22,13 @@
 #include "bookexhibition.h"
 #include "bookmanagewindow.h"
 #include "returnwindow.h"
+#include "readersearchwindow.h"
+#include "bookoverviewwindow.h"
 
 namespace Ui {
 class Widget;
 }
+
 
 class Widget : public QWidget
 {
@@ -60,12 +63,15 @@ protected:
     MessageBox* popUp;
 
     //中央界面
+    BookOverviewWindow* bookOverviewWindow;
     BookExhibition* bookExhibitionWindow;
     BookManageWindow* bookManagementWindow;
     BookInfoWindow* bookInfoWindow;
     PersonalInfoWindow* personalInfoWindow;
     LoginWindow* loginWindow;
     ReturnWindow* returnWindow;
+    ReaderSearchWindow* readerSearchWindow;
+
     void paintEvent(QPaintEvent* event);
 
 
@@ -84,6 +90,7 @@ public slots:
     void showBookInfoBySearch();
     void showBookManagementWindow();
     void showPersonalInfoWindow();
+    void showMessages();
     void showSearchResult();
     void showLoginWindow();
     void showLogoutWindow();
@@ -91,9 +98,15 @@ public slots:
     void showReturnWindow();
     void userLogedIn();
     void tryToLogOut();
+    void showReaderInfoByRequest();
+    void showReaderSearchWindow();
 protected slots:
     void addDate();
     void addMonth();
+    void daycheck();
+signals:
+    void dateChanged();
+    void newMessages();
 };
 
 #endif // WIDGET_H

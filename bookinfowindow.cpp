@@ -134,18 +134,41 @@ void BookInfoWindow::borrowEvent(){
         if (count > 2){
             popUp->setText("借书数量过多");
             popUp->setVisible(true);
-        } else if (book->getIntByTag("amount") == 1 && book->is_resv && systemDate <= book->resv_date){
-            popUp->setText("该图书处于预定状态，请与" + book->resv_date.toString("yyyy年MM月dd日") + "后再次查询");
+        }
+        else if (activereader->balance <=0){
+            popUp->setText("余额不足，请充值");
             popUp->setVisible(true);
         }
         else if (book->getIntByTag("amount") == 0){
             popUp->setText("暂无库存");
             popUp->setVisible(true);
         }
-        else {
-            borrowForm->setBook(book);
-            borrowForm->setReader(activereader);
-            borrowForm->setVisible(true);
+        else if ((activereader->getStringByTag("credit")=="3" && activereader->getIntByTag("bor_num")>=3)||(activereader->getStringByTag("credit")=="2" && activereader->getIntByTag("bor_num")>=10) || activereader->getIntByTag("bor_num")>=20){
+            QString tmp = "信用等级限制借书数量<";
+            if (activereader->getStringByTag("credit")=="3") tmp+="3本";
+            else if (activereader->getStringByTag("credit")=="2") tmp+="10本";
+            else tmp +="20本";
+            popUp->setText(tmp);
+            popUp->setVisible(true);
+        }
+        else{
+            int flag = 0;
+            int num = activereader->getIntByTag("resv_num");
+            for (int i=0;i<num;i++){
+                if (activereader->resvs[i] == book->getStringByTag("id")) {
+                    flag = 1;
+                    break;
+                }
+            }
+            if (book->getIntByTag("amount") == 1 && book->is_resv && !flag){
+                    popUp->setText("该图书处于预定状态");
+                    popUp->setVisible(true);
+            }
+            else {
+                borrowForm->setBook(book);
+                borrowForm->setReader(activereader);
+                borrowForm->setVisible(true);
+            }
         }
     }
     else
@@ -157,9 +180,14 @@ void BookInfoWindow::borrowEvent(){
 
 void BookInfoWindow::resvEvent(){
     if (activereader!=Q_NULLPTR){
-        resvForm->setBook(book);
-        resvForm->setReader(activereader);
-        resvForm->setVisible(true);
+        if (book->getIntByTag("amount")==0){
+            resvForm->setBook(book);
+            resvForm->setReader(activereader);
+            resvForm->setVisible(true);
+        }else {
+            popUp->setText("仍有库存，无需预约");
+            popUp->setVisible(true);
+        }
     }
     else {
         popUp->setText("请先登录");

@@ -16,7 +16,6 @@ public:
     int is_delete;
     int is_resv;
     int order;
-    QDate resv_date;
     Book();
     bool is_modf;
     Book & operator=(const Book &);
@@ -24,12 +23,12 @@ public:
     QDomElement toDom();
     QString getStringByTag(QString tag);
     int getIntByTag(QString tag);
-    void setStringByTag(QString tag,QString &text);
+    void setStringByTag(QString tag,QString text);
     void setIntByTag(QString tag,int num);
     void IncIntByTag(QString tag);
     void DecIntByTag(QString tag);
     void display();
-    Book(QString &t,QString &a,QString &p,QString &d,QString &i,QString &c,int am,int to,int rc,int bc,QString & lc);
+    Book(QString &t,QString &a,QString &p,QString &d,QString &i,QString &c,int am,int to,int rc,int bc,QString & lc,int is_r);
 };
 
 std::vector<Book> * getXml();//Get Xml from file to vector <Book>

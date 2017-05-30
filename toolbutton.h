@@ -19,9 +19,11 @@ public:
 protected:
     void enterEvent(QEvent* event);
     void leaveEvent(QEvent* event);
+protected slots:
 private:
     QColor plainColor;                 //鼠标未进入时按钮颜色
     QColor enterColor;                 //鼠标进入时按钮颜色
+signals:
 };
 
 

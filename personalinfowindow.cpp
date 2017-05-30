@@ -27,6 +27,15 @@ PersonalInfoWindow::PersonalInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     showBorrowInfoBtn->setText("已借书籍");
     connect(showBorrowInfoBtn,SIGNAL(clicked()),this,SLOT(showBorrowInfo()));
 
+    rechargeBtn=new ToolButton(this);
+    rechargeBtn->setGeometry(690*dpi,225*dpi,100*dpi,30*dpi);
+    rechargeBtn->setText("余额充值");
+    rechargeBtn->setFont(QFont("微软雅黑",12));
+    rechargeBtn->setEnterColor("#ebf2fa");
+    rechargeBtn->setPlainColor(Qt::white);
+    rechargeBtn->setVisible(false);
+    connect(rechargeBtn,SIGNAL(clicked()),this,SLOT(showRechargeWindow()));
+
     showReserveInfoBtn=new ToolButton(this);
     showReserveInfoBtn->setFont(QFont("微软雅黑",15));
     showReserveInfoBtn->setPlainColor("#ff0099ff");
@@ -36,11 +45,15 @@ PersonalInfoWindow::PersonalInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     showReserveInfoBtn->setText("已预约书籍");
     connect(showReserveInfoBtn,SIGNAL(clicked()),this,SLOT(showReserveInfo()));
 
+    rechargeWindow=new RechargeWindow(this);
+    connect(rechargeWindow,SIGNAL(chargeRequest()),this,SLOT(reCharge()));
+    rechargeWindow->setVisible(false);
+
     area=new QScrollArea(this);
     area->setGeometry(230*dpi,310*dpi,615*dpi,205*dpi);
     messageArea=new MessageWidget(area);
     messageArea->setWindowFlags(Qt::FramelessWindowHint);
-    messageArea->setGeometry(0*dpi,0*dpi,700*dpi,500*dpi);
+    messageArea->setGeometry(0*dpi,0*dpi,700*dpi,700*dpi);
     area->setWidget(messageArea);
     area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -87,8 +100,8 @@ PersonalInfoWindow::PersonalInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     borrowInfo->setVisible(false);
 
     QStringList columnLabels2;
-    columnLabels2<<"已预预约图书"<<"预约日期";
-    reserveInfo=new QTableWidget(20,2,this);
+    columnLabels2<<"已预预约图书";
+    reserveInfo=new QTableWidget(20,1,this);
     reserveInfo->setHorizontalHeaderLabels(columnLabels2);
     reserveInfo->setFocusPolicy(Qt::NoFocus);
     reserveInfo->setStyleSheet("background-color: #ffffff");
@@ -108,11 +121,19 @@ PersonalInfoWindow::PersonalInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     for(int i=0;i<20;i++)
     {
         reserveInfo->setItem(i,0,Q_NULLPTR);
-        reserveInfo->setItem(i,1,Q_NULLPTR);
-        reserveInfo->setItem(i,2,Q_NULLPTR);
     }
     reserveInfo->setVisible(false);
 
+    popUp=new MessageBox(this);
+    popUp->move(250*dpi,this->height()/3);
+    popUp->setText("充值成功！");
+    popUp->setVisible(false);
+    connect(popUp->confirmBtn,SIGNAL(clicked()),this->rechargeWindow,SLOT(close()));
+}
+
+void PersonalInfoWindow::setLoadPattern(LoadPattern a)
+{
+    loadPattern=a;
 }
 
 void PersonalInfoWindow::paintEvent(QPaintEvent *paintEvent)
@@ -125,13 +146,13 @@ void PersonalInfoWindow::paintEvent(QPaintEvent *paintEvent)
     QFont titleFont("微软雅黑",15);
     titleFont.setBold(true);
     painter.drawPixmap(0,0,partBackGround.scaled(200*dpi,this->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-    if(activereader->getStringByTag("agency")=="st")
+    if(reader->getStringByTag("agency")=="st")
         painter.drawPixmap(35*dpi,50*dpi,QPixmap(":/Images/Icons/Student.png").scaled(150*dpi,150*dpi, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     else
         painter.drawPixmap(35*dpi,50*dpi,QPixmap(":/Images/Icons/Teacher.png").scaled(150*dpi,150*dpi, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     if(pattern==PersonalInfo)
     {
-        messageArea->loadMessage(activereader->msg,activereader->getIntByTag("msg_num"));
+        messageArea->loadMessage(reader->msg,activereader->getIntByTag("msg_num"));
         messageArea->setVisible(true);
         area->setVisible(true);
         borrowInfo->setVisible(false);
@@ -140,6 +161,7 @@ void PersonalInfoWindow::paintEvent(QPaintEvent *paintEvent)
         showBorrowInfoBtn->setEnabled(true);
         showPersonalInfoBtn->setEnabled(false);
         showReserveInfoBtn->setEnabled(true);
+        rechargeBtn->setVisible(true);
 
         painter.setPen(textPen);
         painter.setFont(titleFont);
@@ -149,32 +171,38 @@ void PersonalInfoWindow::paintEvent(QPaintEvent *paintEvent)
         painter.drawText(220*dpi,170*dpi,"权限: ");
         painter.drawText(220*dpi,210*dpi,"违约次数: ");
         painter.drawText(220*dpi,250*dpi,"信用等级: ");
+        painter.drawText(500*dpi,250*dpi,"账户余额: ");
         painter.drawText(220*dpi,290*dpi,"系统消息: ");
 
         QRect messageRect(220*dpi,300*dpi,630*dpi,220*dpi);
         painter.drawRoundedRect(messageRect,10.0,10.0);
 
         painter.setFont(textFont);
-        painter.drawText(290*dpi,50*dpi,activereader->getStringByTag("name"));
-        if(activereader->getStringByTag("agency")=="st")
+        painter.drawText(290*dpi,50*dpi,reader->getStringByTag("name"));
+        if(reader->getStringByTag("agency")=="st")
             painter.drawText(290*dpi,90*dpi,"学生");
         else
             painter.drawText(290*dpi,90*dpi,"教师");
-        painter.drawText(290*dpi,130*dpi,activereader->getStringByTag("id"));
-        if(activereader->getStringByTag("authority")=="1")
+        painter.drawText(290*dpi,130*dpi,reader->getStringByTag("id"));
+        if(reader->getStringByTag("authority")=="1")
             painter.drawText(290*dpi,170*dpi,"普通用户");
         else
             painter.drawText(290*dpi,170*dpi,"管理员");
-        painter.drawText(320*dpi,210*dpi,QString::number(activereader->getIntByTag("illegal_count")));
-        if(activereader->getStringByTag("credit")=="5")
+        painter.drawText(320*dpi,210*dpi,QString::number(reader->getIntByTag("illegal_count")));
+        if(reader->getStringByTag("credit")=="1")
+            painter.drawText(320*dpi,250*dpi,"优秀");
+        if(reader->getStringByTag("credit")=="2")
             painter.drawText(320*dpi,250*dpi,"良好");
-        if(activereader->getStringByTag("credit")=="2")
-            painter.drawText(320*dpi,250*dpi,"较差");
+        if(reader->getStringByTag("credit")=="3")
+            painter.drawText(320*dpi,250*dpi,"差");
+        painter.drawText(600*dpi,250*dpi,QString::number(reader->balance,'f',2)+" ¥");
+        if(loadPattern==byAdmin)
+            rechargeBtn->setVisible(false);
     }
     else if(pattern==BorrowInfo)
     {
-        int l=activereader->getIntByTag("bor_num");
-        messageArea->loadMessage(activereader->msg,activereader->getIntByTag("msg_num"));
+        int l=reader->getIntByTag("bor_num");
+        messageArea->loadMessage(reader->msg,activereader->getIntByTag("msg_num"));
         borrowInfo->setVisible(true);
         reserveInfo->setVisible(false);
         messageArea->setVisible(false);
@@ -183,12 +211,13 @@ void PersonalInfoWindow::paintEvent(QPaintEvent *paintEvent)
         showBorrowInfoBtn->setEnabled(false);
         showPersonalInfoBtn->setEnabled(true);
         showReserveInfoBtn->setEnabled(true);
+        rechargeBtn->setVisible(false);
         for(int row=0;row<l;row++)
         {
-            Book* borrowedBook=search(activereader->bor_list[row].id,5)[0];
+            Book* borrowedBook=search(reader->bor_list[row].id,5)[0];
             borrowItem[row][0]->setText(borrowedBook->getStringByTag("title"));
-            borrowItem[row][1]->setText((activereader->bor_list)[row].st.toString("yyyy-MM-dd"));
-            borrowItem[row][2]->setText((activereader->bor_list)[row].exp.toString("yyyy-MM-dd"));
+            borrowItem[row][1]->setText((reader->bor_list)[row].st.toString("yyyy-MM-dd"));
+            borrowItem[row][2]->setText((reader->bor_list)[row].exp.toString("yyyy-MM-dd"));
             borrowInfo->setItem(row,0,borrowItem[row][0]);
             borrowInfo->setItem(row,1,borrowItem[row][1]);
             borrowInfo->setItem(row,2,borrowItem[row][2]);
@@ -205,7 +234,7 @@ void PersonalInfoWindow::paintEvent(QPaintEvent *paintEvent)
     }
     else
     {
-        int l=activereader->getIntByTag("resv_num");
+        int l=reader->getIntByTag("resv_num");
         messageArea->setVisible(false);
         area->setVisible(false);
         borrowInfo->setVisible(false);
@@ -214,22 +243,31 @@ void PersonalInfoWindow::paintEvent(QPaintEvent *paintEvent)
         showReserveInfoBtn->setEnabled(false);
         showPersonalInfoBtn->setEnabled(true);
         showBorrowInfoBtn->setEnabled(true);
+        rechargeBtn->setVisible(false);
         for(int row=0;row<l;row++)
         {
-            Book* reservedBook=search((activereader->resvs[row]).id,5)[0];
+            Book* reservedBook=search((reader->resvs[row]),5)[0];
             reserveItem[row][0]->setText(reservedBook->getStringByTag("title"));
-            reserveItem[row][1]->setText((activereader->resvs)[row].d.toString("yyyy-MM-dd"));
+            //reserveItem[row][1]->setText((reader->resvs)[row].d.toString("yyyy-MM-dd"));
             reserveInfo->setItem(row,0,reserveItem[row][0]);
-            reserveInfo->setItem(row,1,reserveItem[row][1]);
         }
         for(int i=l;i<20;i++)
         {
             reserveItem[i][0]->setText("");
-            reserveItem[i][1]->setText("");
             reserveInfo->setItem(i,0,reserveItem[i][0]);
-            reserveInfo->setItem(i,1,reserveItem[i][1]);
         }
     }
+}
+
+void PersonalInfoWindow::loadReader(Reader *m_reader)
+{
+    reader=m_reader;
+}
+
+void PersonalInfoWindow::showMessages()
+{
+    userMessageChanged=false;
+    showPersonalInfo();
 }
 
 void PersonalInfoWindow::showPersonalInfo()
@@ -253,4 +291,18 @@ void PersonalInfoWindow::showReserveInfo()
     showPersonalInfoBtn->setStyleSheet("background-color: #0099ff");
     showBorrowInfoBtn->setStyleSheet("background-color: #0099ff");
     this->update();
+}
+
+void PersonalInfoWindow::showRechargeWindow()
+{
+    rechargeWindow->setVisible(true);
+}
+
+void PersonalInfoWindow::reCharge()
+{
+    int moneyAdded=rechargeWindow->getValue();
+    reader->balance+=moneyAdded;
+    reader->is_modf=true;
+    saveXml2();
+    popUp->setVisible(true);
 }

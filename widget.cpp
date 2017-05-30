@@ -9,6 +9,8 @@ extern QDate systemDate;
 extern qreal dpi;
 extern std::vector<Book> booklist,*pbooklist;
 extern Reader* activereader;
+extern std::vector<Reader> readerlist,*preaderlist;
+extern bool userMessageChanged;
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -18,6 +20,19 @@ Widget::Widget(QWidget *parent) :
     this->setGeometry(320*dpi,90*dpi,1024*dpi,725*dpi);
     setWindowFlags(Qt::FramelessWindowHint);      //设置无边框
     setStyleSheet("background-color:#99ccff;");
+    //日期相关
+    changeDateBtn1=new ToolButton(this);
+    changeDateBtn1->setGeometry(200*dpi,85*dpi,20*dpi,20*dpi);
+    changeDateBtn1->setStyleSheet("background-color:transparent; border:none");
+    changeDateBtn1->setIcon(QPixmap(":/Images/Icons/RightArrow2.png"));
+    connect(changeDateBtn1,SIGNAL(clicked()),this,SLOT(addDate()));
+
+    changeDateBtn2=new ToolButton(this);
+    changeDateBtn2->setGeometry(220*dpi,85*dpi,20*dpi,20*dpi);
+    changeDateBtn2->setIcon(QPixmap(":/Images/Icons/DoubleRightArrow2.png"));
+    changeDateBtn2->setStyleSheet("background-color:transparent; border:none");
+    connect(changeDateBtn2,SIGNAL(clicked()),this,SLOT(addMonth()));
+
 
     //添加最小化按钮
     minimizeBtn=new ToolButton(this);
@@ -47,6 +62,7 @@ Widget::Widget(QWidget *parent) :
     messageCentreBtn->setIcon(QPixmap(":/Images/Icons/Message.png").scaled(40*dpi,40*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     messageCentreBtn->setStyleSheet("background-color:transparent;");
     messageCentreBtn->setGeometry(this->width()-3*40*dpi,0*dpi,40*dpi,40*dpi);
+    connect(messageCentreBtn,SIGNAL(clicked()),this,SLOT(showMessages()));
     messageCentreBtn->show();
 
     //添加登录按钮
@@ -82,14 +98,14 @@ Widget::Widget(QWidget *parent) :
     giveBackBtn->setIcon(QPixmap(":/Images/Icons/ReturnBooksButton.png"));
     giveBackBtn->setIconSize(QSize(120*dpi,80*dpi));
     giveBackBtn->setStyleSheet("background-color:transparent; border:none");
-    giveBackBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*dpi,120*dpi,90*dpi);
+    giveBackBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*2*dpi,120*dpi,90*dpi);
 
     //添加个人信息按钮
     personalInfoBtn=new ToolButton(this);
     personalInfoBtn->setIcon(QPixmap(":/Images/Icons/PersonalInfoButton.png"));
     personalInfoBtn->setIconSize(QSize(120*dpi,80*dpi));
     personalInfoBtn->setStyleSheet("background-color:transparent; border:none");
-    personalInfoBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*2*dpi,120*dpi,90*dpi);
+    personalInfoBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*dpi,120*dpi,90*dpi);
     connect(personalInfoBtn,SIGNAL(clicked()),this,SLOT(showPersonalInfoWindow()));
 
     //添加读者管理按钮
@@ -98,6 +114,7 @@ Widget::Widget(QWidget *parent) :
     readerManagementBtn->setIconSize(QSize(120*dpi,80*dpi));
     readerManagementBtn->setStyleSheet("background-color:transparent; border:none");
     readerManagementBtn->setGeometry(10*dpi,this->height()/6+50*dpi+90*3*dpi,120*dpi,90*dpi);
+    connect(readerManagementBtn,SIGNAL(clicked()),this,SLOT(showReaderSearchWindow()));
 
     //添加图书管理按钮
     bookManagementBtn=new ToolButton(this);
@@ -127,29 +144,25 @@ Widget::Widget(QWidget *parent) :
     returnWindow->setVisible(false);
     connect(giveBackBtn,SIGNAL(clicked()),this,SLOT(showReturnWindow()));
 
+    readerSearchWindow=new ReaderSearchWindow(this);
+    readerSearchWindow->setVisible(false);
+    connect(readerSearchWindow,SIGNAL(readerInfoRequest()),this,SLOT(showReaderInfoByRequest()));
+
+    bookOverviewWindow=new BookOverviewWindow(this);
+    bookOverviewWindow->setVisible(true);
+
     //添加登录界面
     loginWindow=new LoginWindow(this);
     loginWindow->setVisible(false);
     connect(loginWindow,SIGNAL(logedIn()),this,SLOT(userLogedIn()));
-    //日期相关
-    changeDateBtn1=new ToolButton(this);
-    changeDateBtn1->setGeometry(200*dpi,85*dpi,20*dpi,20*dpi);
-    changeDateBtn1->setStyleSheet("background-color:transparent; border:none");
-    changeDateBtn1->setIcon(QPixmap(":/Images/Icons/RightArrow2.png"));
-    connect(changeDateBtn1,SIGNAL(clicked()),this,SLOT(addDate()));
-
-    changeDateBtn2=new ToolButton(this);
-    changeDateBtn2->setGeometry(220*dpi,85*dpi,20*dpi,20*dpi);
-    changeDateBtn2->setIcon(QPixmap(":/Images/Icons/DoubleRightArrow2.png"));
-    changeDateBtn2->setStyleSheet("background-color:transparent; border:none");
-    connect(changeDateBtn2,SIGNAL(clicked()),this,SLOT(addMonth()));
-
     //注销弹窗,该弹窗用于注销或提示登录
     popUp=new MessageBox(this);
-    popUp->setVisible(false);
     popUp->setGeometry(this->width()/3,this->height()/3,popUp->width(),popUp->height());
+    this->popUp->setStyleSheet("background-color:white");
     connect(popUp->confirmBtn,SIGNAL(clicked()),this,SLOT(tryToLogOut()));
+    popUp->setVisible(false);
 
+    connect(this,SIGNAL(dateChanged()),this,SLOT(daycheck()));
 }
 
 Widget::~Widget()
@@ -177,7 +190,7 @@ void Widget::paintEvent(QPaintEvent *event)
     //设置背景图片
     QPainter painter(this);
     painter.setFont(QFont("微软雅黑",10));
-
+    QPixmap hasMessages(":/Images/Icons/haveMessage.png");
     this->setAutoFillBackground(true);
     QPixmap pixmap(":/Images/WidgetBackground.jpg");
     QPixmap fitpixmap=pixmap.scaled(this->width(),this->height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -185,6 +198,10 @@ void Widget::paintEvent(QPaintEvent *event)
     palette.setBrush(QPalette::Background,fitpixmap);
    // this->setPalette(palette);//图片不搭
 
+    if(userMessageChanged)
+        messageCentreBtn->setIcon(hasMessages.scaled(40*dpi,40*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    else
+        messageCentreBtn->setIcon(QPixmap(":/Images/Icons/Message.png").scaled(40*dpi,40*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     //重新计算按钮的位置
     minimizeBtn->setGeometry(this->width()-2*40*dpi,0*dpi,40*dpi,40*dpi);
     closeBtn->setGeometry(this->width()-40*dpi,0*dpi,40*dpi,40*dpi);
@@ -246,6 +263,7 @@ void Widget::showBookInfoBySearch()
     personalInfoWindow->setVisible(false);
     returnWindow->setVisible(false);
     personalInfoWindow->setVisible(false);
+    readerSearchWindow->setVisible(false);
 }
 
 void Widget::showBookManagementWindow()
@@ -261,6 +279,7 @@ void Widget::showBookManagementWindow()
     bookInfoWindow->setVisible(false);
     personalInfoWindow->setVisible(false);
     returnWindow->setVisible(false);
+    readerSearchWindow->setVisible(false);
 }
 
 void Widget::showPersonalInfoWindow()
@@ -274,8 +293,22 @@ void Widget::showPersonalInfoWindow()
     bookExhibitionWindow->setVisible(false);
     bookManagementWindow->setVisible(false);
     bookInfoWindow->setVisible(false);
+    personalInfoWindow->loadReader(activereader);
+    personalInfoWindow->setLoadPattern(bySelf);
     personalInfoWindow->setVisible(true);
     returnWindow->setVisible(false);
+    readerSearchWindow->setVisible(false);
+}
+
+void Widget::showMessages()
+{
+    if(activereader==Q_NULLPTR)
+    {
+        popUp->setText("请先登录");
+        popUp->setVisible(true);
+        return;
+    }
+    this->personalInfoWindow->showMessages();
 }
 
 void Widget::showSearchResult()    //在此添加查询结果
@@ -290,6 +323,7 @@ void Widget::showSearchResult()    //在此添加查询结果
     bookInfoWindow->setVisible(false);
     personalInfoWindow->setVisible(false);
     returnWindow->setVisible(false);
+    readerSearchWindow->setVisible(false);
 
     personalInfoWindow->setVisible(false);
 
@@ -337,12 +371,14 @@ void Widget::showReturnWindow()
         bookInfoWindow->setVisible(false);
         personalInfoWindow->setVisible(false);
         returnWindow->setVisible(true);
+        readerSearchWindow->setVisible(false);
     }
 }
 
 void Widget::userLogedIn()
 {
     isloged=true;
+    userMessageChanged=false;
     update();
 }
 
@@ -354,7 +390,39 @@ void Widget::tryToLogOut()
         activereader=Q_NULLPTR;
         bookManagementWindow->setVisible(false);
         personalInfoWindow->setVisible(false);
+        returnWindow->setVisible(false);
         update();
+    }
+}
+
+void Widget::showReaderInfoByRequest()
+{
+    personalInfoWindow->setLoadPattern(byAdmin);
+    personalInfoWindow->loadReader(readerSearchWindow->getRequestedUser());
+    bookExhibitionWindow->setVisible(false);
+    bookManagementWindow->setVisible(false);
+    bookInfoWindow->setVisible(false);
+    personalInfoWindow->setVisible(true);
+    returnWindow->setVisible(false);
+    readerSearchWindow->setVisible(false);
+}
+
+void Widget::showReaderSearchWindow()
+{
+    if(activereader==Q_NULLPTR)
+    {
+        popUp->setText("请先登录");
+        popUp->setVisible(true);
+        return;
+    }
+    else
+    {
+        bookExhibitionWindow->setVisible(false);
+        bookManagementWindow->setVisible(false);
+        bookInfoWindow->setVisible(false);
+        personalInfoWindow->setVisible(false);
+        returnWindow->setVisible(false);
+        readerSearchWindow->setVisible(true);
     }
 }
 
@@ -383,18 +451,75 @@ void Widget::drawDate()
 
 void Widget::addDate()
 {
-    qDebug()<<systemDate;
     systemDate=systemDate.addDays(1);
-    qDebug()<<systemDate;
+    emit dateChanged();
     update();
 }
 
 void Widget::addMonth()
 {
-   qDebug()<<systemDate;
-   systemDate=systemDate.addMonths(1);
-   qDebug()<<systemDate;
+   QDate dueDate=systemDate.addMonths(1);
+   while (systemDate !=dueDate){
+       systemDate = systemDate.addDays(1);
+       emit dateChanged();
+   }
    update();
+}
+
+void Widget::daycheck()
+{
+    for (int i=0;i<readerlist.size();i++){
+        int num = readerlist[i].getIntByTag("bor_num");
+        for (int j=0;j<num;j++){
+            if (readerlist[i].bor_list[j].exp.addDays(1) == systemDate){
+                if (readerlist[i].getIntByTag("msg_num")!=30)
+                    readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期一天，请尽快归还！");
+                else {
+                   for (int k=0;k<29;k++)
+                       readerlist[i].msg[k]=readerlist[i].msg[k+1];
+                   readerlist[i].msg[29] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期一天，请尽快归还！");
+                }
+                if (readerlist[i].getIntByTag("msg_num") != 30) readerlist[i].IncIntByTag("msg_num");
+                else readerlist[i].is_modf = true;
+                readerlist[i].IncIntByTag("illegal_count");
+                int cnt = readerlist[i].getIntByTag("illegal_count");
+                if (cnt>5) readerlist[i].setStringByTag("credit",QString("3"));
+                else if (cnt > 3) readerlist[i].setStringByTag("credit",QString("2"));
+                else readerlist[i].setStringByTag("credit",QString("1"));
+            } else
+            if (readerlist[i].bor_list[j].exp.addDays(10) == systemDate){
+                if (readerlist[i].getIntByTag("msg_num")!=30)
+                    readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期十天，请尽快归还！");
+                else {
+                   for (int k=0;k<29;k++)
+                       readerlist[i].msg[k]=readerlist[i].msg[k+1];
+                   readerlist[i].msg[29] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期十天，请尽快归还！");
+                }
+                if (readerlist[i].getIntByTag("msg_num") != 30) readerlist[i].IncIntByTag("msg_num");
+                else readerlist[i].is_modf = true;
+            } else
+            if (readerlist[i].bor_list[j].exp.addDays(30) == systemDate){
+                if (readerlist[i].getIntByTag("msg_num")!=30)
+                    readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期三十天，请尽快归还！");
+                else {
+                   for (int k=0;k<29;k++)
+                       readerlist[i].msg[k]=readerlist[i].msg[k+1];
+                   readerlist[i].msg[29] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期三十天，请尽快归还！");
+                }
+                if (readerlist[i].getIntByTag("msg_num") != 30) readerlist[i].IncIntByTag("msg_num");
+                else readerlist[i].is_modf = true;
+            }
+            if (readerlist[i].bor_list[j].exp < systemDate){
+                readerlist[i].is_modf=true;
+                int days = readerlist[i].bor_list[j].exp.daysTo(systemDate);
+                if (days < 10) readerlist[i].balance -= 0.5;
+                else if (days < 30) readerlist[i].balance -= 0.75;
+                else readerlist[i].balance -= 1;
+            }
+        }
+    }
+    saveXml();
+    saveXml2();
 }
 
 QString Widget::toWeekString(int week)
