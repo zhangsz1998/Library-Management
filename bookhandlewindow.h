@@ -20,6 +20,7 @@ class BookHandleWindow : public QMdiSubWindow
     Q_OBJECT
 public:
     BookHandleWindow(QWidget *parent = 0);
+    ~BookHandleWindow();
     QComboBox* getPattern;
     int order;
     HandlePattern pattern;

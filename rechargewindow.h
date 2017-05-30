@@ -17,6 +17,7 @@ class RechargeWindow : public QDialog
     Q_OBJECT
 public:
     RechargeWindow(QWidget *parent = 0);
+    ~RechargeWindow();
     QSpinBox* getMoney;
     ToolButton* closeBtn;
     ToolButton* confirmBtn;

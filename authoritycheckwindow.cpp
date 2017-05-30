@@ -26,6 +26,13 @@ AuthorityCheckWindow::AuthorityCheckWindow(QWidget *parent):
     connect(this->confirmBtn,SIGNAL(clicked()),this,SLOT(close()));
 }
 
+AuthorityCheckWindow::~AuthorityCheckWindow()
+{
+    delete getPassWord;
+    delete confirmBtn;
+    delete closeBtn;
+}
+
 void AuthorityCheckWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);

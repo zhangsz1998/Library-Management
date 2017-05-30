@@ -1,5 +1,6 @@
-#ifndef GETREASONWINDOW_H
-#define GETREASONWINDOW_H
+#ifndef REPORTREASONWINDOW_H
+#define REPORTREASONWINDOW_H
+
 
 #include <QDialog>
 #include "toolbutton.h"
@@ -9,12 +10,12 @@
 #include <QPainter>
 #include "messagebox.h"
 
-class GetReasonWindow : public QDialog
+class ReportReasonWindow : public QDialog
 {
     Q_OBJECT
 public:
-    GetReasonWindow(QWidget *parent = 0);
-    ~GetReasonWindow();
+    ReportReasonWindow(QWidget *parent = 0);
+    ~ReportReasonWindow();
     ToolButton* closeBtn;
     ToolButton* confirmBtn;
 
@@ -36,11 +37,12 @@ public:
 protected:
     void paintEvent(QPaintEvent* event);
 signals:
-    void successfullyModified();
+    void success();
 public slots:
     void showMessageBox();
     void refreshReasons();
     void modified();
 };
 
-#endif // GETREASONWINDOW_H
+
+#endif // REPORTREASONWINDOW_H

@@ -27,6 +27,12 @@ BookExhibition::BookExhibition(QWidget *parent) : QMdiSubWindow(parent)
     connect(prePage,SIGNAL(clicked()),this,SLOT(toPrePage()));
 }
 
+BookExhibition::~BookExhibition()
+{
+    delete nextPage;
+    delete prePage;
+}
+
 void BookExhibition::toNextPage()
 {
     if(currentPage<maxPages)
@@ -175,7 +181,6 @@ void BookExhibition::mouseMoveEvent(QMouseEvent *event)
         cursorLayer=y/(41*dpi)-2;
         update();
     }
-    qDebug()<<currentPage<<" "<<maxPages<<" "<<books.size();
     if(currentPage<maxPages&&cursorLayer>=9)         //除尾页外每页显示9组数据,鼠标层数为10则置为9
         cursorLayer=9;
     else if(currentPage==maxPages&&cursorLayer>=(books.size()-1)%9+1)      //尾页显示books.size()%10+1组数据,鼠标层数超过则显示最后一组
@@ -187,7 +192,7 @@ void BookExhibition::mousePressEvent(QMouseEvent *event)
     if(event->button()&Qt::LeftButton)
     {
         int y=event->pos().y();
-        if(y>=0&&y<=492)
+        if(y>=0*dpi&&y<=492*dpi)
             emit bookInfoClicked();
     }
 }

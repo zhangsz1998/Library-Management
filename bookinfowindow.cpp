@@ -68,6 +68,8 @@ BookInfoWindow::~BookInfoWindow()
     delete borrowBtn;
     delete goBackBtn;
     delete reservationBtn;
+    delete borrowForm;
+    delete resvForm;
 }
 
 void BookInfoWindow::paintEvent(QPaintEvent *paintEvent)
@@ -100,6 +102,8 @@ void BookInfoWindow::paintEvent(QPaintEvent *paintEvent)
     painter.drawText(270*dpi,110*dpi,"出版社:");
     painter.drawText(270*dpi,140*dpi,"编号:");
     painter.drawText(270*dpi,170*dpi,"剩余量:");
+    painter.drawText(450*dpi,170*dpi,"馆藏数量:");
+    painter.drawText(580*dpi,170*dpi,"类别:");
 
     painter.setPen(textPen);
     painter.drawText(320*dpi,80*dpi,book->getStringByTag("author"));
@@ -107,6 +111,8 @@ void BookInfoWindow::paintEvent(QPaintEvent *paintEvent)
     painter.drawText(320*dpi,140*dpi,book->getStringByTag("id"));
     if (book->getIntByTag("amount")) painter.drawText(345*dpi,170*dpi,QString::number(book->getIntByTag("amount")));
     else painter.drawText(345*dpi,170*dpi,QString("暂无库存"));
+    painter.drawText(540*dpi,170*dpi,QString::number(book->getIntByTag("total")));
+    painter.drawText(635*dpi,170*dpi,book->getStringByTag("category"));
     painter.setPen(labelPen);
     painter.setFont(despFont);
     painter.drawText(270*dpi,210*dpi,"内容简介");

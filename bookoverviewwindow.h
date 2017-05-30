@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QList>
 #include <QPropertyAnimation>
+#include <QMouseEvent>
 
 #include "book_mgmt.h"
 #include "toolbutton.h"
@@ -21,10 +22,14 @@ class BookOverviewWindow : public QMdiSubWindow
     Q_OBJECT
 public:
     BookOverviewWindow(QWidget *parent = 0);
-    QStringList covers[30];
-    QStringList titles[30];
-    Label* coversOnDisplay[6];
-    Label* titlesOnDisplay[6];
+    ~BookOverviewWindow();
+    QStringList covers[8];
+    QStringList titles[8];
+//    Label* coversOnDisplay[6];
+//    Label* titlesOnDisplay[6];
+    Label* coversOnDisplay[7];
+    Label* titlesOnDisplay[7];
+
     std::vector<Book*> bookList;
     std::vector<Label*> mostBorsCovers;
     std::vector<Label*> mostBorsTitles;
@@ -33,28 +38,39 @@ public:
     QTableWidget* buttons;
     QVector<QRect> r_Cover;
     QVector<QRect> r_Title;
-    ToolButton* categories[30];
+    ToolButton* categories[8];
     ToolButton* toLeft;
     ToolButton* toRight;
-    QPropertyAnimation moveAction_Cover[6];
+//    QPropertyAnimation moveAction_Cover[6];
+//    QPropertyAnimation opacityAction_Cover[2];
+//    QPropertyAnimation moveAction_Title[6];
+//    QPropertyAnimation opacityAction_Title[2];
+    QPropertyAnimation moveAction_Cover[7];
     QPropertyAnimation opacityAction_Cover[2];
-    QPropertyAnimation moveAction_Title[6];
+    QPropertyAnimation moveAction_Title[7];
     QPropertyAnimation opacityAction_Title[2];
-    QTimer* timerL;
+    QTimer* timerL;      //交换用定时器
+    QTimer* timerR;
 protected:
-    int lastIndex;  //当前被隐藏的是该类的第几本图书
+    int cursorLayer;
+    int firstIndexInBookList;  //当前最左的图标签指向的书目下标
     int firstIndexOnDisplay;  //第一个coversOndisplay的编号;
     int categoryOnDisplay;
     void paintEvent(QPaintEvent *paintEvent);
+    void mouseMoveEvent(QMouseEvent *mouseEvent);
+    void mousePressEvent(QMouseEvent *mouseEvent);
 signals:
 
 public slots:
     void startTimerL();
-    void showBookByCategory();
+    void startTimerR();
     void moveLeft();
     void moveRight();
-    void graduallyDisappear();
+    void graduallyDisappearL();
+    void graduallyDisappearR();
     void changeOrderL();
+    void changeOrderR();
+    void changeCategory();
 };
 
 #endif // BOOKOVERVIEWWINDOW_H

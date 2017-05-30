@@ -5,6 +5,10 @@ MessageWidget::MessageWidget(QWidget *parent) : QWidget(parent)
 
 }
 
+MessageWidget::~MessageWidget()
+{
+}
+
 void MessageWidget::loadMessage(QString m_msg[], int num)
 {
     for(int i=0;i<num;i++)

@@ -12,6 +12,7 @@ class AuthorityCheckWindow : public QDialog
     Q_OBJECT
 public:
     AuthorityCheckWindow(QWidget* parent);
+    ~AuthorityCheckWindow();
 protected:
     QLineEdit* getPassWord;
     ToolButton* confirmBtn;

@@ -9,6 +9,7 @@
 #include "reader_mgmt.h"
 #include "bookhandlewindow.h"
 #include "messagebox.h"
+#include "reportreasonwindow.h"
 
 extern Reader* activereader;
 extern qreal dpi;
@@ -19,10 +20,12 @@ class ReturnWindow : public QMdiSubWindow
     Q_OBJECT
 public:
     ReturnWindow(QWidget *parent = 0);
+    ~ReturnWindow();
     QTableWidget* borrowTable;
     QTableWidgetItem* item[20][3];
     ToolButton* returnBtn[20];
     BookHandleWindow* handleWindow;
+    ReportReasonWindow * reportWindow;
     MessageBox* popUp;
     int order;   //当前操作的图书
 protected:
@@ -34,6 +37,7 @@ public slots:
     void bookReturning();
     void bookRenewing();
     void bookLost();
+    void getReason();
 };
 
 #endif // RETURNWINDOW_H

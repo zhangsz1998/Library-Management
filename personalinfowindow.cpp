@@ -129,6 +129,33 @@ PersonalInfoWindow::PersonalInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     popUp->setText("充值成功！");
     popUp->setVisible(false);
     connect(popUp->confirmBtn,SIGNAL(clicked()),this->rechargeWindow,SLOT(close()));
+
+    popUp2=new MessageBox(this);
+    popUp2->move(250*dpi,this->height()/3);
+    popUp2->setText("不得小于10元");
+    popUp2->setVisible(false);
+}
+
+PersonalInfoWindow::~PersonalInfoWindow()
+{
+    delete showPersonalInfoBtn;
+    delete showBorrowInfoBtn;
+    delete showReserveInfoBtn;
+    delete messageArea;
+    delete rechargeWindow;
+    delete popUp;
+    delete popUp2;
+    for(int i=0;i<20;i++)
+    {
+        for(int j=0;j<3;j++)
+            delete borrowItem[i][j];
+        for(int j=0;j<2;j++)
+            delete reserveItem[i][j];
+    }
+    delete borrowInfo;
+    delete reserveInfo;
+    delete rechargeBtn;
+    delete area;
 }
 
 void PersonalInfoWindow::setLoadPattern(LoadPattern a)
@@ -153,8 +180,16 @@ void PersonalInfoWindow::paintEvent(QPaintEvent *paintEvent)
     if(pattern==PersonalInfo)
     {
         messageArea->loadMessage(reader->msg,activereader->getIntByTag("msg_num"));
-        messageArea->setVisible(true);
-        area->setVisible(true);
+        if(loadPattern==byAdmin)
+        {
+            messageArea->setVisible(false);
+            area->setVisible(false);
+        }
+        else
+        {
+            messageArea->setVisible(true);
+            area->setVisible(true);
+        }
         borrowInfo->setVisible(false);
         reserveInfo->setVisible(false);
         showPersonalInfoBtn->setStyleSheet("background-color:#ffffff");
@@ -301,8 +336,13 @@ void PersonalInfoWindow::showRechargeWindow()
 void PersonalInfoWindow::reCharge()
 {
     int moneyAdded=rechargeWindow->getValue();
-    reader->balance+=moneyAdded;
-    reader->is_modf=true;
-    saveXml2();
-    popUp->setVisible(true);
+        if (moneyAdded<10) {
+            popUp2->setVisible(true);
+        }else{
+            activereader->balance+=moneyAdded;
+            activereader->is_modf=true;
+            log_print("recharge",activereader->getStringByTag("id"),QString::number(moneyAdded),QString::number(activereader->balance,'f',2));
+            saveXml2();
+            popUp->setVisible(true);
+        }
 }

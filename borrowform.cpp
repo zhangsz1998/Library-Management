@@ -87,9 +87,17 @@ void BorrowForm::paintEvent(QPaintEvent *event){
     painter.drawText(220*dpi,240*dpi,QString("学号/教师编号:"));
     painter.drawText(360*dpi,240*dpi,(this->borrower->getStringByTag("id")));
     painter.drawText(30*dpi,275*dpi,QString("权限:"));
-    painter.drawText(90*dpi,275*dpi,(this->borrower->getStringByTag("authority")));
+    if (this->borrower->getStringByTag("authority") ==  "1")
+        painter.drawText(90*dpi,275*dpi,QString("普通用户"));
+    else
+        painter.drawText(90*dpi,275*dpi,QString("管理员"));
     painter.drawText(240*dpi,275*dpi,QString("信用等级:"));
-    painter.drawText(350*dpi,275*dpi,(this->borrower->getStringByTag("credit")));
+    if (this->borrower->getStringByTag("credit") == "1")
+        painter.drawText(350*dpi,275*dpi,QString("优秀"));
+    else if (this->borrower->getStringByTag("credit") == "2")
+        painter.drawText(350*dpi,275*dpi,QString("良好"));
+    else
+        painter.drawText(350*dpi,275*dpi,QString("差"));
 
     painter.drawLine(30*dpi,330*dpi,510*dpi,330*dpi);
     painter.drawText(30*dpi,370*dpi,QString("借书时间:"));
@@ -101,9 +109,9 @@ void BorrowForm::paintEvent(QPaintEvent *event){
 }
 
 void BorrowForm::comfirm(){
-    qDebug()<<"Entering function";
     QDate dueDate = systemDate.addDays(100);
     borrow(this->item,this->borrower,systemDate,dueDate);
+    log_print("borrow",this->borrower->getStringByTag("id"),this->item->getStringByTag("id"),dueDate.toString("yyyy-MM-dd"));
     saveXml();
     saveXml2();
     popUp->setVisible(true);

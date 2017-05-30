@@ -4,10 +4,12 @@
 #include <QList>
 #include <QSPinBox>
 #include "book_mgmt.h"
+#include "reader_mgmt.h"
 
 extern QString coverDir;
 extern qreal dpi;
 extern std::vector<Book> booklist;
+extern Reader * activereader;
 
 BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
 {
@@ -444,7 +446,8 @@ void BookManageWindow::addNewBook()
         cover.save(coverDir+"/"+title+".png","png");
         newCoverPath="/"+title+".png";
     }
-    newBook=new Book(title,author,press,desp,title,category,amount,amount,0,0,newCoverPath,0);        //由于编号函数暂未确定，先置编号为titile
+    QString id = myHash(author,press,category,title);
+    newBook=new Book(title,author,press,desp,id,category,amount,amount,0,0,newCoverPath,0);        //由于编号函数暂未确定，先置编号为titile
     add_newbook(*newBook);
     saveXml();
     cover.load(*defaultCoverPath);
@@ -455,6 +458,7 @@ void BookManageWindow::addNewBook()
     getPress->clear();
     getDescription->clear();
     getAmount->clear();
+    log_print("add",activereader->getStringByTag("id"),id,"");
     this->repaint();
 }
 
@@ -505,6 +509,7 @@ void BookManageWindow::changeBookInfo()
         bookEditing->setStringByTag("category",category);
         bookEditing->setIntByTag("amount",amount);
         bookEditing->setStringByTag("loc",newCoverPath);
+        log_print("modify",activereader->getStringByTag("id"),bookEditing->getStringByTag("id"),getReasonWindow->getReasons().join(","));
         saveXml();      //无法保存...
         cover.load(*defaultCoverPath);
         popUp->setText("修改成功");
@@ -517,6 +522,8 @@ void BookManageWindow::changeBookInfo()
     }
     if(changeInfoPattern==Delete)
     {
+        bookEditing->is_delete=true;
+        log_print("delete",activereader->getStringByTag("id"),bookEditing->getStringByTag("id"),getReasonWindow->getReasons().join(","));
         saveXml();
         popUp->setText("删除成功");
         popUp->setVisible(true);

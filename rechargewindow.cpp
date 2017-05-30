@@ -21,7 +21,7 @@ RechargeWindow::RechargeWindow(QWidget *parent) : QDialog(parent)
 
     getMoney=new QSpinBox(this);
     getMoney->setMaximum(2000);
-    getMoney->setMinimum(10);
+    getMoney->setMinimum(0);
     getMoney->setGeometry(200*dpi,30*dpi,100*dpi,30*dpi);\
     getMoney->setStyleSheet(
                 "QSpinBox{background-color:transparent;border:1px;border-color:gray;border-style:solid;border-radius: 4px}"
@@ -29,6 +29,13 @@ RechargeWindow::RechargeWindow(QWidget *parent) : QDialog(parent)
                 "QSpinBox::up-button{width:30px;height:30px;image:url(:/Images/Icons/UpArrow.png);}}"
                 );
     getMoney->setFont(QFont("微软雅黑",12));
+}
+
+RechargeWindow::~RechargeWindow()
+{
+    delete getMoney;
+    delete closeBtn;
+    delete confirmBtn;
 }
 
 void RechargeWindow::paintEvent(QPaintEvent *event)

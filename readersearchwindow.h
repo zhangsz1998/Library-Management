@@ -20,6 +20,7 @@ class ReaderSearchWindow : public QMdiSubWindow
     Q_OBJECT
 public:
     ReaderSearchWindow(QWidget *parent = 0);
+    ~ReaderSearchWindow();
     Reader* getRequestedUser();
 protected:
     QTableWidget* readerList;

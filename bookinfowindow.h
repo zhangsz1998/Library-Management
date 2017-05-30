@@ -16,7 +16,7 @@ class BookInfoWindow : public QMdiSubWindow
 {
     Q_OBJECT
 public:
-    explicit BookInfoWindow(QWidget *parent = 0);
+    BookInfoWindow(QWidget *parent = 0);
     Book* book;
     QPixmap cover;       //图书的封面
     QVector<QString> despList;    //图书简介分行

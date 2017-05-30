@@ -38,5 +38,12 @@ void add_newbook(Book &);
 QString convert2id();
 bool match(Book & b,QRegExp & rx,int mode);
 std::vector<Book *> search(QString kw,int mode);
+void log_print(QString format,QString a,QString b,QString c);
+QString myHash(QString author,QString press, QString category,QString name);
+QString categoryId(QString s);
+QString categortString(QString s);
+std::vector<QString> getTopCat();
+std::vector<Book *> getCatTopBor(QString cat);
+std::vector<Book *> getCatTopRef(QString cat);
 
 #endif // BOOK_MGMT_H

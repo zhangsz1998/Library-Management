@@ -34,6 +34,13 @@ BookHandleWindow::BookHandleWindow(QWidget *parent) : QMdiSubWindow(parent)
 
 }
 
+BookHandleWindow::~BookHandleWindow()
+{
+    delete getPattern;
+    delete closeBtn;
+    delete confirmBtn;
+}
+
 void BookHandleWindow::paintEvent(QPaintEvent *paintEvent)
 {
     QPainter painter(this);

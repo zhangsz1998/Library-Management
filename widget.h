@@ -43,6 +43,7 @@ private:
     QPoint offset;
     int preWindowFlag;       //若前一窗口为搜索框进入则为1,为图书概览界面则为2.....
 protected:
+    bool userAuthorized;
     bool isloged;
     ToolButton* minimizeBtn;           //最小化按钮
     ToolButton* closeBtn;              //最大化按钮
@@ -61,6 +62,7 @@ protected:
     ToolButton* logoutBtn;                   //注销登录按钮
     ToolButton* personalInfoBtn;             //个人信息
     MessageBox* popUp;
+    AuthorityCheckWindow* checkUp;        //检查权限
 
     //中央界面
     BookOverviewWindow* bookOverviewWindow;
@@ -96,14 +98,19 @@ public slots:
     void showLogoutWindow();
     void showPreWindow();
     void showReturnWindow();
+    void showOverviewWindow();
     void userLogedIn();
     void tryToLogOut();
+    void tryClose();
     void showReaderInfoByRequest();
     void showReaderSearchWindow();
+    void checkUpFailed();
+    void showCheckUpWindow();
 protected slots:
     void addDate();
     void addMonth();
     void daycheck();
+    void userChecked();
 signals:
     void dateChanged();
     void newMessages();

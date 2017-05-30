@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     rechargewindow.cpp \
     readersearchwindow.cpp \
     bookoverviewwindow.cpp \
-    label.cpp
+    label.cpp \
+    reportreasonwindow.cpp
 
 HEADERS  += widget.h \
     searchbar.h \
@@ -60,7 +61,8 @@ HEADERS  += widget.h \
     rechargewindow.h \
     readersearchwindow.h \
     bookoverviewwindow.h \
-    label.h
+    label.h \
+    reportreasonwindow.h
 
 FORMS    += widget.ui
 

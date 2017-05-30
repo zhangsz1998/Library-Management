@@ -306,6 +306,7 @@ int renew(int order,Reader *r, QDate &cur){
     }
     if (due < cur.addDays(15)) {
         r->bor_list[order].exp = cur.addDays(15);
+        log_print("renew",r->getStringByTag("id"),b->getStringByTag("id"),"");
         return 0; //xujiechenggong
     }
     return 3; // riqi mei bian
@@ -325,6 +326,7 @@ void returning(int order,Reader *r, QDate &cur){
     for (int j=order+1;j<num;j++)
         r->bor_list[j-1] = r->bor_list[j];
     r->DecIntByTag("bor_num");
+    log_print("return",r->getStringByTag("id"),cur.toString("yyyy-MM-dd"),b->getStringByTag("id"));
     if (b->is_resv && b->getIntByTag("amount") == 1)
         for (int i=0;i<readerlist.size();i++){
             int rnum = readerlist[i].getIntByTag("resv_num");
@@ -346,6 +348,44 @@ void returning(int order,Reader *r, QDate &cur){
                 }
             readerlist[i].setIntByTag("resv_num",rnum);
         }
+}
+
+void report(int order,Reader *r,QString reason){
+    QDate due = r->bor_list[order].exp;
+    QString id = r->bor_list[order].id;
+    Book * b;
+    for (int i=0;i<booklist.size();i++)
+        if (booklist[i].getStringByTag("id") == id) {
+            b = &booklist[i];
+            break;
+        }
+    b->DecIntByTag("total");
+    int num = r->getIntByTag("bor_num");
+    for (int j=order+1;j<num;j++)
+        r->bor_list[j-1] = r->bor_list[j];
+    r->DecIntByTag("bor_num");
+
+    if (r->getIntByTag("msg_num")!=30)
+        r->msg[r->getIntByTag("msg_num")] = systemDate.toString("yyyy-MM-dd")+" 您借阅的图书"+b->getStringByTag("id")+"已挂失成功,从您的账户中扣除10元!";
+    else {
+       for (int k=0;k<29;k++)
+           r->msg[k]=r->msg[k+1];
+       r->msg[29] = systemDate.toString("yyyy-MM-dd")+" 您借阅的图书"+b->getStringByTag("id")+"已挂失成功,从您的账户中扣除10元!";
+    }
+    if (r->getIntByTag("msg_num") != 30) r->IncIntByTag("msg_num");
+    else r->is_modf = true;
+    log_print("report",r->getStringByTag("id"),b->getStringByTag("id"),reason);
+
+    r->IncIntByTag("illegal_count");
+    int cnt = r->getIntByTag("illegal_count");
+    if (cnt>5) r->setStringByTag("credit",QString("3"));
+    else if (cnt > 3) r->setStringByTag("credit",QString("2"));
+    else r->setStringByTag("credit",QString("1"));
+    log_print("illegal",r->getStringByTag("id"),QString::number(cnt),r->getStringByTag("credit"));
+
+    r->balance -= 10;
+    r->is_modf = true;
+    log_print("balance",r->getStringByTag("id"),"10.00",QString::number(r->balance,'f',2));
 }
 
 Reader * getUser(QString id){

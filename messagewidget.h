@@ -10,6 +10,7 @@ class MessageWidget : public QWidget
     Q_OBJECT
 public:
     MessageWidget(QWidget *parent = 0);
+    ~MessageWidget();
     void loadMessage(QString m_msg[],int num);
 protected:
     QString* msg[30];

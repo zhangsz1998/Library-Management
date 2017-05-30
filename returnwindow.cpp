@@ -53,12 +53,31 @@ ReturnWindow::ReturnWindow(QWidget *parent) : QMdiSubWindow(parent)
         borrowTable->setCellWidget(i,3,returnBtn[i]);
     }
     borrowTable->setVisible(true);
+
+    reportWindow = new ReportReasonWindow(this);
+    reportWindow->setModal(true);
+    reportWindow->setVisible(false);
+    connect(reportWindow,SIGNAL(success()),this,SLOT(bookLost()));
     //选择操作模式：归还续借、挂失
     handleWindow=new BookHandleWindow(this);
     handleWindow->setVisible(false);
     connect(handleWindow,SIGNAL(returnPatternConfirmed()),this,SLOT(bookReturning()));
     connect(handleWindow,SIGNAL(renewPatternConfirmed()),this,SLOT(bookRenewing()));
-    connect(handleWindow,SIGNAL(lossPatternConfirmed()),this,SLOT(bookLost()));
+    connect(handleWindow,SIGNAL(lossPatternConfirmed()),this,SLOT(getReason()));
+}
+
+ReturnWindow::~ReturnWindow()
+{
+
+    for(int i=0;i<20;i++)
+    {
+        delete returnBtn[i];
+        for(int j=0;j<3;j++)
+            delete item[i][j];
+    }
+    delete handleWindow;
+    delete reportWindow;
+    delete borrowTable;
 }
 
 void ReturnWindow::paintEvent(QPaintEvent *paintEvent)
@@ -127,5 +146,9 @@ void ReturnWindow::bookRenewing()
 
 void ReturnWindow::bookLost()
 {
+    report(order,activereader,reportWindow->getReasons().join(","));
+}
 
+void ReturnWindow::getReason(){
+    reportWindow->setVisible(true);
 }

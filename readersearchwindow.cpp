@@ -50,7 +50,7 @@ ReaderSearchWindow::ReaderSearchWindow(QWidget *parent) : QMdiSubWindow(parent)
     connect(searchUser,SIGNAL(clicked()),this,SLOT(searchByName()));
 
     searchDetail=new ToolButton(this);
-    searchDetail->setGeometry(670,150*dpi,30*dpi,30*dpi);
+    searchDetail->setGeometry(670*dpi,150*dpi,30*dpi,30*dpi);
     searchDetail->setIcon(QPixmap(":/Images/Icons/Goback.png"));
     searchDetail->setIconSize(QSize(30*dpi,30*dpi));
     connect(searchDetail,SIGNAL(clicked()),this,SLOT(askForInfo()));
@@ -65,6 +65,17 @@ ReaderSearchWindow::ReaderSearchWindow(QWidget *parent) : QMdiSubWindow(parent)
     popUp->setVisible(false);
     popUp->setModal(true);
     popUp->setGeometry(220*dpi,150*dpi,popUp->width(),popUp->height());
+}
+
+ReaderSearchWindow::~ReaderSearchWindow()
+{
+    delete readerList;
+    delete searchDetail;    //搜索id
+    delete searchUser;   //搜索用户
+    delete resetBtn;     //展开表格
+    delete getId;     //用于获取读者编号,用于查询详细信息
+    delete getName;    //用于搜索姓名对应Id
+    delete popUp;
 }
 
 Reader *ReaderSearchWindow::getRequestedUser()
@@ -84,12 +95,10 @@ void ReaderSearchWindow::paintEvent(QPaintEvent *paintEvent)
         {
             readerList->setRowCount(readerList->rowCount()+1);
             QTableWidgetItem* item0=new QTableWidgetItem;
-            qDebug()<<readerlist[i].getStringByTag("name");
             item0->setText(readerlist[i].getStringByTag("name"));
             readerList->setItem(i,0,item0);
             QTableWidgetItem* item1=new QTableWidgetItem;
             item1->setText(readerlist[i].getStringByTag("id"));
-            qDebug()<<readerlist[i].getStringByTag("id");
             readerList->setItem(i,1,item1);
         }
     }

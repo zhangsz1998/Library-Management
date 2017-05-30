@@ -40,6 +40,7 @@ class PersonalInfoWindow : public QMdiSubWindow
     Q_OBJECT
 public:
     PersonalInfoWindow(QWidget *parent = 0);
+    ~PersonalInfoWindow();
     void setLoadPattern(LoadPattern a);
     void loadReader(Reader* m_reader);
 protected:
@@ -56,8 +57,9 @@ protected:
     std::vector<QString> bookTitle_rev;
     MessageWidget* messageArea;
     RechargeWindow* rechargeWindow;
-    MessageBox* popUp;
     Reader* reader;
+    MessageBox* popUp;
+    MessageBox* popUp2;
     QScrollArea* area;
     QTableWidget* borrowInfo;
     QTableWidget* reserveInfo;

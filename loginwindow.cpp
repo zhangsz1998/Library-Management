@@ -54,7 +54,19 @@ LoginWindow::LoginWindow(QWidget *parent) : QDialog(parent)
     signUpWindow=new SignUpWindow(this);
     signUpWindow->setVisible(false);
     connect(signUpWindow,SIGNAL(signedUp()),this,SLOT(userSignedUp()));
+    connect(signUpWindow,SIGNAL(loggedIn()),this,SLOT(close()));
 
+}
+
+LoginWindow::~LoginWindow()
+{
+    delete getUserName;
+    delete getPassWord;
+    delete loginBtn;
+    delete signUpBtn;
+    delete closeBtn;
+    delete signUpWindow;
+    delete popUp;
 }
 
 void LoginWindow::paintEvent(QPaintEvent *event)
@@ -106,6 +118,7 @@ void LoginWindow::checkPassWord()
     if(loginPattern==1)
     {
         popUp->setText("登录成功");
+        log_print("login",activereader->getStringByTag("id"),"","");
         this->getUserName->clear();
         this->getPassWord->clear();
         emit logedIn();

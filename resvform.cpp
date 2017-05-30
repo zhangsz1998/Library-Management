@@ -61,62 +61,47 @@ void ResvForm::setIcon(QPixmap pixmap){
 void ResvForm::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     QFont textFont("微软雅黑",15);
-    //QRect rect(30*dpi,30*dpi,60*dpi,25*dpi);
     painter.setFont(textFont);
     painter.drawText(30*dpi,50*dpi,QString("书名:"));
-    //rect.adjust(90*dpi,30*dpi,100*dpi,25*dpi);
     painter.drawText(90*dpi,50*dpi,(this->item->getStringByTag("title")));
-    //rect.adjust(200*dpi,30*dpi,60*dpi,25*dpi);
     painter.drawText(30*dpi,85*dpi,QString("编号:"));
-    //rect.adjust(260*dpi,30*dpi,100*dpi,25*dpi);
     painter.drawText(90*dpi,85*dpi,(this->item->getStringByTag("id")));
-    //rect.adjust(360*dpi,30*pi,60*dpi,25*dpi);
     painter.drawText(300*dpi,85*dpi,QString("类别:"));
-    //rect.adjust(420*dpi,30*dpi,100*dpi,25*dpi);
     painter.drawText(360*dpi,85*dpi,(this->item->getStringByTag("category")));
 
-    //rect.adjust(30*dpi,90*dpi,90*dpi,25*dpi);
     painter.drawText(30*dpi,120*dpi,QString("出版社:"));
-    //rect.adjust(120*dpi,90*dpi,200*dpi,25*dpi);
     painter.drawText(98*dpi,120*dpi,(this->item->getStringByTag("press")));
-    //rect.adjust(350*dpi,90*dpi,60*dpi,25*dpi);
     painter.drawText(30*dpi,155*dpi,QString("作者:"));
-    //rect.adjust(410*dpi,90*dpi,80*dpi,25*dpi);
     painter.drawText(90*dpi,155*dpi,(this->item->getStringByTag("author")));
 
-    //rect.adjust(30*dpi,150*dpi,100*dpi,25*dpi);
     painter.drawText(30*dpi,190*dpi,QString("馆藏数量:"));
-    //rect.adjust(150*dpi,150*dpi,60*dpi,25*dpi);
     painter.drawText(120*dpi,190*dpi,QString::number(this->item->getIntByTag("total")));
-    //rect.adjust(230*dpi,150*dpi,100*dpi,25*dpi);
     painter.drawText(230*dpi,190*dpi,QString("剩余数量:"));
-    //rect.adjust(340*dpi,150*dpi,60*dpi,25*dpi);
     painter.drawText(320*dpi,190*dpi,QString::number(this->item->getIntByTag("amount")));
 
     painter.drawLine(30*dpi,210*dpi,510*dpi,210*dpi);
 
-    //rect.adjust(30*dpi,250*dpi,60*dpi,25*dpi);
     painter.drawText(30*dpi,240*dpi,QString("姓名："));
-    //rect.adjust(90*dpi,250*dpi,100*dpi,25*dpi);
     painter.drawText(90*dpi,240*dpi,(this->borrower->getStringByTag("name")));
-    //rect.adjust(200*dpi,250*dpi,140*dpi,25*dpi);
     painter.drawText(220*dpi,240*dpi,QString("学号/教师编号:"));
-    //rect.adjust(340*dpi,250*dpi,140*dpi,25*dpi);
     painter.drawText(360*dpi,240*dpi,(this->borrower->getStringByTag("id")));
-    //rect.adjust(30*dpi,310*dpi,60*dpi,25*dpi);
     painter.drawText(30*dpi,275*dpi,QString("权限:"));
-    //rect.adjust(90*dpi,310*dpi,100*dpi,25*dpi);
-    painter.drawText(90*dpi,275*dpi,(this->borrower->getStringByTag("authority")));
-    //rect.adjust(240*dpi,310*dpi,100*dpi,25*dpi);
+    if (this->borrower->getStringByTag("authority") ==  "1")
+        painter.drawText(90*dpi,275*dpi,QString("普通用户"));
+    else
+        painter.drawText(90*dpi,275*dpi,QString("管理员"));
     painter.drawText(240*dpi,275*dpi,QString("信用等级:"));
-    //rect.adjust(350*dpi,310*dpi,100*dpi,25*dpi);
-    painter.drawText(350*dpi,275*dpi,(this->borrower->getStringByTag("credit")));
-
+    if (this->borrower->getStringByTag("credit") == "1")
+        painter.drawText(350*dpi,275*dpi,QString("优秀"));
+    else if (this->borrower->getStringByTag("credit") == "2")
+        painter.drawText(350*dpi,275*dpi,QString("良好"));
+    else
+        painter.drawText(350*dpi,275*dpi,QString("差"));
 }
 
 void ResvForm::comfirm(){
-    qDebug()<<"Entering function";
     reservation(item,borrower);
+    log_print("reserve",item->getStringByTag("id"),borrower->getStringByTag("id"),"");
     saveXml();
     saveXml2();
     popUp->setVisible(true);

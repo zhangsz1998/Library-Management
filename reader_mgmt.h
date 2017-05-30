@@ -50,6 +50,7 @@ void reservation(Book * b, Reader * r);
 int renew(int order, Reader * r, QDate &cur);
 void daycheck();
 Reader * getUser(QString id);
+void report(int order,Reader *r,QString reason);
 
 #endif // READER_MGMT_H
 

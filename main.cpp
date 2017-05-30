@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
         dir.mkdir(dataDir);
     if(!dir.exists(coverDir))        //在Data目录下创建Cover文件夹
         dir.mkdir(coverDir);
-    qDebug()<<dir.currentPath();
 
     //创建xml文件
 
@@ -65,7 +64,6 @@ int main(int argc, char *argv[])
 
         if(!bookInfo.open(QIODevice::WriteOnly|QIODevice::Truncate))
         {
-            qDebug()<<"创建BookInfo.xml失败";
             return 0;
         }
         QTextStream out_1(&bookInfo);
@@ -87,7 +85,6 @@ int main(int argc, char *argv[])
 
         if(!readerInfo.open(QIODevice::WriteOnly|QIODevice::Truncate))
         {
-            qDebug()<<"创建ReaderInfo.xml失败";
             return 0;
         }
         QTextStream out_1(&readerInfo);

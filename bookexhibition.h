@@ -13,7 +13,8 @@ class BookExhibition : public QMdiSubWindow
 {
     Q_OBJECT
 public:
-    explicit BookExhibition(QWidget *parent = 0);
+    BookExhibition(QWidget *parent = 0);
+    ~BookExhibition();
     QVector<QString> titile;
     QVector<QPixmap> cover;
     QVector<QString> press;

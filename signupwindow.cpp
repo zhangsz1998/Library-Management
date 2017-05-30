@@ -59,7 +59,24 @@ SignUpWindow::SignUpWindow(QWidget *parent) : QDialog(parent)
     popUp=new MessageBox(this);
     popUp->setGeometry(30*dpi,30*dpi,popUp->width(),popUp->height());
     popUp->setVisible(false);
-    connect(popUp->confirmBtn,SIGNAL(clicked()),this,SLOT(close()));
+    connect(popUp->confirmBtn,SIGNAL(clicked()),this,SLOT(tryToClose()));
+
+    popUp2=new MessageBox(this);
+    popUp2->setGeometry(30*dpi,30*dpi,popUp2->width(),popUp2->height());
+    popUp2->setVisible(false);
+}
+
+SignUpWindow::~SignUpWindow()
+{
+    delete getUserName;
+    delete isStudent;
+    delete isTeacher;
+    delete getId;
+    delete getPassWord;
+    delete closeBtn;
+    delete confirmBtn;
+    delete popUp;
+    delete popUp2;
 }
 
 void SignUpWindow::paintEvent(QPaintEvent *event)
@@ -88,21 +105,26 @@ void SignUpWindow::addNewUser()
     QString passWord=getPassWord->text();
     QString authority("1");
     QString credit("1");
-
-    Reader newReader(Reader(userName,id,passWord,agency,authority,credit,0,0,0,0,0));
-    if(add_newreader(newReader)==1)
-    {
-        saveXml2();
-        popUp->setText("注册成功");
-        int tmp;
-        activereader = sign_in(id,passWord,tmp);
-        emit signedUp();
-        popUp->setVisible(true);
-    }
-    else
-    {
-        popUp->setText("用户已存在！");
-        popUp->setVisible(true);
+    if (userName.isEmpty()||id.isEmpty()||passWord.isEmpty()) {
+        popUp2->setText("表单项不得为空");
+        popUp2->setVisible(true);
+    }else{
+        Reader newReader(Reader(userName,id,passWord,agency,authority,credit,0,0,0,0,0));
+        if(add_newreader(newReader)==1)
+        {
+            saveXml2();
+            popUp->setText("注册成功");
+            log_print("signup",id,"","");
+            int tmp;
+            activereader = sign_in(id,passWord,tmp);
+            emit signedUp();
+            popUp->setVisible(true);
+        }
+        else
+        {
+            popUp->setText("用户已存在！");
+            popUp->setVisible(true);
+        }
     }
     this->getId->clear();
     this->getUserName->clear();
@@ -110,4 +132,10 @@ void SignUpWindow::addNewUser()
     this->getPassWord->clear();
     isStudent->setChecked(false);
     isTeacher->setChecked(false);
+}
+
+void SignUpWindow::tryToClose()
+{
+    emit loggedIn();
+    this->close();
 }

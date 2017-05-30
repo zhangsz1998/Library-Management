@@ -1,9 +1,9 @@
-#include "getreasonwindow.h"
+#include "reportreasonwindow.h"
 #include <QDebug>
 
 extern qreal dpi;
 
-GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
+ReportReasonWindow::ReportReasonWindow(QWidget *parent) : QDialog(parent)
 {
     this->setWindowFlags(Qt::FramelessWindowHint);
     this->setStyleSheet({"background-color:#ffffff;border:1px;border-style:solid;border-color:black;border-radius:4px"});
@@ -29,7 +29,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason2->setGeometry(50*dpi,150*dpi,200*dpi,30*dpi);
     reason2->setStyleSheet({"background-color:transparent;border:none"});
     reason2->setFont(QFont("微软雅黑",15));
-    reason2->setText("图书blabla2");
+    reason2->setText("图书内页缺失");
     reason2->setVisible(true);
     reason2->setCheckState(Qt::Unchecked);
 
@@ -37,7 +37,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason3->setGeometry(50*dpi,200*dpi,200*dpi,30*dpi);
     reason3->setStyleSheet({"background-color:transparent;border:none"});
     reason3->setFont(QFont("微软雅黑",15));
-    reason3->setText("图书blabla3");
+    reason3->setText("图书封面缺失");
     reason3->setVisible(true);
     reason3->setCheckState(Qt::Unchecked);
 
@@ -45,7 +45,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason4->setGeometry(300*dpi,100*dpi,200*dpi,30*dpi);
     reason4->setStyleSheet({"background-color:transparent;border:none"});
     reason4->setFont(QFont("微软雅黑",15));
-    reason4->setText("图书blabla4");
+    reason4->setText("图书内容篡改");
     reason4->setVisible(true);
     reason4->setCheckState(Qt::Unchecked);
 
@@ -53,7 +53,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason5->setGeometry(300*dpi,150*dpi,200*dpi,30*dpi);
     reason5->setStyleSheet({"background-color:transparent;border:none"});
     reason5->setFont(QFont("微软雅黑",15));
-    reason5->setText("图书blabla5");
+    reason5->setText("图书遗失");
     reason5->setVisible(true);
     reason5->setCheckState(Qt::Unchecked);
 
@@ -61,7 +61,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason6->setGeometry(300*dpi,200*dpi,200*dpi,30*dpi);
     reason6->setStyleSheet({"background-color:transparent;border:none"});
     reason6->setFont(QFont("微软雅黑",15));
-    reason6->setText("图书blabla6");
+    reason6->setText("图书");
     reason6->setVisible(true);
     reason6->setCheckState(Qt::Unchecked);
 
@@ -115,10 +115,11 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     connect(submitComplete->closeBtn,SIGNAL(clicked()),this,SLOT(close()));
 }
 
-GetReasonWindow::~GetReasonWindow()
+ReportReasonWindow::~ReportReasonWindow()
 {
     delete closeBtn;
     delete confirmBtn;
+
     delete reason1;
     delete reason2;
     delete reason3;
@@ -129,17 +130,17 @@ GetReasonWindow::~GetReasonWindow()
     delete reason8;
     delete reason9;
     delete getOtherReason;
+
     delete submitComplete;
     delete noReasonWarning;
-
 }
 
-QStringList GetReasonWindow::getReasons()
+QStringList ReportReasonWindow::getReasons()
 {
     return reasons;
 }
 
-void GetReasonWindow::paintEvent(QPaintEvent *event)
+void ReportReasonWindow::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     QFont titleFont("微软雅黑",30);
@@ -149,12 +150,12 @@ void GetReasonWindow::paintEvent(QPaintEvent *event)
 
     painter.setPen(titlePen);
     painter.setFont(titleFont);
-    painter.drawText(20*dpi,60*dpi,"请选择您修改图书信息的原因");
+    painter.drawText(20*dpi,60*dpi,"请填写挂失理由");
     painter.setFont(elemFont);
     painter.drawText(20*dpi,280*dpi,"其他原因：");
 }
 
-void GetReasonWindow::showMessageBox()
+void ReportReasonWindow::showMessageBox()
 {
     if(reasons.length()!=0)
         submitComplete->setVisible(true);
@@ -162,7 +163,7 @@ void GetReasonWindow::showMessageBox()
         noReasonWarning->setVisible(true);
 }
 
-void GetReasonWindow::refreshReasons()
+void ReportReasonWindow::refreshReasons()
 {
     reasons.clear();
     if(reason1->isChecked())
@@ -197,7 +198,7 @@ void GetReasonWindow::refreshReasons()
         reasons.append(otherReason);
 }
 
-void GetReasonWindow::modified()
+void ReportReasonWindow::modified()
 {
-    emit successfullyModified();
+    emit success();
 }
