@@ -51,10 +51,7 @@ public:
     QPropertyAnimation opacityAction_Title[2];
     QTimer* timerL;      //交换用定时器
     QTimer* timerR;
-<<<<<<< HEAD
     QTimer * actionTimer;
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 protected:
     int cursorLayer;
     int firstIndexInBookList;  //当前最左的图标签指向的书目下标
@@ -64,11 +61,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *mouseEvent);
     void mousePressEvent(QMouseEvent *mouseEvent);
 signals:
-<<<<<<< HEAD
     void actionTimeout();
-=======
-
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 public slots:
     void startTimerL();
     void startTimerR();
@@ -79,10 +72,7 @@ public slots:
     void changeOrderL();
     void changeOrderR();
     void changeCategory();
-<<<<<<< HEAD
     void noAction();
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 };
 
 #endif // BOOKOVERVIEWWINDOW_H

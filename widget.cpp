@@ -134,10 +134,6 @@ Widget::Widget(QWidget *parent) :
     connect(bookManagementBtn,SIGNAL(clicked()),this,SLOT(showBookManagementWindow()));
 
     bookInfoWindow=new BookInfoWindow(this);
-<<<<<<< HEAD
-=======
-    bookInfoWindow->loadBook(&(booklist.at(1)));
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     bookInfoWindow->setVisible(false);
     connect(bookInfoWindow->goBackBtn,SIGNAL(clicked()),this,SLOT(showPreWindow()));
 
@@ -175,10 +171,7 @@ Widget::Widget(QWidget *parent) :
     popUp->setVisible(false);
 
     connect(this,SIGNAL(dateChanged()),this,SLOT(daycheck()));
-<<<<<<< HEAD
     connect(bookOverviewWindow,SIGNAL(actionTimeout()),this,SLOT(addDate()));
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 }
 
 Widget::~Widget()
@@ -223,11 +216,7 @@ void Widget::paintEvent(QPaintEvent *event)
    // this->setPalette(palette);//图片不搭
 
     if(userMessageChanged)
-<<<<<<< HEAD
         messageCentreBtn->setIcon(QPixmap(":/Images/Icons/haveMessage.png").scaled(40*dpi,40*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-=======
-        messageCentreBtn->setIcon(hasMessages.scaled(40*dpi,40*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     else
         messageCentreBtn->setIcon(QPixmap(":/Images/Icons/Message.png").scaled(40*dpi,40*dpi,Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
     //重新计算按钮的位置
@@ -298,10 +287,7 @@ void Widget::showBookInfoBySearch()
     personalInfoWindow->setVisible(false);
     readerSearchWindow->setVisible(false);
     bookOverviewWindow->setVisible(false);
-<<<<<<< HEAD
     bookOverviewWindow->actionTimer->stop();
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 }
 
 void Widget::showBookManagementWindow()
@@ -324,10 +310,7 @@ void Widget::showBookManagementWindow()
     returnWindow->setVisible(false);
     readerSearchWindow->setVisible(false);
     bookOverviewWindow->setVisible(false);
-<<<<<<< HEAD
     bookOverviewWindow->actionTimer->stop();
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 }
 
 void Widget::showPersonalInfoWindow()
@@ -343,18 +326,12 @@ void Widget::showPersonalInfoWindow()
     bookInfoWindow->setVisible(false);
     personalInfoWindow->loadReader(activereader);
     personalInfoWindow->setLoadPattern(bySelf);
-<<<<<<< HEAD
     personalInfoWindow->repaint();
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     personalInfoWindow->setVisible(true);
     returnWindow->setVisible(false);
     readerSearchWindow->setVisible(false);
     bookOverviewWindow->setVisible(false);
-<<<<<<< HEAD
     bookOverviewWindow->actionTimer->stop();
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 }
 
 void Widget::showMessages()
@@ -365,7 +342,6 @@ void Widget::showMessages()
         popUp->setVisible(true);
         return;
     }
-<<<<<<< HEAD
     personalInfoWindow->setLoadPattern(bySelf);
     personalInfoWindow->loadReader(activereader);
     this->personalInfoWindow->showMessages();
@@ -376,9 +352,6 @@ void Widget::showMessages()
     returnWindow->setVisible(false);
     readerSearchWindow->setVisible(false);
     bookOverviewWindow->setVisible(false);
-=======
-    this->personalInfoWindow->showMessages();
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 }
 
 void Widget::showSearchResult()    //在此添加查询结果
@@ -387,11 +360,8 @@ void Widget::showSearchResult()    //在此添加查询结果
     std::vector<Book*> &books=(this->bookExhibitionWindow->books);
     int mode=this->searchBar->mode();
     books=search(this->searchBar->lineEdit->text(),mode);
-<<<<<<< HEAD
     for (int i=0;i<books.size();i++)
         books[i]->IncIntByTag("refer_count");
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     this->bookExhibitionWindow->currentPage=0;
     bookExhibitionWindow->setVisible(true);
     bookManagementWindow->setVisible(false);
@@ -401,10 +371,7 @@ void Widget::showSearchResult()    //在此添加查询结果
     readerSearchWindow->setVisible(false);
     bookOverviewWindow->setVisible(false);
     personalInfoWindow->setVisible(false);
-<<<<<<< HEAD
     bookOverviewWindow->actionTimer->stop();
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 
     bookExhibitionWindow->refreshDesp();
     this->bookExhibitionWindow->repaint();
@@ -413,7 +380,6 @@ void Widget::showSearchResult()    //在此添加查询结果
 void Widget::showLoginWindow()
 {
     loginWindow->setVisible(true);
-<<<<<<< HEAD
 }
 
 void Widget::showLogoutWindow()
@@ -540,130 +506,6 @@ void Widget::showReaderSearchWindow()
     }
 }
 
-=======
-}
-
-void Widget::showLogoutWindow()
-{
-    popUp->setText("您真的要注销么？");
-    popUp->setVisible(true);
-}
-
-void Widget::showPreWindow()
-{
-    if(preWindowFlag==1)
-    {
-        bookExhibitionWindow->setVisible(true);
-        bookManagementWindow->setVisible(false);
-        bookInfoWindow->setVisible(false);
-    }
-    else
-    {
-
-    }
-}
-
-void Widget::showReturnWindow()
-{
-    if(activereader==Q_NULLPTR)
-    {
-        popUp->setText("请先登录");
-        popUp->setVisible(true);
-        return;
-    }
-    else
-    {
-        bookExhibitionWindow->setVisible(false);
-        bookManagementWindow->setVisible(false);
-        bookInfoWindow->setVisible(false);
-        personalInfoWindow->setVisible(false);
-        returnWindow->setVisible(true);
-        readerSearchWindow->setVisible(false);
-        bookOverviewWindow->setVisible(false);
-    }
-}
-
-void Widget::showOverviewWindow()
-{
-    bookExhibitionWindow->setVisible(false);
-    bookManagementWindow->setVisible(false);
-    bookInfoWindow->setVisible(false);
-    personalInfoWindow->setVisible(false);
-    returnWindow->setVisible(false);
-    readerSearchWindow->setVisible(false);
-    bookOverviewWindow->setVisible(true);
-}
-
-void Widget::userLogedIn()
-{
-    isloged=true;
-    userAuthorized=false;
-    userMessageChanged=false;
-    update();
-}
-
-void Widget::tryClose(){
-    if (activereader) log_print("signout",activereader->getStringByTag("id"),"","");
-    log_print("close","","","");
-    saveXml();
-    saveXml2();
-    this->close();
-}
-
-void Widget::tryToLogOut()
-{
-    if(popUp->getText()=="您真的要注销么？")
-    {
-        isloged=false;
-        log_print("signout",activereader->getStringByTag("id"),"","");
-        activereader=Q_NULLPTR;
-        bookManagementWindow->setVisible(false);
-        personalInfoWindow->setVisible(false);
-        returnWindow->setVisible(false);
-        readerSearchWindow->setVisible(false);
-        bookManagementWindow->setVisible(false);
-        bookOverviewWindow->setVisible(true);
-        update();
-    }
-}
-
-void Widget::showReaderInfoByRequest()
-{
-    personalInfoWindow->setLoadPattern(byAdmin);
-    personalInfoWindow->loadReader(readerSearchWindow->getRequestedUser());
-    bookExhibitionWindow->setVisible(false);
-    bookManagementWindow->setVisible(false);
-    bookInfoWindow->setVisible(false);
-    personalInfoWindow->setVisible(true);
-    returnWindow->setVisible(false);
-    readerSearchWindow->setVisible(false);
-}
-
-void Widget::showReaderSearchWindow()
-{
-    if(activereader==Q_NULLPTR)
-    {
-        popUp->setText("请先登录");
-        popUp->setVisible(true);
-        return;
-    }
-    if(userAuthorized==false)
-    {
-        checkUp->setVisible(true);
-        return;
-    }
-    else
-    {
-        bookExhibitionWindow->setVisible(false);
-        bookManagementWindow->setVisible(false);
-        bookInfoWindow->setVisible(false);
-        personalInfoWindow->setVisible(false);
-        returnWindow->setVisible(false);
-        readerSearchWindow->setVisible(true);
-    }
-}
-
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 void Widget::checkUpFailed()
 {
     popUp->setText("密码错误");
@@ -763,103 +605,6 @@ void Widget::daycheck()
             } else
             if (readerlist[i].bor_list[j].exp.addDays(30) == systemDate){
                 userMessageChanged=true;
-                if (readerlist[i].getIntByTag("msg_num")!=30)
-                    readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期三十天，请尽快归还！");
-                else {
-                   for (int k=0;k<29;k++)
-                       readerlist[i].msg[k]=readerlist[i].msg[k+1];
-                   readerlist[i].msg[29] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期三十天，请尽快归还！");
-                }
-                if (readerlist[i].getIntByTag("msg_num") != 30) readerlist[i].IncIntByTag("msg_num");
-                else readerlist[i].is_modf = true;
-                Book *b;
-                for (int k=0;k<booklist.size();k++)
-                    if (booklist[k].getStringByTag("id") == readerlist[i].bor_list[j].id){
-                        b=&booklist[k];
-                        break;
-                    }
-                log_print("expire",readerlist[i].getStringByTag("id"),b->getStringByTag("id"),"三十");
-            }
-            if (readerlist[i].bor_list[j].exp < systemDate){
-                readerlist[i].is_modf=true;
-                int days = readerlist[i].bor_list[j].exp.daysTo(systemDate);
-                if (days < 10) {
-                    readerlist[i].balance -= 0.5;
-                    log_print("balance",readerlist[i].getStringByTag("id"),"0.5",QString::number(readerlist[i].balance,'f',2));
-                }
-                else if (days < 30) {
-                    readerlist[i].balance -= 0.75;
-                    log_print("balance",readerlist[i].getStringByTag("id"),"0.75",QString::number(readerlist[i].balance,'f',2));
-                }
-                else {
-                    readerlist[i].balance -= 1;
-                    log_print("balance",readerlist[i].getStringByTag("id"),"1.0",QString::number(readerlist[i].balance,'f',2));
-                }
-            }
-        }
-    }
-    saveXml();
-    saveXml2();
-}
-
-void Widget::userChecked()
-{
-    userAuthorized=true;
-    popUp->setText("验证通过");
-    popUp->setVisible(true);
-}
-
-void Widget::daycheck()
-{
-    for (int i=0;i<readerlist.size();i++){
-        int num = readerlist[i].getIntByTag("bor_num");
-        for (int j=0;j<num;j++){
-            if (readerlist[i].bor_list[j].exp.addDays(1) == systemDate){
-                emit newMessages();
-                if (readerlist[i].getIntByTag("msg_num")!=30)
-                    readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期一天，请尽快归还！");
-                else {
-                   for (int k=0;k<29;k++)
-                       readerlist[i].msg[k]=readerlist[i].msg[k+1];
-                   readerlist[i].msg[29] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期一天，请尽快归还！");
-                }
-                if (readerlist[i].getIntByTag("msg_num") != 30) readerlist[i].IncIntByTag("msg_num");
-                else readerlist[i].is_modf = true;
-                Book *b;
-                for (int k=0;k<booklist.size();k++)
-                    if (booklist[k].getStringByTag("id") == readerlist[i].bor_list[j].id){
-                        b=&booklist[k];
-                        break;
-                    }
-                log_print("expire",readerlist[i].getStringByTag("id"),b->getStringByTag("id"),"一");
-                readerlist[i].IncIntByTag("illegal_count");
-                int cnt = readerlist[i].getIntByTag("illegal_count");
-                if (cnt>5) readerlist[i].setStringByTag("credit",QString("3"));
-                else if (cnt > 3) readerlist[i].setStringByTag("credit",QString("2"));
-                else readerlist[i].setStringByTag("credit",QString("1"));
-                log_print("illegal",readerlist[i].getStringByTag("id"),QString::number(cnt),readerlist[i].getStringByTag("credit"));
-            } else
-            if (readerlist[i].bor_list[j].exp.addDays(10) == systemDate){
-                emit newMessages();
-                if (readerlist[i].getIntByTag("msg_num")!=30)
-                    readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期十天，请尽快归还！");
-                else {
-                   for (int k=0;k<29;k++)
-                       readerlist[i].msg[k]=readerlist[i].msg[k+1];
-                   readerlist[i].msg[29] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期十天，请尽快归还！");
-                }
-                if (readerlist[i].getIntByTag("msg_num") != 30) readerlist[i].IncIntByTag("msg_num");
-                else readerlist[i].is_modf = true;
-                Book *b;
-                for (int k=0;k<booklist.size();k++)
-                    if (booklist[k].getStringByTag("id") == readerlist[i].bor_list[j].id){
-                        b=&booklist[k];
-                        break;
-                    }
-                log_print("expire",readerlist[i].getStringByTag("id"),b->getStringByTag("id"),"十");
-            } else
-            if (readerlist[i].bor_list[j].exp.addDays(30) == systemDate){
-                emit newMessages();
                 if (readerlist[i].getIntByTag("msg_num")!=30)
                     readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = QString(systemDate.toString("yyyy-MM-dd")+" 您借阅的图书:"+readerlist[i].bor_list[j].id+"已过期三十天，请尽快归还！");
                 else {

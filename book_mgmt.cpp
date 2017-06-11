@@ -46,17 +46,12 @@ Book::Book(const QDomNode a){
     this->author = list.at(1).toElement().text();
     this->press = list.at(2).toElement().text();
     this->desp = list.at(3).toElement().text();
-    //this->id = list.at(4).toElement().text();
-
+    this->id = list.at(4).toElement().text();
     this->amount = list.at(5).toElement().text().toInt();
     this->total = list.at(6).toElement().text().toInt();
     this->category =list.at(7).toElement().text();
     this->refer_count = list.at(8).toElement().text().toInt();
     this->bor_count = list.at(9).toElement().text().toInt();
-<<<<<<< HEAD
-=======
-    this->id=myHash(author,press,category,title);
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     QString tmp = list.at(10).toElement().text();
     if (tmp[0]==':') this->loc = tmp;
     else this->loc = coverDir + tmp;
@@ -66,10 +61,6 @@ Book::Book(const QDomNode a){
     else
         this->is_resv = true;
     is_modf = false;
-<<<<<<< HEAD
-=======
-    is_modf=true;
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     is_delete = false;
 }
 
@@ -239,7 +230,6 @@ void add_newbook(Book & book){
 }
 
 void fileUpdate(){
-<<<<<<< HEAD
     if (!booklist.empty()){
         while (booklist.back().is_delete == true) booklist.pop_back();
         for (std::vector<Book>::iterator it=booklist.begin();it!=booklist.end();++it)
@@ -257,28 +247,6 @@ void fileUpdate(){
             else if (it->order >= list.count())
                 doc.documentElement().appendChild(it->toDom());
     }
-=======
-    while (booklist.back().is_delete == true) booklist.pop_back();
-    for (std::vector<Book>::iterator it=booklist.begin();it!=booklist.end();++it)
-        if (it->is_delete) {
-            firstNode.removeChild(firstNode.childNodes().at(it->order));
-            for (std::vector<Book>::iterator ir=it+1;ir!=booklist.end();ir++)
-                ir->order--;
-            booklist.erase(it);
-        }
-        else if (it->is_modf && it->order < list.count()){
-            QDomNode tmp = it->toDom();
-            firstNode.replaceChild(tmp,firstNode.childNodes().at(it->order));
-            list = firstNode.childNodes();
-            //qDebug()<<st.childNodes().at(5).toElement().text();
-            //qDebug()<<firstNode.childNodes().at(it->order).childNodes().at(5).toElement().text();
-            //firstNode.childNodes().at(it->order).childNodes().at(5).setNodeValue("32");;
-            //qDebug()<<firstNode.childNodes().at(it->order).childNodes().at(5).toElement().text();
-
-        }
-       else if (it->order >= list.count())
-            doc.documentElement().appendChild(it->toDom());
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 }
 
 void saveXml(){
@@ -478,10 +446,7 @@ void log_print(QString format,QString a,QString b,QString c){
     QTextStream outlog(&f);
     //QTextCodec *codec=QTextCodec::codecForName("GBK");
     //outlog.setCodec(codec);
-<<<<<<< HEAD
     if (format == "initial") outlog <<systemDate.toString("yyyy-MM-dd")<<QString(" 程序已启动")<<".\n";
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     if (format == "borrow") outlog<<systemDate.toString("yyyy-MM-dd")<<QString(" 用户<")<<a<<QString(">已借阅图书<")<<b<<QString(">,预期归还时间为")<<c<<".\n";
     //  borrowform.cpp 107
     if (format == "reserve") outlog<<systemDate.toString("yyyy-MM-dd")<<QString(" 用户<")<<a <<QString(">已预订图书<")<<b<<">.\n";
@@ -565,7 +530,6 @@ std::vector<Book *> getCatTopRef(QString cat){
          res.push_back(&booklist[mylist[i].order]);
     return res;
 }
-<<<<<<< HEAD
 
 QDate getDate(){
     QFile f(dataDir+"/system.cfg");
@@ -590,5 +554,3 @@ void configureDate(){
     out << systemDate.toString("yyyy-MM-dd");
     f.close();
 }
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169

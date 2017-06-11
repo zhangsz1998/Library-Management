@@ -186,7 +186,6 @@ void BookInfoWindow::borrowEvent(){
 
 void BookInfoWindow::resvEvent(){
     if (activereader!=Q_NULLPTR){
-<<<<<<< HEAD
         int flag=0;
         for (int i=0;i<activereader->getIntByTag("resv_num");i++)
             if (book->getStringByTag("id") == activereader->resvs[i]) flag =1;
@@ -202,15 +201,6 @@ void BookInfoWindow::resvEvent(){
                 popUp->setText("仍有库存，无需预约");
                 popUp->setVisible(true);
             }
-=======
-        if (book->getIntByTag("amount")==0){
-            resvForm->setBook(book);
-            resvForm->setReader(activereader);
-            resvForm->setVisible(true);
-        }else {
-            popUp->setText("仍有库存，无需预约");
-            popUp->setVisible(true);
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
         }
     }
     else {

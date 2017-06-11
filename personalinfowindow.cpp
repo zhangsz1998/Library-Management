@@ -53,11 +53,7 @@ PersonalInfoWindow::PersonalInfoWindow(QWidget *parent) : QMdiSubWindow(parent)
     area->setGeometry(230*dpi,310*dpi,615*dpi,205*dpi);
     messageArea=new MessageWidget(area);
     messageArea->setWindowFlags(Qt::FramelessWindowHint);
-<<<<<<< HEAD
     messageArea->setGeometry(0*dpi,0*dpi,800*dpi,700*dpi);
-=======
-    messageArea->setGeometry(0*dpi,0*dpi,700*dpi,700*dpi);
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     area->setWidget(messageArea);
     area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -312,11 +308,8 @@ void PersonalInfoWindow::showMessages()
 void PersonalInfoWindow::showPersonalInfo()
 {
     pattern=PersonalInfo;
-<<<<<<< HEAD
     if(loadPattern==bySelf)
         this->loadReader(activereader);
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     showBorrowInfoBtn->setStyleSheet("background-color: #0099ff");
     showReserveInfoBtn->setStyleSheet("background-color: #0099ff");
     this->update();

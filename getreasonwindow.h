@@ -26,10 +26,6 @@ public:
     QCheckBox* reason6;
     QCheckBox* reason7;
     QCheckBox* reason8;
-<<<<<<< HEAD
-=======
-    QCheckBox* reason9;
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     QTextEdit* getOtherReason;
 
     MessageBox* submitComplete;

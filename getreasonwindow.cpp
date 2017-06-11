@@ -21,11 +21,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason1->setGeometry(50*dpi,100*dpi,200*dpi,30*dpi);
     reason1->setFont(QFont("微软雅黑",15));
     reason1->setStyleSheet({"background-color:transparent;border:none"});
-<<<<<<< HEAD
     reason1->setText("图书整体磨损");
-=======
-    reason1->setText("图书损坏");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason1->setVisible(true);
     reason1->setCheckState(Qt::Unchecked);
 
@@ -33,11 +29,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason2->setGeometry(50*dpi,150*dpi,200*dpi,30*dpi);
     reason2->setStyleSheet({"background-color:transparent;border:none"});
     reason2->setFont(QFont("微软雅黑",15));
-<<<<<<< HEAD
     reason2->setText("图书内页缺失");
-=======
-    reason2->setText("图书blabla2");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason2->setVisible(true);
     reason2->setCheckState(Qt::Unchecked);
 
@@ -45,11 +37,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason3->setGeometry(50*dpi,200*dpi,200*dpi,30*dpi);
     reason3->setStyleSheet({"background-color:transparent;border:none"});
     reason3->setFont(QFont("微软雅黑",15));
-<<<<<<< HEAD
     reason3->setText("图书封面缺失");
-=======
-    reason3->setText("图书blabla3");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason3->setVisible(true);
     reason3->setCheckState(Qt::Unchecked);
 
@@ -57,11 +45,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason4->setGeometry(300*dpi,100*dpi,200*dpi,30*dpi);
     reason4->setStyleSheet({"background-color:transparent;border:none"});
     reason4->setFont(QFont("微软雅黑",15));
-<<<<<<< HEAD
     reason4->setText("图书内容篡改");
-=======
-    reason4->setText("图书blabla4");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason4->setVisible(true);
     reason4->setCheckState(Qt::Unchecked);
 
@@ -69,26 +53,15 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason5->setGeometry(300*dpi,150*dpi,200*dpi,30*dpi);
     reason5->setStyleSheet({"background-color:transparent;border:none"});
     reason5->setFont(QFont("微软雅黑",15));
-<<<<<<< HEAD
     reason5->setText("图书遗失");
-=======
-    reason5->setText("图书blabla5");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason5->setVisible(true);
     reason5->setCheckState(Qt::Unchecked);
 
     reason6=new QCheckBox(this);
-<<<<<<< HEAD
     reason6->setGeometry(300*dpi,200*dpi,400*dpi,30*dpi);
     reason6->setStyleSheet({"background-color:transparent;border:none"});
     reason6->setFont(QFont("微软雅黑",15));
     reason6->setText("图书库存已更新，但信息未更新");
-=======
-    reason6->setGeometry(300*dpi,200*dpi,200*dpi,30*dpi);
-    reason6->setStyleSheet({"background-color:transparent;border:none"});
-    reason6->setFont(QFont("微软雅黑",15));
-    reason6->setText("图书blabla6");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason6->setVisible(true);
     reason6->setCheckState(Qt::Unchecked);
 
@@ -96,11 +69,7 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason7->setGeometry(550*dpi,100*dpi,200*dpi,30*dpi);
     reason7->setStyleSheet({"background-color:transparent;border:none"});
     reason7->setFont(QFont("微软雅黑",15));
-<<<<<<< HEAD
     reason7->setText("图书超出时效");
-=======
-    reason7->setText("图书blabla7");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason7->setVisible(true);
     reason7->setCheckState(Qt::Unchecked);
 
@@ -108,25 +77,10 @@ GetReasonWindow::GetReasonWindow(QWidget *parent) : QDialog(parent)
     reason8->setGeometry(550*dpi,150*dpi,200*dpi,30*dpi);
     reason8->setStyleSheet({"background-color:transparent;border:none"});
     reason8->setFont(QFont("微软雅黑",15));
-<<<<<<< HEAD
     reason8->setText("图书证遗失");
     reason8->setVisible(true);
     reason8->setCheckState(Qt::Unchecked);
 
-=======
-    reason8->setText("图书blabla8");
-    reason8->setVisible(true);
-    reason8->setCheckState(Qt::Unchecked);
-
-    reason9=new QCheckBox(this);
-    reason9->setGeometry(550*dpi,200*dpi,200*dpi,30*dpi);
-    reason9->setStyleSheet({"background-color:transparent;border:none"});
-    reason9->setFont(QFont("微软雅黑",15));
-    reason9->setText("图书blabla9");
-    reason9->setVisible(true);
-    reason9->setCheckState(Qt::Unchecked);
-
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     getOtherReason=new QTextEdit(this);
     getOtherReason->setGeometry(50*dpi,300*dpi,600*dpi,200*dpi);
     getOtherReason->setStyleSheet({"background-color: #ffffff"});
@@ -165,10 +119,6 @@ GetReasonWindow::~GetReasonWindow()
     delete reason6;
     delete reason7;
     delete reason8;
-<<<<<<< HEAD
-=======
-    delete reason9;
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     delete getOtherReason;
     delete submitComplete;
     delete noReasonWarning;
@@ -222,11 +172,6 @@ void GetReasonWindow::refreshReasons()
         reasons.append(reason7->text());
     if(reason8->isChecked())
         reasons.append(reason8->text());
-<<<<<<< HEAD
-=======
-    if(reason9->isChecked())
-        reasons.append(reason9->text());
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     QString otherReason=getOtherReason->toPlainText();
     getOtherReason->clear();
     reason1->setCheckState(Qt::Unchecked);
@@ -236,10 +181,6 @@ void GetReasonWindow::refreshReasons()
     reason6->setCheckState(Qt::Unchecked);
     reason7->setCheckState(Qt::Unchecked);
     reason8->setCheckState(Qt::Unchecked);
-<<<<<<< HEAD
-=======
-    reason9->setCheckState(Qt::Unchecked);
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     if(otherReason.length()!=0)
         reasons.append(otherReason);
 }

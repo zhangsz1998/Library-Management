@@ -7,18 +7,12 @@
 #include "reader_mgmt.h"
 
 extern QString coverDir;
-<<<<<<< HEAD
 extern QDate systemDate;
 extern qreal dpi;
 extern std::vector<Book> booklist;
 extern Reader * activereader;
 extern std::vector<Reader> readerlist;
 extern bool userMessageChanged;
-=======
-extern qreal dpi;
-extern std::vector<Book> booklist;
-extern Reader * activereader;
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 
 BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
 {
@@ -168,22 +162,14 @@ BookManageWindow::BookManageWindow(QWidget *parent) : QMdiSubWindow(parent)
     modifyConfirmBtn->setFont(QFont("微软雅黑",15));
     modifyConfirmBtn->setGeometry(763*dpi,473*dpi,80*dpi,40*dpi);
     connect(modifyConfirmBtn,SIGNAL(clicked()),this,SLOT(nowEditing()));
-<<<<<<< HEAD
     connect(modifyConfirmBtn,SIGNAL(clicked()),this,SLOT(isAuthorized()));
-=======
-    connect(modifyConfirmBtn,SIGNAL(clicked()),this,SLOT(checkAuthority()));
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 
     deleteBtn=new ToolButton(this);
     deleteBtn->setFont(QFont("微软雅黑",15));
     deleteBtn->setText("删除图书");
     deleteBtn->setGeometry(603*dpi,473*dpi,150*dpi,40*dpi);
     connect(deleteBtn,SIGNAL(clicked()),this,SLOT(nowDeleting()));
-<<<<<<< HEAD
     connect(deleteBtn,SIGNAL(clicked()),this,SLOT(isAuthorized()));
-=======
-    connect(deleteBtn,SIGNAL(clicked()),this,SLOT(checkAuthority()));
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 
     checkWindow=new AuthorityCheckWindow(this);
     checkWindow->setModal(true);
@@ -358,11 +344,7 @@ void BookManageWindow::paintEvent(QPaintEvent *paintEvent)
     case searching:
         changePatternBtn->setIcon(*leftArrow);
         painter.setPen(titlePen);
-<<<<<<< HEAD
         painter.drawText(this->width()/3,45*dpi,"修改图书");
-=======
-        painter.drawText(this->width()/3,45*dpi,"删减图书");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
         painter.setFont(elemFont);
         painter.setPen(textPen);
 
@@ -387,11 +369,7 @@ void BookManageWindow::paintEvent(QPaintEvent *paintEvent)
         break;
     case editing:
         painter.setPen(titlePen);
-<<<<<<< HEAD
         painter.drawText(this->width()/3,45*dpi,"修改图书");
-=======
-        painter.drawText(this->width()/3,45*dpi,"删减图书");
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
         painter.setFont(elemFont);
         painter.setPen(textPen);
         //绘制表单提示字符
@@ -535,7 +513,6 @@ void BookManageWindow::changeBookInfo()
         bookEditing->setIntByTag("amount",amount);
         bookEditing->setStringByTag("loc",newCoverPath);
         log_print("modify",activereader->getStringByTag("id"),bookEditing->getStringByTag("id"),getReasonWindow->getReasons().join(","));
-<<<<<<< HEAD
         if (bookEditing->is_resv=1 && bookEditing->getIntByTag("amount")>0){
             for (int i=0;i<readerlist.size();i++){
                 int rnum = readerlist[i].getIntByTag("resv_num");
@@ -559,8 +536,6 @@ void BookManageWindow::changeBookInfo()
             }
 
         }
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
         saveXml();      //无法保存...
         cover.load(*defaultCoverPath);
         popUp->setText("修改成功");

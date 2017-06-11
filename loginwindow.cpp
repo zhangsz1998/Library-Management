@@ -43,10 +43,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QDialog(parent)
     getPassWord->setFont(QFont("微软雅黑",15));
     getPassWord->setEchoMode(QLineEdit::Password);
     getPassWord->setPlaceholderText("密码");
-<<<<<<< HEAD
     connect(getPassWord,SIGNAL(returnPressed()),this,SLOT(checkPassWord()));
-=======
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 
     popUp=new MessageBox(this);
     popUp->move(QPoint(100*dpi,100*dpi));

@@ -113,11 +113,7 @@ protected slots:
     void userChecked();
 signals:
     void dateChanged();
-<<<<<<< HEAD
     void daysadd();
-=======
-    void newMessages();
->>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 };
 
 #endif // WIDGET_H
