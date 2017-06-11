@@ -5,8 +5,8 @@ ToolButton::ToolButton(QWidget *parent,QColor p_color,QColor e_color)
 {
     plainColor=p_color;
     enterColor=e_color;
-    QString plainARGB=toARGBString(plainColor);
-    setStyleSheet(QString("border:none; margin 0px; background-color:rgba(%1);").arg(plainARGB));
+    QString plainRGBA=toRGBAString(plainColor);
+    setStyleSheet(QString("border:none; margin 0px; background-color:rgba(%1);").arg(plainRGBA));
 }
 
 ToolButton::ToolButton(QWidget *parent)
@@ -25,7 +25,7 @@ ToolButton::~ToolButton()
 ToolButton::setPlainColor(QColor color)
 {
     plainColor=color;
-    setStyleSheet(QString("background-color:rgba(%1); border: none;margin: 0px;").arg(toARGBString(plainColor)));
+    setStyleSheet(QString("background-color:rgba(%1); border: none;margin: 0px;").arg(toRGBAString(plainColor)));
 }
 
 ToolButton::setEnterColor(QColor color)
@@ -33,17 +33,17 @@ ToolButton::setEnterColor(QColor color)
     enterColor=color;
 }
 
-QString ToolButton::toARGBString(QColor color)
+QString ToolButton::toRGBAString(QColor color)
 {
     return QString("%1,%2,%3,%4").arg(QString::number(color.red())).arg(QString::number(color.green())).arg(QString::number(color.blue())).arg(QString::number(color.alpha()));
 }
 
 void ToolButton::enterEvent(QEvent *event)
 {
-    this->setStyleSheet(QString("background-color:rgba(%1); border: none;margin: 0px;").arg(toARGBString(enterColor)));
+    this->setStyleSheet(QString("background-color:rgba(%1); border: none;margin: 0px;").arg(toRGBAString(enterColor)));
 }
 
 void ToolButton::leaveEvent(QEvent *event)
 {
-    this->setStyleSheet(QString("border:none; margin 0px; background-color:rgba(%1)").arg(toARGBString(plainColor)));
+    this->setStyleSheet(QString("border:none; margin 0px; background-color:rgba(%1)").arg(toRGBAString(plainColor)));
 }

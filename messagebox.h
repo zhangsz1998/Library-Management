@@ -25,6 +25,7 @@ public:
     QString text;
     ~MessageBox();
     void setText(QString text);         //设置提示文字
+    QString getText();
     void setIcon(QPixmap pixmap);        //设置图片
 protected:
     void paintEvent(QPaintEvent *event);
