@@ -17,7 +17,10 @@ SignUpWindow::SignUpWindow(QWidget *parent) : QDialog(parent)
 
     getUserName=new QLineEdit(this);
     getUserName->setGeometry(250*dpi,50*dpi,150*dpi,30*dpi);
+<<<<<<< HEAD
     getUserName->setPlaceholderText("中英文字符，不得超过10位");
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     getUserName->setStyleSheet({"background-color:transparent;border:2px;"
                           "border-top:none;border-left:none;"
                           "border-right:none;border-color:#c0c0c0;border-style:solid;"
@@ -37,14 +40,20 @@ SignUpWindow::SignUpWindow(QWidget *parent) : QDialog(parent)
 
     getId=new QLineEdit(this);
     getId->setGeometry(250*dpi,180*dpi,150*dpi,30*dpi);
+<<<<<<< HEAD
     getId->setPlaceholderText("由数字组成,不得超过10位");
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     getId->setStyleSheet({"background-color:transparent;border:2px;"
                           "border-top:none;border-left:none;"
                           "border-right:none;border-color:#c0c0c0;border-style:solid;"
                           "border-top-left-radius:4px;border-top-right-radius: 4px;"});
 
     getPassWord=new QLineEdit(this);
+<<<<<<< HEAD
     getPassWord->setPlaceholderText("长度不得小于5位");
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     getPassWord->setGeometry(250*dpi,240*dpi,150*dpi,30*dpi);
     getPassWord->setStyleSheet("background-color:transparent;border:1px ;border-color:#c0c0c0;border-style:solid;border-top-left-radius:4px;border-top-right-radius: 4px;");
     getPassWord->setStyleSheet({"background-color:transparent;border:2px;"
@@ -108,6 +117,7 @@ void SignUpWindow::addNewUser()
     QString passWord=getPassWord->text();
     QString authority("1");
     QString credit("1");
+<<<<<<< HEAD
     QRegExp p("^\\d*$");
     if (userName.isEmpty()||id.isEmpty()||passWord.isEmpty()) {
         popUp2->setText("表单项不得为空");
@@ -126,6 +136,13 @@ void SignUpWindow::addNewUser()
         popUp2->setVisible(true);
     } else {
         Reader newReader(Reader(userName,id,passWord,agency,authority,credit,0,0,0,0,30));
+=======
+    if (userName.isEmpty()||id.isEmpty()||passWord.isEmpty()) {
+        popUp2->setText("表单项不得为空");
+        popUp2->setVisible(true);
+    }else{
+        Reader newReader(Reader(userName,id,passWord,agency,authority,credit,0,0,0,0,0));
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
         if(add_newreader(newReader)==1)
         {
             saveXml2();

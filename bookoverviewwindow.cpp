@@ -29,6 +29,10 @@ BookOverviewWindow::BookOverviewWindow(QWidget *parent) : QMdiSubWindow(parent)
             titlesOnDisplay[i]=new Label(this);
             titlesOnDisplay[i]->setGeometry((48+(i-1)*157)*dpi,200*dpi,135*dpi,30*dpi);
                  titlesOnDisplay[i]->setStyleSheet("background-color:transparent");
+<<<<<<< HEAD
+=======
+            titlesOnDisplay[i]->setAlignment(Qt::AlignCenter);
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
             titlesOnDisplay[i]->setVisible(false);
             r_Cover.push_back(QRect((48+(i-1)*157)*dpi,10*dpi,135*dpi,190*dpi));
             r_Title.push_back(QRect((48+(i-1)*157)*dpi,200*dpi,135*dpi,30*dpi));
@@ -151,15 +155,22 @@ BookOverviewWindow::BookOverviewWindow(QWidget *parent) : QMdiSubWindow(parent)
     toLeft->setIconSize(QSize(30*dpi,30*dpi));
     toLeft->setGeometry(10*dpi,100*dpi,30*dpi,30*dpi);
     toLeft->setEnterColor("#ebf2fa");
+<<<<<<< HEAD
     connect(toLeft,SIGNAL(clicked()),this,SLOT(graduallyDisappearR()));
     connect(toLeft,SIGNAL(clicked()),this,SLOT(moveRight()));
     connect(toLeft,SIGNAL(clicked()),this,SLOT(startTimerR()));
+=======
+    connect(toLeft,SIGNAL(clicked()),this,SLOT(graduallyDisappearL()));
+    connect(toLeft,SIGNAL(clicked()),this,SLOT(moveLeft()));
+    connect(toLeft,SIGNAL(clicked()),this,SLOT(startTimerL()));
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 
     toRight=new ToolButton(this);
     toRight->setIcon(QPixmap(":/Images/Icons/NextPage.png"));
     toRight->setIconSize(QSize(30*dpi,30*dpi));
     toRight->setGeometry(this->width()-40*dpi,100*dpi,30*dpi,30*dpi);
     toRight->setEnterColor("#ebf2fa");
+<<<<<<< HEAD
     connect(toRight,SIGNAL(clicked()),this,SLOT(graduallyDisappearL()));
     connect(toRight,SIGNAL(clicked()),this,SLOT(moveLeft()));
     connect(toRight,SIGNAL(clicked()),this,SLOT(startTimerL()));
@@ -167,6 +178,11 @@ BookOverviewWindow::BookOverviewWindow(QWidget *parent) : QMdiSubWindow(parent)
     actionTimer = new QTimer(this);
     connect(actionTimer,SIGNAL(timeout()),this,SLOT(noAction()));
     actionTimer->start(5000);
+=======
+    connect(toRight,SIGNAL(clicked()),this,SLOT(graduallyDisappearR()));
+    connect(toRight,SIGNAL(clicked()),this,SLOT(moveRight()));
+    connect(toRight,SIGNAL(clicked()),this,SLOT(startTimerR()));
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 }
 
 BookOverviewWindow::~BookOverviewWindow()
@@ -224,7 +240,10 @@ void BookOverviewWindow::paintEvent(QPaintEvent *paintEvent)
             painter.drawText(300*dpi,h-130*dpi+35*dpi,"作者: "+bookList[i-1]->getStringByTag("author"));
             painter.drawText(300*dpi,h-130*dpi+60*dpi,"出版社: "+bookList[i-1]->getStringByTag("press"));
             painter.drawText(300*dpi,h-130*dpi+85*dpi,"编号: "+bookList[i-1]->getStringByTag("id"));
+<<<<<<< HEAD
             painter.drawText(300*dpi,h-130*dpi+110*dpi,"借阅数量:"+ QString::number(bookList[i-1]->getIntByTag("bor_count"))+"     查询次数： "+QString::number(bookList[i-1]->getIntByTag("refer_count")));
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
         }
         else
         {
@@ -468,7 +487,10 @@ void BookOverviewWindow::startTimerR()
     timerR->start(400);
 }
 
+<<<<<<< HEAD
 void BookOverviewWindow::noAction(){
     emit actionTimeout();
 }
 
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169

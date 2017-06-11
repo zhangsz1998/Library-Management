@@ -141,16 +141,22 @@ void ReturnWindow::bookRenewing()
         popUp->setText("无需续借");
     else
         popUp->setText("续借成功");
+<<<<<<< HEAD
     saveXml();
     saveXml2();
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     popUp->setVisible(true);
 }
 
 void ReturnWindow::bookLost()
 {
     report(order,activereader,reportWindow->getReasons().join(","));
+<<<<<<< HEAD
     saveXml();
     saveXml2();
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 }
 
 void ReturnWindow::getReason(){

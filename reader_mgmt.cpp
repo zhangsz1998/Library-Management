@@ -240,6 +240,21 @@ void update2(){
 
 int add_newreader(Reader & reader){     //返回1表示添加成功，返回2表示注册用户以存在
     for (std::vector<Reader>::iterator it=readerlist.begin();it!=readerlist.end();it++)
+<<<<<<< HEAD
+=======
+        if (it->is_modf && it->order <list2.count()){
+            QDomNode tmp = it->toDom();
+            firstNode2.replaceChild(tmp,firstNode2.childNodes().at(it->order));
+            list2 = firstNode2.childNodes();
+        }
+        else if (it->order >= list2.count())
+            doc2.documentElement().appendChild(it->toDom());
+}
+
+
+int add_newreader(Reader & reader){     //返回1表示添加成功，返回2表示注册用户以存在
+    for (std::vector<Reader>::iterator it=readerlist.begin();it!=readerlist.end();it++)
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
         if (it->getStringByTag(QString("id")) == reader.getStringByTag(QString("id")))
             return 2;
     if (readerlist.size())
@@ -335,7 +350,11 @@ void returning(int order,Reader *r, QDate &cur){
             for (int j=0;j<rnum;j++)
                 if (readerlist[i].resvs[j] == b->getStringByTag("id")) {
                     for (int k=j+1;k<rnum;k++)
+<<<<<<< HEAD
                         readerlist[i].resvs[k-1] = readerlist[i].resvs[k];
+=======
+                        readerlist[i].bor_list[k-1] = readerlist[i].bor_list[k];
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
                     rnum--;
                     if (readerlist[i].getIntByTag("msg_num")!=30)
                         readerlist[i].msg[readerlist[i].getIntByTag("msg_num")] = systemDate.toString("yyyy-MM-dd")+" 您预约的图书"+b->getStringByTag("id")+"已有库存，请尽快前往借阅！";

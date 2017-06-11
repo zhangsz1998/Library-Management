@@ -58,10 +58,17 @@ ReportReasonWindow::ReportReasonWindow(QWidget *parent) : QDialog(parent)
     reason5->setCheckState(Qt::Unchecked);
 
     reason6=new QCheckBox(this);
+<<<<<<< HEAD
     reason6->setGeometry(300*dpi,200*dpi,400*dpi,30*dpi);
     reason6->setStyleSheet({"background-color:transparent;border:none"});
     reason6->setFont(QFont("微软雅黑",15));
     reason6->setText("图书已归还，但信息未更新");
+=======
+    reason6->setGeometry(300*dpi,200*dpi,200*dpi,30*dpi);
+    reason6->setStyleSheet({"background-color:transparent;border:none"});
+    reason6->setFont(QFont("微软雅黑",15));
+    reason6->setText("图书");
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason6->setVisible(true);
     reason6->setCheckState(Qt::Unchecked);
 
@@ -69,7 +76,11 @@ ReportReasonWindow::ReportReasonWindow(QWidget *parent) : QDialog(parent)
     reason7->setGeometry(550*dpi,100*dpi,200*dpi,30*dpi);
     reason7->setStyleSheet({"background-color:transparent;border:none"});
     reason7->setFont(QFont("微软雅黑",15));
+<<<<<<< HEAD
     reason7->setText("图书借阅证明遗失");
+=======
+    reason7->setText("图书blabla7");
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     reason7->setVisible(true);
     reason7->setCheckState(Qt::Unchecked);
 
@@ -77,10 +88,25 @@ ReportReasonWindow::ReportReasonWindow(QWidget *parent) : QDialog(parent)
     reason8->setGeometry(550*dpi,150*dpi,200*dpi,30*dpi);
     reason8->setStyleSheet({"background-color:transparent;border:none"});
     reason8->setFont(QFont("微软雅黑",15));
+<<<<<<< HEAD
     reason8->setText("借书证遗失");
     reason8->setVisible(true);
     reason8->setCheckState(Qt::Unchecked);
 
+=======
+    reason8->setText("图书blabla8");
+    reason8->setVisible(true);
+    reason8->setCheckState(Qt::Unchecked);
+
+    reason9=new QCheckBox(this);
+    reason9->setGeometry(550*dpi,200*dpi,200*dpi,30*dpi);
+    reason9->setStyleSheet({"background-color:transparent;border:none"});
+    reason9->setFont(QFont("微软雅黑",15));
+    reason9->setText("图书blabla9");
+    reason9->setVisible(true);
+    reason9->setCheckState(Qt::Unchecked);
+
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     getOtherReason=new QTextEdit(this);
     getOtherReason->setGeometry(50*dpi,300*dpi,600*dpi,200*dpi);
     getOtherReason->setStyleSheet({"background-color: #ffffff"});
@@ -120,6 +146,10 @@ ReportReasonWindow::~ReportReasonWindow()
     delete reason6;
     delete reason7;
     delete reason8;
+<<<<<<< HEAD
+=======
+    delete reason9;
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     delete getOtherReason;
 
     delete submitComplete;
@@ -173,6 +203,11 @@ void ReportReasonWindow::refreshReasons()
         reasons.append(reason7->text());
     if(reason8->isChecked())
         reasons.append(reason8->text());
+<<<<<<< HEAD
+=======
+    if(reason9->isChecked())
+        reasons.append(reason9->text());
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     QString otherReason=getOtherReason->toPlainText();
     getOtherReason->clear();
     reason1->setCheckState(Qt::Unchecked);
@@ -182,6 +217,10 @@ void ReportReasonWindow::refreshReasons()
     reason6->setCheckState(Qt::Unchecked);
     reason7->setCheckState(Qt::Unchecked);
     reason8->setCheckState(Qt::Unchecked);
+<<<<<<< HEAD
+=======
+    reason9->setCheckState(Qt::Unchecked);
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     if(otherReason.length()!=0)
         reasons.append(otherReason);
 }

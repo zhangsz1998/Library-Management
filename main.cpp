@@ -33,6 +33,11 @@ int main(int argc, char *argv[])
     QScreen* screen=a.primaryScreen();
     dpi=screen->logicalDotsPerInch()/96;
 
+    //计算DPI
+    QScreen* screen=a.primaryScreen();
+    dpi=screen->logicalDotsPerInch()/96;
+    systemDate=QDate::currentDate();
+
     //创建Data文件夹
     QDir dir;
     dataDir=dir.currentPath()+"/Data";
@@ -92,7 +97,10 @@ int main(int argc, char *argv[])
     }
     getXml();
     getXml2();
+<<<<<<< HEAD
     log_print("initial","","","");
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
     Widget w;
     w.show();
     return a.exec();

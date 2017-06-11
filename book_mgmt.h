@@ -45,7 +45,10 @@ QString categortString(QString s);
 std::vector<QString> getTopCat();
 std::vector<Book *> getCatTopBor(QString cat);
 std::vector<Book *> getCatTopRef(QString cat);
+<<<<<<< HEAD
 QDate getDate();
 void configureDate();
+=======
+>>>>>>> 45443e6f96dc0f3db8d1aac62fd60092fe373169
 
 #endif // BOOK_MGMT_H
