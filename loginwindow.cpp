@@ -4,8 +4,7 @@ extern Reader* activereader;
 LoginWindow::LoginWindow(QWidget *parent) : QDialog(parent)
 {
     this->setGeometry(300*dpi,180*dpi,450*dpi,350*dpi);
-    setWindowFlags(Qt::FramelessWindowHint);      //设置无边框
-    this->setStyleSheet("background-color:#ebf2fa;border:1px; border-style:solid;border-color:white");
+    setWindowFlags(Qt::FramelessWindowHint);      //设置无边
 
     closeBtn= new ToolButton(this,QColor(0,0,0,0),QColor(0,153,255,255));
     closeBtn->setEnterColor("#ff6666");
